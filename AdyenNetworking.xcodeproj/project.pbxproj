@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F938997826B004EF0065561F /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
+		F938997D26B004EF0065561F /* AdyenNetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */; };
+		F938997F26B004EF0065561F /* AdyenNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = F938997126B004EE0065561F /* AdyenNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998926B0059E0065561F /* RetryAPIClient.swift */; };
+		F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998A26B0059E0065561F /* SimpleScheduler.swift */; };
+		F938999226B0059E0065561F /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998B26B0059E0065561F /* APIClient.swift */; };
+		F938999326B0059E0065561F /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998C26B0059E0065561F /* Scheduler.swift */; };
+		F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998D26B0059E0065561F /* RetryOnErrorAPIClient.swift */; };
+		F938999526B0059E0065561F /* BackoffScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998E26B0059E0065561F /* BackoffScheduler.swift */; };
+		F938999626B0059E0065561F /* UniqueAssetAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998F26B0059E0065561F /* UniqueAssetAPIClient.swift */; };
+		F938999826B005B00065561F /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999726B005B00065561F /* Request.swift */; };
+		F938999B26B005D70065561F /* AnyAPIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999926B005D70065561F /* AnyAPIContext.swift */; };
+		F938999C26B005D70065561F /* AnyAPIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999A26B005D70065561F /* AnyAPIEnvironment.swift */; };
+		F938999E26B0061C0065561F /* Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999D26B0061C0065561F /* Coder.swift */; };
+		F93899A026B0064E0065561F /* AdyenScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999F26B0064E0065561F /* AdyenScope.swift */; };
+		F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A126B006610065561F /* URLSessionHelpers.swift */; };
+		F93899A526B006900065561F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A326B006900065561F /* Logger.swift */; };
+		F93899A826B007730065561F /* HttpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* HttpError.swift */; };
+		F93899AA26B008080065561F /* URLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A926B008080065561F /* URLHelpers.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F938997926B004EF0065561F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F938996526B004EE0065561F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F938996D26B004EE0065561F;
+			remoteInfo = AdyenNetworking;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F938996E26B004EE0065561F /* AdyenNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdyenNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F938997126B004EE0065561F /* AdyenNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdyenNetworking.h; sourceTree = "<group>"; };
+		F938997226B004EE0065561F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdyenNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdyenNetworkingTests.swift; sourceTree = "<group>"; };
+		F938997E26B004EF0065561F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F938998926B0059E0065561F /* RetryAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryAPIClient.swift; sourceTree = "<group>"; };
+		F938998A26B0059E0065561F /* SimpleScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleScheduler.swift; sourceTree = "<group>"; };
+		F938998B26B0059E0065561F /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		F938998C26B0059E0065561F /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+		F938998D26B0059E0065561F /* RetryOnErrorAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryOnErrorAPIClient.swift; sourceTree = "<group>"; };
+		F938998E26B0059E0065561F /* BackoffScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackoffScheduler.swift; sourceTree = "<group>"; };
+		F938998F26B0059E0065561F /* UniqueAssetAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniqueAssetAPIClient.swift; sourceTree = "<group>"; };
+		F938999726B005B00065561F /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		F938999926B005D70065561F /* AnyAPIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyAPIContext.swift; sourceTree = "<group>"; };
+		F938999A26B005D70065561F /* AnyAPIEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyAPIEnvironment.swift; sourceTree = "<group>"; };
+		F938999D26B0061C0065561F /* Coder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coder.swift; sourceTree = "<group>"; };
+		F938999F26B0064E0065561F /* AdyenScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdyenScope.swift; sourceTree = "<group>"; };
+		F93899A126B006610065561F /* URLSessionHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionHelpers.swift; sourceTree = "<group>"; };
+		F93899A326B006900065561F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F93899A726B007730065561F /* HttpError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpError.swift; sourceTree = "<group>"; };
+		F93899A926B008080065561F /* URLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelpers.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F938996B26B004EE0065561F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F938997426B004EF0065561F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F938997826B004EF0065561F /* AdyenNetworking.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F938996426B004EE0065561F = {
+			isa = PBXGroup;
+			children = (
+				F938997026B004EE0065561F /* AdyenNetworking */,
+				F938997B26B004EF0065561F /* AdyenNetworkingTests */,
+				F938996F26B004EE0065561F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F938996F26B004EE0065561F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F938996E26B004EE0065561F /* AdyenNetworking.framework */,
+				F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F938997026B004EE0065561F /* AdyenNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				F93899AB26B00ADE0065561F /* Helpers */,
+				F938998826B0056A0065561F /* APIClient */,
+				F938997126B004EE0065561F /* AdyenNetworking.h */,
+				F938997226B004EE0065561F /* Info.plist */,
+			);
+			path = AdyenNetworking;
+			sourceTree = "<group>";
+		};
+		F938997B26B004EF0065561F /* AdyenNetworkingTests */ = {
+			isa = PBXGroup;
+			children = (
+				F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */,
+				F938997E26B004EF0065561F /* Info.plist */,
+			);
+			path = AdyenNetworkingTests;
+			sourceTree = "<group>";
+		};
+		F938998826B0056A0065561F /* APIClient */ = {
+			isa = PBXGroup;
+			children = (
+				F938999926B005D70065561F /* AnyAPIContext.swift */,
+				F938999A26B005D70065561F /* AnyAPIEnvironment.swift */,
+				F938999726B005B00065561F /* Request.swift */,
+				F938998B26B0059E0065561F /* APIClient.swift */,
+				F938998E26B0059E0065561F /* BackoffScheduler.swift */,
+				F938998926B0059E0065561F /* RetryAPIClient.swift */,
+				F938998D26B0059E0065561F /* RetryOnErrorAPIClient.swift */,
+				F938998C26B0059E0065561F /* Scheduler.swift */,
+				F938998A26B0059E0065561F /* SimpleScheduler.swift */,
+				F938998F26B0059E0065561F /* UniqueAssetAPIClient.swift */,
+				F93899A726B007730065561F /* HttpError.swift */,
+			);
+			path = APIClient;
+			sourceTree = "<group>";
+		};
+		F93899AB26B00ADE0065561F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F93899A926B008080065561F /* URLHelpers.swift */,
+				F93899A326B006900065561F /* Logger.swift */,
+				F93899A126B006610065561F /* URLSessionHelpers.swift */,
+				F938999F26B0064E0065561F /* AdyenScope.swift */,
+				F938999D26B0061C0065561F /* Coder.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		F938996926B004EE0065561F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F938997F26B004EF0065561F /* AdyenNetworking.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F938996D26B004EE0065561F /* AdyenNetworking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F938998226B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworking" */;
+			buildPhases = (
+				F938996926B004EE0065561F /* Headers */,
+				F938996A26B004EE0065561F /* Sources */,
+				F938996B26B004EE0065561F /* Frameworks */,
+				F938996C26B004EE0065561F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdyenNetworking;
+			productName = AdyenNetworking;
+			productReference = F938996E26B004EE0065561F /* AdyenNetworking.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F938997626B004EF0065561F /* AdyenNetworkingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F938998526B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */;
+			buildPhases = (
+				F938997326B004EF0065561F /* Sources */,
+				F938997426B004EF0065561F /* Frameworks */,
+				F938997526B004EF0065561F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F938997A26B004EF0065561F /* PBXTargetDependency */,
+			);
+			name = AdyenNetworkingTests;
+			productName = AdyenNetworkingTests;
+			productReference = F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F938996526B004EE0065561F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					F938996D26B004EE0065561F = {
+						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
+					};
+					F938997626B004EF0065561F = {
+						CreatedOnToolsVersion = 12.5;
+					};
+				};
+			};
+			buildConfigurationList = F938996826B004EE0065561F /* Build configuration list for PBXProject "AdyenNetworking" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F938996426B004EE0065561F;
+			productRefGroup = F938996F26B004EE0065561F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F938996D26B004EE0065561F /* AdyenNetworking */,
+				F938997626B004EF0065561F /* AdyenNetworkingTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F938996C26B004EE0065561F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F938997526B004EF0065561F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F938996A26B004EE0065561F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F938999526B0059E0065561F /* BackoffScheduler.swift in Sources */,
+				F938999826B005B00065561F /* Request.swift in Sources */,
+				F93899A026B0064E0065561F /* AdyenScope.swift in Sources */,
+				F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */,
+				F938999326B0059E0065561F /* Scheduler.swift in Sources */,
+				F938999B26B005D70065561F /* AnyAPIContext.swift in Sources */,
+				F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */,
+				F938999626B0059E0065561F /* UniqueAssetAPIClient.swift in Sources */,
+				F938999226B0059E0065561F /* APIClient.swift in Sources */,
+				F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */,
+				F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */,
+				F93899AA26B008080065561F /* URLHelpers.swift in Sources */,
+				F93899A526B006900065561F /* Logger.swift in Sources */,
+				F93899A826B007730065561F /* HttpError.swift in Sources */,
+				F938999E26B0061C0065561F /* Coder.swift in Sources */,
+				F938999C26B005D70065561F /* AnyAPIEnvironment.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F938997326B004EF0065561F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F938997D26B004EF0065561F /* AdyenNetworkingTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F938997A26B004EF0065561F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F938996D26B004EE0065561F /* AdyenNetworking */;
+			targetProxy = F938997926B004EF0065561F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F938998026B004EF0065561F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F938998126B004EF0065561F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F938998326B004EF0065561F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = B2NYSS5932;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AdyenNetworking/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworking;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F938998426B004EF0065561F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = B2NYSS5932;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AdyenNetworking/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworking;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F938998626B004EF0065561F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B2NYSS5932;
+				INFOPLIST_FILE = AdyenNetworkingTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F938998726B004EF0065561F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B2NYSS5932;
+				INFOPLIST_FILE = AdyenNetworkingTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F938996826B004EE0065561F /* Build configuration list for PBXProject "AdyenNetworking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F938998026B004EF0065561F /* Debug */,
+				F938998126B004EF0065561F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F938998226B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F938998326B004EF0065561F /* Debug */,
+				F938998426B004EF0065561F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F938998526B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F938998626B004EF0065561F /* Debug */,
+				F938998726B004EF0065561F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F938996526B004EE0065561F /* Project object */;
+}
