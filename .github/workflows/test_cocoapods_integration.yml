@@ -27,5 +27,5 @@ jobs:
     - name: Test Cocoapods Integration
       run: |
         gem install cocoapods
-        pod lib lint Adyen.podspec --allow-warnings
+        pod lib lint AdyenNetworking.podspec --allow-warnings
         Scripts/test-CocoaPods-integration.sh

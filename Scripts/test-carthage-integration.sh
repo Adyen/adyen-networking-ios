@@ -63,7 +63,7 @@ targets:
     sources: Source
     settings:
       base:
-        INFOPLIST_FILE: Source/UIKit/Info.plist
+        INFOPLIST_FILE: Source/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.adyen.$PROJECT_NAME
     dependencies:
       - framework: Carthage/Build/AdyenNetworking.xcframework
@@ -75,6 +75,116 @@ schemes:
       targets:
         $PROJECT_NAME: all
 " > project.yml
+
+mkdir -p Source
+touch Source/Dummy.swift
+
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>\$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>\$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>\$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>da-DK</string>
+		<string>de-DE</string>
+		<string>en-US</string>
+		<string>es-ES</string>
+		<string>ja-JP</string>
+		<string>fr-FR</string>
+		<string>it-IT</string>
+		<string>nl-NL</string>
+		<string>pl-PL</string>
+		<string>pt-BR</string>
+		<string>ru-RU</string>
+		<string>sv-SE</string>
+		<string>zh-CN</string>
+		<string>zh-TW</string>
+		<string>ko</string>
+		<string>nb-NO</string>
+		<string>fi</string>
+		<string>cs-CZ</string>
+		<string>el-GR</string>
+		<string>hr-HR</string>
+		<string>hu-HU</string>
+		<string>ro-RO</string>
+		<string>sk-SK</string>
+		<string>sl-SL</string>
+		<string>ar</string>
+	</array>
+	<key>CFBundleName</key>
+	<string>\$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>\$(MARKETING_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.adyen.AdyenUIHost</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ui-host</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>weixin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wx33ed7fe146f6a50a</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>\$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save vouchers to your photos library</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>
+"  > Source/Info.plist
 
 xcodegen generate
 

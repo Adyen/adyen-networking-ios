@@ -31,13 +31,15 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: \"AdyenNetworking\", path: \"../\"),
+        .package(name: \"AdyenNetworking\", path: \"../\")
     ],
     targets: [
         .target(
             name: \"TempProject\",
             dependencies: [
                 .product(name: \"AdyenNetworking\", package: \"AdyenNetworking\")
+            ]
+        )
     ]
 )
 " > Package.swift
