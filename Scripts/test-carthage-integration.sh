@@ -63,7 +63,7 @@ targets:
     sources: Source
     settings:
       base:
-        INFOPLIST_FILE: Source/Networking Demo App/Info.plist
+        INFOPLIST_FILE: Source/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.adyen.$PROJECT_NAME
     dependencies:
       - framework: Carthage/Build/AdyenNetworking.xcframework
@@ -77,7 +77,7 @@ schemes:
 " > project.yml
 
 mkdir -p Source
-cp -a "../Networking Demo App" Source/
+cp -a "../Networking Demo App/." Source/
 
 xcodegen generate
 
