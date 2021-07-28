@@ -63,7 +63,7 @@ targets:
     sources: Source
     settings:
       base:
-        INFOPLIST_FILE: Source/Info.plist
+        INFOPLIST_FILE: Source/Networking Demo App/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.adyen.$PROJECT_NAME
     dependencies:
       - framework: Carthage/Build/AdyenNetworking.xcframework
