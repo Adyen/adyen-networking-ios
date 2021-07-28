@@ -77,7 +77,7 @@ schemes:
 " > project.yml
 
 mkdir -p Source
-cp -a "../Networking\ Demo\ App" Source/
+cp -a "../Networking Demo App" Source/
 
 xcodegen generate
 
