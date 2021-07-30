@@ -2,66 +2,85 @@
 
 set -e # Any subsequent(*) commands which fail will cause the shell script to exit immediately
 
+function echo_header {
+  echo " "
+  echo "===   $1"
+}
+
+function print_help {
+  echo "Test Swift Package Integration"
+  echo " "
+  echo "test-SPM-integration.sh [project name] [arguments]"
+  echo " "
+  echo "options:"
+  echo "-h, --help                show brief help"
+  echo "-c, --no-clean            ignore cleanup"
+}
+
 PROJECT_NAME=TempProject
+NEED_CLEANUP=true
 
-# Clean up.
-rm -rf $PROJECT_NAME
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      print_help
+      exit 0
+      ;;
+    -c|--no-clean)
+      NEED_CLEANUP=false
+      shift
+      ;;
+    -p|--project)
+      PROJECT_NAME="$1"
+      shift
+      ;;
+  esac
+done
 
-mkdir -p $PROJECT_NAME && cd $PROJECT_NAME
+if [ "$NEED_CLEANUP" == true ]
+then
+  echo_header "Clean up $PROJECT_NAME"
+  rm -rf $PROJECT_NAME
+  mkdir -p $PROJECT_NAME && cd $PROJECT_NAME
+else
+  cd $PROJECT_NAME
+fi
 
-# Create the package.
-swift package init
+echo_header "Generate Project"
+echo "
+name: $PROJECT_NAME
+packages:
+  AdyenNetworking:
+    path: ../
+targets:
+  $PROJECT_NAME:
+    type: application
+    platform: iOS
+    sources: Source
+    settings:
+      base:
+        INFOPLIST_FILE: Source/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.adyen.$PROJECT_NAME
+    dependencies:
+      - package: AdyenNetworking
+schemes:
+  App:
+    build:
+      targets:
+        $PROJECT_NAME: all
+" > project.yml
 
-# Create the Package.swift.
-echo "// swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+mkdir -p Source
+cp -a "../Networking Demo App/." Source/
 
-import PackageDescription
+xcodegen generate
 
-let package = Package(
-    name: \"TempProject\",
-    defaultLocalization: \"en-US\",
-    platforms: [
-        .iOS(.v11)
-    ],
-    products: [
-        .library(
-            name: \"TempProject\",
-            targets: [\"TempProject\"]
-        )
-    ],
-    dependencies: [
-        .package(name: \"AdyenNetworking\", path: \"../\")
-    ],
-    targets: [
-        .target(
-            name: \"TempProject\",
-            dependencies: [
-                .product(name: \"AdyenNetworking\", package: \"AdyenNetworking\")
-            ]
-        )
-    ]
-)
-" > Package.swift
+echo_header "Build"
+xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone 11" | xcpretty && exit ${PIPESTATUS[0]}
 
-swift package update
-
-# Archive for generic iOS device
-echo '############# Archive for generic iOS device ###############'
-xcodebuild archive -scheme TempProject -destination 'generic/platform=iOS'
-
-# Build for generic iOS device
-echo '############# Build for generic iOS device ###############'
-xcodebuild build -scheme TempProject -destination 'generic/platform=iOS'
-
-# Archive for x86_64 simulator
-echo '############# Archive for x86_64 simulator ###############'
-xcodebuild archive -scheme TempProject -destination 'generic/platform=iOS Simulator' ARCHS=x86_64
-
-# Build for x86_64 simulator
-echo '############# Build for x86_64 simulator ###############'
-xcodebuild build -scheme TempProject -destination 'generic/platform=iOS Simulator' ARCHS=x86_64
-
-# Clean up.
-cd ../
-rm -rf $PROJECT_NAME
+if [ "$NEED_CLEANUP" == true ]
+then
+  echo_header "Clean up"
+  cd ../
+  rm -rf $PROJECT_NAME
+fi
