@@ -39,7 +39,8 @@ public extension AdyenScope where Base: URLSession {
 
         if let error = error {
             completion(.failure(error))
-        } else if let statusCode = statusCode, statusCode != 200,
+        } else if let statusCode = statusCode,
+                  Int(statusCode / 100) != 2,
                   let data = data {
             adyenPrint("---- Response (/\(String(describing: response?.url?.path))) ----")
             printAsJSON(data)
