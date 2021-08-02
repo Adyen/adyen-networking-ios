@@ -21,6 +21,10 @@ public protocol Request: Encodable {
     associatedtype ResponseType: Response
     
     /// :nodoc:
+    /// The type of the error response.
+    associatedtype ErrorResponseType: Error & Decodable
+    
+    /// :nodoc:
     /// The request path.
     var path: String { get }
     
@@ -44,6 +48,4 @@ public protocol Request: Encodable {
 
 /// :nodoc:
 /// Represents an API response.
-public protocol Response: Decodable {
-    associatedtype ErrorType: Error & Decodable
-}
+public protocol Response: Decodable { }

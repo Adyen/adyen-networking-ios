@@ -12,6 +12,8 @@ internal struct GetUsersRequest: Request {
 
     typealias ResponseType = GetUsersResponse
     
+    typealias ErrorResponseType = HttpError
+    
     let method: HTTPMethod = .get
     
     var path: String { "users/\(userId ?? "")" }
@@ -28,7 +30,5 @@ internal struct GetUsersRequest: Request {
 }
 
 internal struct GetUsersResponse: Response {
-    typealias ErrorType = HttpError
-    
     let data: [UserModel]
 }

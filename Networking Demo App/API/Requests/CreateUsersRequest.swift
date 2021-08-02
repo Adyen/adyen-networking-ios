@@ -12,6 +12,8 @@ internal struct CreateUsersRequest: Request {
 
     typealias ResponseType = CreateUsersResponse
     
+    typealias ErrorResponseType = HttpError
+    
     let method: HTTPMethod = .post
     
     let path: String = "users"
@@ -33,7 +35,5 @@ internal struct CreateUsersRequest: Request {
 }
 
 internal struct CreateUsersResponse: Response {
-    typealias ErrorType = HttpError
-    
     let data: UserModel
 }

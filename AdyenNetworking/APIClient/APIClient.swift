@@ -104,7 +104,7 @@ public final class APIClient: APIClientProtocol {
                 adyenPrint("---- Response (/\(request.path)) ----")
                 printAsJSON(data)
 
-                if let apiError: R.ResponseType.ErrorType = try? Coder.decode(data) {
+                if let apiError: R.ErrorResponseType = try? Coder.decode(data) {
                     completionHandler(.failure(apiError))
                 } else {
                     let response = try Coder.decode(data) as R.ResponseType
