@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        AdyenLogging.isEnabled = true
+        Logging.isEnabled = true
         let request = GetUsersRequest()
         apiClient.perform(request) { result in
             switch result {

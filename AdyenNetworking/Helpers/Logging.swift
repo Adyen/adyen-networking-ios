@@ -7,16 +7,13 @@
 import func Darwin.fputs
 
 /// Provides control over SDK logging.
-public enum AdyenLogging {
+public enum Logging {
     /// Indicates whether to enable printing to the console.
     public static var isEnabled: Bool = false
 }
 
-/// :nodoc:
-/// Copies the interface of `Swift.print()`,
-/// and `Swift.print()` is called inside after checking first if `AdyenLogging.isEnabled` is `true`, and returns if `false`.
-public func adyenPrint(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-    guard AdyenLogging.isEnabled else { return }
+internal func adyenPrint(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+    guard Logging.isEnabled else { return }
     var idx = items.startIndex
     let endIdx = items.endIndex
     

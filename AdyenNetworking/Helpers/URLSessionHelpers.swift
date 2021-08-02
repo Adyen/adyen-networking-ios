@@ -7,21 +7,17 @@
 import Foundation
 
 /// :nodoc:
-extension URLSession: AdyenCompatible {}
-
-/// :nodoc:
-public extension AdyenScope where Base: URLSession {
-
+internal extension URLSession {
     /// :nodoc:
     func dataTask(with url: URL, completion: @escaping ((Result<Data, Error>) -> Void)) -> URLSessionDataTask {
-        base.dataTask(with: url, completionHandler: { data, response, error in
+        dataTask(with: url, completionHandler: { data, response, error in
             self.handle(data: data, response: response, error: error, completion: completion)
         })
     }
 
     /// :nodoc:
     func dataTask(with urlRequest: URLRequest, completion: @escaping ((Result<Data, Error>) -> Void)) -> URLSessionDataTask {
-        base.dataTask(with: urlRequest, completionHandler: { data, response, error in
+        dataTask(with: urlRequest, completionHandler: { data, response, error in
             self.handle(data: data, response: response, error: error, completion: completion)
         })
     }

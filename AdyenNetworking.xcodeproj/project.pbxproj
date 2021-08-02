@@ -34,9 +34,8 @@
 		F938999B26B005D70065561F /* AnyAPIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999926B005D70065561F /* AnyAPIContext.swift */; };
 		F938999C26B005D70065561F /* AnyAPIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999A26B005D70065561F /* AnyAPIEnvironment.swift */; };
 		F938999E26B0061C0065561F /* Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999D26B0061C0065561F /* Coder.swift */; };
-		F93899A026B0064E0065561F /* AdyenScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999F26B0064E0065561F /* AdyenScope.swift */; };
 		F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A126B006610065561F /* URLSessionHelpers.swift */; };
-		F93899A526B006900065561F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A326B006900065561F /* Logger.swift */; };
+		F93899A526B006900065561F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A326B006900065561F /* Logging.swift */; };
 		F93899A826B007730065561F /* HttpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* HttpError.swift */; };
 		F93899AA26B008080065561F /* URLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A926B008080065561F /* URLHelpers.swift */; };
 /* End PBXBuildFile section */
@@ -112,9 +111,8 @@
 		F938999926B005D70065561F /* AnyAPIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyAPIContext.swift; sourceTree = "<group>"; };
 		F938999A26B005D70065561F /* AnyAPIEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyAPIEnvironment.swift; sourceTree = "<group>"; };
 		F938999D26B0061C0065561F /* Coder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coder.swift; sourceTree = "<group>"; };
-		F938999F26B0064E0065561F /* AdyenScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdyenScope.swift; sourceTree = "<group>"; };
 		F93899A126B006610065561F /* URLSessionHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionHelpers.swift; sourceTree = "<group>"; };
-		F93899A326B006900065561F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F93899A326B006900065561F /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		F93899A726B007730065561F /* HttpError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpError.swift; sourceTree = "<group>"; };
 		F93899A926B008080065561F /* URLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -276,9 +274,8 @@
 			isa = PBXGroup;
 			children = (
 				F93899A926B008080065561F /* URLHelpers.swift */,
-				F93899A326B006900065561F /* Logger.swift */,
+				F93899A326B006900065561F /* Logging.swift */,
 				F93899A126B006610065561F /* URLSessionHelpers.swift */,
-				F938999F26B0064E0065561F /* AdyenScope.swift */,
 				F938999D26B0061C0065561F /* Coder.swift */,
 			);
 			path = Helpers;
@@ -480,7 +477,6 @@
 			files = (
 				F938999526B0059E0065561F /* BackoffScheduler.swift in Sources */,
 				F938999826B005B00065561F /* Request.swift in Sources */,
-				F93899A026B0064E0065561F /* AdyenScope.swift in Sources */,
 				F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */,
 				F938999326B0059E0065561F /* Scheduler.swift in Sources */,
 				F938999B26B005D70065561F /* AnyAPIContext.swift in Sources */,
@@ -490,7 +486,7 @@
 				F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */,
 				F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */,
 				F93899AA26B008080065561F /* URLHelpers.swift in Sources */,
-				F93899A526B006900065561F /* Logger.swift in Sources */,
+				F93899A526B006900065561F /* Logging.swift in Sources */,
 				F93899A826B007730065561F /* HttpError.swift in Sources */,
 				F938999E26B0061C0065561F /* Coder.swift in Sources */,
 				F938999C26B005D70065561F /* AnyAPIEnvironment.swift in Sources */,

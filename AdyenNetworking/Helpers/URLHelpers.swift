@@ -7,7 +7,7 @@
 import Foundation
 
 /// :nodoc:
-public extension URL {
+internal extension URL {
     var queryParameters: [String: String] {
         let components = URLComponents(url: self, resolvingAgainstBaseURL: true)
         let queryItems = components?.queryItems ?? []

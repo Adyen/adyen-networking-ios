@@ -68,7 +68,7 @@ public final class APIClient: APIClientProtocol {
         
         requestCounter += 1
         
-        urlSession.adyen.dataTask(with: urlRequest) { [weak self] result in
+        urlSession.dataTask(with: urlRequest) { [weak self] result in
             self?.handle(result, request, completionHandler: completionHandler)
         }.resume()
     }
@@ -152,7 +152,7 @@ public final class APIClient: APIClientProtocol {
 }
 
 internal func printAsJSON(_ data: Data) {
-    guard AdyenLogging.isEnabled else { return }
+    guard Logging.isEnabled else { return }
     do {
         let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
