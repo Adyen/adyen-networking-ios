@@ -1,5 +1,5 @@
 //
-//  RequestWithEmptyResponse.swift
+//  InvalidCreateUsersRequest.swift
 //  Networking Demo App
 //
 //  Created by Mohamed Eldoheiri on 8/13/21.
@@ -8,11 +8,11 @@
 import Foundation
 import AdyenNetworking
 
-internal struct RequestWithEmptyResponse: Request {
+internal struct InvalidCreateUsersRequest: Request {
 
-    typealias ResponseType = EmptyResponse
+    typealias ResponseType = CreateUsersResponse
     
-    typealias ErrorResponseType = HttpError
+    typealias ErrorResponseType = CreateUsersErrorResponse
     
     let method: HTTPMethod = .post
     
@@ -20,16 +20,9 @@ internal struct RequestWithEmptyResponse: Request {
     
     let queryParameters: [URLQueryItem] = []
     
-    let userModel: UserModel
-    
     var counter: UInt = 0
     
     let headers: [String : String] = [:]
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(userModel)
-    }
     
     private enum CodingKeys: CodingKey {}
 }

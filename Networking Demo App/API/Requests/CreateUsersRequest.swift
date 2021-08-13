@@ -8,11 +8,20 @@
 import Foundation
 import AdyenNetworking
 
+internal struct CreateUsersErrorResponse: Decodable, Error {
+    internal struct Data: Decodable {
+        let message: String?
+        let field: String?
+    }
+    
+    internal let data: [Data]?
+}
+
 internal struct CreateUsersRequest: Request {
 
     typealias ResponseType = CreateUsersResponse
     
-    typealias ErrorResponseType = HttpError
+    typealias ErrorResponseType = CreateUsersErrorResponse
     
     let method: HTTPMethod = .post
     

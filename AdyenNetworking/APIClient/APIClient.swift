@@ -95,37 +95,33 @@ public final class APIClient: APIClientProtocol {
 
     }
 
-    private func handle<R: Request>(_ result: Result<Data, Error>,
+    private func handle<R: Request>(_ result: Result<URLSessionSuccess, URLSessionFailure>,
                                     _ request: R,
                                     completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         requestCounter -= 1
 
         switch result {
-        case let .success(data):
+        case let .success(result):
             do {
                 adyenPrint("---- Response (/\(request.path)) ----")
-                printAsJSON(data)
-
-                if let apiError: R.ErrorResponseType = try? Coder.decode(data) {
-                    completionHandler(.failure(apiError))
-                } else {
-                    let response: R.ResponseType = try parse(with: data)
-                    completionHandler(.success(response))
-                }
+                printAsJSON(result.data)
+                
+                let response = try Coder.decode(result.data) as R.ResponseType
+                completionHandler(.success(response))
             } catch {
-                completionHandler(.failure(error))
+                if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
+                    completionHandler(.failure(errorResponse))
+                } else if let httpResponse = result.response as? HTTPURLResponse,
+                          (httpResponse.statusCode / 100) != 2 {
+                    completionHandler(.failure(HttpError(errorCode: httpResponse.statusCode,
+                                                         errorMessage: "Http \(httpResponse.statusCode) error")))
+                } else {
+                    completionHandler(.failure(error))
+                }
             }
-        case let .failure(error):
-            completionHandler(.failure(error))
+        case let .failure(result):
+            completionHandler(.failure(result.error))
         }
-    }
-    
-    private func parse<R: Response>(with data: Data) throws -> R {
-        try Coder.decode(data) as R
-    }
-    
-    private func parse(with data: Data) throws -> EmptyResponse  {
-        EmptyResponse()
     }
     
     /// :nodoc:

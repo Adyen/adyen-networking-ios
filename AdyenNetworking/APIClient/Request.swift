@@ -49,7 +49,3 @@ public protocol Request: Encodable {
 /// :nodoc:
 /// Represents an API response.
 public protocol Response: Decodable { }
-
-/// :nodoc:
-/// Represents an empty API response.
-public struct EmptyResponse: Response { }

@@ -15,8 +15,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Logging.isEnabled = true
-        let request = GetUsersRequest()
-        apiClient.perform(request) { result in
+        let invalidGetRequest = GetUsersRequest(userId: "88888888")
+        apiClient.perform(invalidGetRequest) { result in
             switch result {
             case let .success(response):
                 print(response)
@@ -25,14 +25,24 @@ class ViewController: UIViewController {
             }
         }
         
+        let validGetRequest = GetUsersRequest()
+        apiClient.perform(validGetRequest) { result in
+            switch result {
+            case let .success(response):
+                print(response)
+            case let .failure(error):
+                print(error)
+            }
+        }
+
         let name = UUID().uuidString
         let newUser = UserModel(id: Int.random(in: 0...1000),
                                 name: name,
                                 email: "\(name)@gmail.com",
                                 gender: .female,
                                 status: .active)
-        let createRequest = CreateUsersRequest(userModel: newUser)
-        apiClient.perform(createRequest) { result in
+        let validCreateRequest = CreateUsersRequest(userModel: newUser)
+        apiClient.perform(validCreateRequest) { result in
             switch result {
             case let .success(response):
                 print(response)
@@ -41,14 +51,8 @@ class ViewController: UIViewController {
             }
         }
         
-        let name1 = UUID().uuidString
-        let newUser1 = UserModel(id: Int.random(in: 0...1000),
-                                name: name1,
-                                email: "\(name1)@gmail.com",
-                                gender: .female,
-                                status: .active)
-        let createRequest1 = RequestWithEmptyResponse(userModel: newUser1)
-        apiClient.perform(createRequest1) { result in
+        let invalidCreateRequest = InvalidCreateUsersRequest()
+        apiClient.perform(invalidCreateRequest) { result in
             switch result {
             case let .success(response):
                 print(response)

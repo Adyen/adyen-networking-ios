@@ -6,24 +6,36 @@
 
 import Foundation
 
+internal struct URLSessionSuccess {
+    internal let data: Data
+    
+    internal let response: URLResponse?
+}
+
+internal struct URLSessionFailure: Error {
+    internal let error: Error
+    
+    internal let response: URLResponse?
+}
+
 /// :nodoc:
 internal extension URLSession {
     /// :nodoc:
-    func dataTask(with url: URL, completion: @escaping ((Result<Data, Error>) -> Void)) -> URLSessionDataTask {
+    func dataTask(with url: URL, completion: @escaping ((Result<URLSessionSuccess, URLSessionFailure>) -> Void)) -> URLSessionDataTask {
         dataTask(with: url, completionHandler: { data, response, error in
             self.handle(data: data, response: response, error: error, completion: completion)
         })
     }
 
     /// :nodoc:
-    func dataTask(with urlRequest: URLRequest, completion: @escaping ((Result<Data, Error>) -> Void)) -> URLSessionDataTask {
+    func dataTask(with urlRequest: URLRequest, completion: @escaping ((Result<URLSessionSuccess, URLSessionFailure>) -> Void)) -> URLSessionDataTask {
         dataTask(with: urlRequest, completionHandler: { data, response, error in
             self.handle(data: data, response: response, error: error, completion: completion)
         })
     }
 
     /// :nodoc:
-    private func handle(data: Data?, response: URLResponse?, error: Error?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+    private func handle(data: Data?, response: URLResponse?, error: Error?, completion: @escaping ((Result<URLSessionSuccess, URLSessionFailure>) -> Void)) {
         let httpResponse = response as? HTTPURLResponse
         if let headers = httpResponse?.allHeaderFields,
            let path = response?.url?.path {
@@ -31,20 +43,10 @@ internal extension URLSession {
             adyenPrint(headers)
         }
 
-        let statusCode = httpResponse?.statusCode
-
         if let error = error {
-            completion(.failure(error))
-        } else if let statusCode = statusCode,
-                  Int(statusCode / 100) != 2,
-                  let data = data {
-            adyenPrint("---- Response (/\(String(describing: response?.url?.path))) ----")
-            printAsJSON(data)
-            let apiError = HttpError(errorCode: statusCode,
-                                     errorMessage: "Http \(statusCode) error")
-            completion(.failure(apiError))
+            completion(.failure(URLSessionFailure(error: error, response: response)))
         } else if let data = data {
-            completion(.success(data))
+            completion(.success(URLSessionSuccess(data: data, response: response)))
         } else {
             fatalError("Invalid response.")
         }
