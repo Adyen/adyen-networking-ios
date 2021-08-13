@@ -95,7 +95,9 @@ public final class APIClient: APIClientProtocol {
 
     }
 
-    private func handle<R: Request>(_ result: Result<Data, Error>, _ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
+    private func handle<R: Request>(_ result: Result<Data, Error>,
+                                    _ request: R,
+                                    completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         requestCounter -= 1
 
         switch result {
@@ -107,7 +109,7 @@ public final class APIClient: APIClientProtocol {
                 if let apiError: R.ErrorResponseType = try? Coder.decode(data) {
                     completionHandler(.failure(apiError))
                 } else {
-                    let response = try Coder.decode(data) as R.ResponseType
+                    let response: R.ResponseType = try parse(with: data)
                     completionHandler(.success(response))
                 }
             } catch {
@@ -116,6 +118,14 @@ public final class APIClient: APIClientProtocol {
         case let .failure(error):
             completionHandler(.failure(error))
         }
+    }
+    
+    private func parse<R: Response>(with data: Data) throws -> R {
+        try Coder.decode(data) as R
+    }
+    
+    private func parse(with data: Data) throws -> EmptyResponse  {
+        EmptyResponse()
     }
     
     /// :nodoc:

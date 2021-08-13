@@ -40,6 +40,22 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
+        
+        let name1 = UUID().uuidString
+        let newUser1 = UserModel(id: Int.random(in: 0...1000),
+                                name: name1,
+                                email: "\(name1)@gmail.com",
+                                gender: .female,
+                                status: .active)
+        let createRequest1 = RequestWithEmptyResponse(userModel: newUser1)
+        apiClient.perform(createRequest1) { result in
+            switch result {
+            case let .success(response):
+                print(response)
+            case let .failure(error):
+                print(error)
+            }
+        }
     }
 
 
