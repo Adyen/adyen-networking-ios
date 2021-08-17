@@ -13,7 +13,6 @@
 		F913B3B426B1854F008F6CD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F913B3B226B1854F008F6CD2 /* Main.storyboard */; };
 		F913B3B626B18551008F6CD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F913B3B526B18551008F6CD2 /* Assets.xcassets */; };
 		F913B3B926B18551008F6CD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F913B3B726B18551008F6CD2 /* LaunchScreen.storyboard */; };
-		F913B3C426B18551008F6CD2 /* Networking_Demo_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3C326B18551008F6CD2 /* Networking_Demo_AppTests.swift */; };
 		F913B3DC26B40C0F008F6CD2 /* GetUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3DB26B40C0F008F6CD2 /* GetUsersRequest.swift */; };
 		F913B3DF26B40C5B008F6CD2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3DE26B40C5B008F6CD2 /* UserModel.swift */; };
 		F913B3E126B40E0B008F6CD2 /* APIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3E026B40E0B008F6CD2 /* APIContext.swift */; };
@@ -39,6 +38,7 @@
 		F93899A826B007730065561F /* HttpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* HttpError.swift */; };
 		F93899AA26B008080065561F /* URLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A926B008080065561F /* URLHelpers.swift */; };
 		F9FCFF4426C6AACD00540FE1 /* InvalidCreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */; };
+		F9FCFF4826CB96E800540FE1 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,7 +89,6 @@
 		F913B3B826B18551008F6CD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F913B3BA26B18551008F6CD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F913B3BF26B18551008F6CD2 /* Networking Demo AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Networking Demo AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F913B3C326B18551008F6CD2 /* Networking_Demo_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking_Demo_AppTests.swift; sourceTree = "<group>"; };
 		F913B3C526B18551008F6CD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F913B3DB26B40C0F008F6CD2 /* GetUsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersRequest.swift; sourceTree = "<group>"; };
 		F913B3DE26B40C5B008F6CD2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -117,6 +116,7 @@
 		F93899A726B007730065561F /* HttpError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpError.swift; sourceTree = "<group>"; };
 		F93899A926B008080065561F /* URLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelpers.swift; sourceTree = "<group>"; };
 		F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvalidCreateUsersRequest.swift; sourceTree = "<group>"; };
+		F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,7 +171,7 @@
 		F913B3C226B18551008F6CD2 /* Networking Demo AppTests */ = {
 			isa = PBXGroup;
 			children = (
-				F913B3C326B18551008F6CD2 /* Networking_Demo_AppTests.swift */,
+				F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */,
 				F913B3C526B18551008F6CD2 /* Info.plist */,
 			);
 			path = "Networking Demo AppTests";
@@ -471,7 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F913B3C426B18551008F6CD2 /* Networking_Demo_AppTests.swift in Sources */,
+				F9FCFF4826CB96E800540FE1 /* APIClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
