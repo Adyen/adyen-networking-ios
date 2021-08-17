@@ -111,7 +111,7 @@ public final class APIClient: APIClientProtocol {
             } catch {
                 if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
                     completionHandler(.failure(errorResponse))
-                } else if !(200...299).contains(result.response.statusCode) {
+                } else if (200...299).contains(result.response.statusCode) == false {
                     completionHandler(.failure(HttpError(errorCode: result.response.statusCode,
                                                          errorMessage: "Http \(result.response.statusCode) error")))
                 } else {
