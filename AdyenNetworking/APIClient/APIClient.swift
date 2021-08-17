@@ -95,7 +95,7 @@ public final class APIClient: APIClientProtocol {
 
     }
 
-    private func handle<R: Request>(_ result: Result<URLSessionSuccess, URLSessionFailure>,
+    private func handle<R: Request>(_ result: Result<URLSessionSuccess, Error>,
                                     _ request: R,
                                     completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         requestCounter -= 1
@@ -111,16 +111,15 @@ public final class APIClient: APIClientProtocol {
             } catch {
                 if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
                     completionHandler(.failure(errorResponse))
-                } else if let httpResponse = result.response as? HTTPURLResponse,
-                          (httpResponse.statusCode / 100) != 2 {
-                    completionHandler(.failure(HttpError(errorCode: httpResponse.statusCode,
-                                                         errorMessage: "Http \(httpResponse.statusCode) error")))
+                } else if !(200...299).contains(result.response.statusCode) {
+                    completionHandler(.failure(HttpError(errorCode: result.response.statusCode,
+                                                         errorMessage: "Http \(result.response.statusCode) error")))
                 } else {
                     completionHandler(.failure(error))
                 }
             }
-        case let .failure(result):
-            completionHandler(.failure(result.error))
+        case let .failure(error):
+            completionHandler(.failure(error))
         }
     }
     
