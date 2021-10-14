@@ -66,7 +66,9 @@ public final class APIClient: APIClientProtocol {
 
         log(urlRequest: urlRequest, request: request)
         
-        requestCounter += 1
+        DispatchQueue.main.async {
+            self.requestCounter += 1
+        }
         
         urlSession.dataTask(with: urlRequest) { [weak self] result in
             self?.handle(result, request, completionHandler: completionHandler)
@@ -98,7 +100,9 @@ public final class APIClient: APIClientProtocol {
     private func handle<R: Request>(_ result: Result<URLSessionSuccess, Error>,
                                     _ request: R,
                                     completionHandler: @escaping CompletionHandler<R.ResponseType>) {
-        requestCounter -= 1
+        DispatchQueue.main.async {
+            self.requestCounter -= 1
+        }
 
         switch result {
         case let .success(result):
@@ -149,8 +153,7 @@ public final class APIClient: APIClientProtocol {
     /// :nodoc:
     private var requestCounter = 0 {
         didSet {
-            let application = UIApplication.shared
-            application.isNetworkActivityIndicatorVisible = self.requestCounter > 0
+            UIApplication.shared.isNetworkActivityIndicatorVisible = self.requestCounter > 0
         }
     }
     
