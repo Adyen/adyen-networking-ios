@@ -41,6 +41,9 @@ public final class APIClient: APIClientProtocol {
     public let apiContext: AnyAPIContext
     
     /// :nodoc:
+    private let urlSession: URLSession
+    
+    /// :nodoc:
     /// Initializes the API client.
     ///
     /// - Parameters:
@@ -57,81 +60,99 @@ public final class APIClient: APIClientProtocol {
     }
     
     /// :nodoc:
+    @available(iOS 15.0.0, *)
+    public func perform<R: Request>(_ request: R) async -> Result<R.ResponseType, Error> {
+        do {
+            let result = try await urlSession.data(for: try buildUrlRequest(from: request))
+            
+            guard let httpResponse = result.1 as? HTTPURLResponse else {
+                fatalError("Invalid response.")
+            }
+            
+            return Self.handle(.success(.init(data: result.0, response: httpResponse)), request)
+        } catch {
+            return .failure(error)
+        }
+    }
+    
+    /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
+        do {
+            urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
+                completionHandler(Self.handle(result, request))
+            }.resume()
+        } catch {
+            completionHandler(.failure(error))
+        }
+    }
+    
+    private func buildUrlRequest<R: Request>(from request: R) throws -> URLRequest {
         let url = apiContext.environment.baseURL.appendingPathComponent(request.path)
-
+        
         var urlRequest = URLRequest(url: add(queryParameters: request.queryParameters + apiContext.queryParameters, to: url))
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers.merging(apiContext.headers, uniquingKeysWith: { key1, _ in key1 })
         if request.method == .post {
-            do {
-                urlRequest.httpBody = try Coder.encode(request)
-            } catch {
-                return completionHandler(.failure(error))
-            }
+            urlRequest.httpBody = try Coder.encode(request)
         }
-
+        
         log(urlRequest: urlRequest, request: request)
         
-        DispatchQueue.main.async {
-            self.requestCounter += 1
-        }
-        
-        urlSession.dataTask(with: urlRequest) { [weak self] result in
-            self?.handle(result, request, completionHandler: completionHandler)
-        }.resume()
+        return urlRequest
     }
-
+    
+    private static func handle<R: Request>(
+        _ result: Result<URLSessionSuccess, Error>,
+        _ request: R
+    ) -> Result<R.ResponseType, Error> {
+        result.flatMap { (result: URLSessionSuccess) -> Result<R.ResponseType, Error> in
+            do {
+                log(result: result, request: request)
+                return .success(try Coder.decode(result.data) as R.ResponseType)
+            } catch {
+                if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
+                    return .failure(errorResponse)
+                } else if (200...299).contains(result.response.statusCode) == false {
+                    return .failure(
+                        HttpError(errorCode: result.response.statusCode,
+                                  errorMessage: "Http \(result.response.statusCode) error"))
+                } else {
+                    return .failure(error)
+                }
+            }
+        }
+    }
+    
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
         adyenPrint("---- Request (/\(request.path)) ----")
-
+        
         if let body = urlRequest.httpBody {
             printAsJSON(body)
         }
         
         adyenPrint("---- Request base url (/\(request.path)) ----")
         adyenPrint(apiContext.environment.baseURL)
-
+        
         if let headers = urlRequest.allHTTPHeaderFields {
             adyenPrint("---- Request Headers (/\(request.path)) ----")
             adyenPrint(headers)
         }
-
+        
         if let queryParams = urlRequest.url?.queryParameters {
             adyenPrint("---- Request query (/\(request.path)) ----")
             adyenPrint(queryParams)
         }
-
+        
     }
-
-    private func handle<R: Request>(_ result: Result<URLSessionSuccess, Error>,
-                                    _ request: R,
-                                    completionHandler: @escaping CompletionHandler<R.ResponseType>) {
-        DispatchQueue.main.async {
-            self.requestCounter -= 1
+    
+    private static func log<R: Request>(result: URLSessionSuccess, request: R) {
+        if let path = result.response.url?.path {
+            adyenPrint("---- Response Headers (/\(path)) ----")
+            adyenPrint(result.response.allHeaderFields)
         }
-
-        switch result {
-        case let .success(result):
-            do {
-                adyenPrint("---- Response (/\(request.path)) ----")
-                printAsJSON(result.data)
-                
-                let response = try Coder.decode(result.data) as R.ResponseType
-                completionHandler(.success(response))
-            } catch {
-                if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
-                    completionHandler(.failure(errorResponse))
-                } else if (200...299).contains(result.response.statusCode) == false {
-                    completionHandler(.failure(HttpError(errorCode: result.response.statusCode,
-                                                         errorMessage: "Http \(result.response.statusCode) error")))
-                } else {
-                    completionHandler(.failure(error))
-                }
-            }
-        case let .failure(error):
-            completionHandler(.failure(error))
-        }
+        
+        adyenPrint("---- Response (/\(request.path)) ----")
+        printAsJSON(result.data)
     }
     
     /// :nodoc:
@@ -141,16 +162,6 @@ public final class APIClient: APIClientProtocol {
             components?.queryItems = queryParameters
         }
         return components?.url ?? url
-    }
-    
-    /// :nodoc:
-    private let urlSession: URLSession
-    
-    /// :nodoc:
-    private var requestCounter = 0 {
-        didSet {
-            UIApplication.shared.isNetworkActivityIndicatorVisible = self.requestCounter > 0
-        }
     }
     
     /// :nodoc:
@@ -169,7 +180,7 @@ public final class APIClient: APIClientProtocol {
     
 }
 
-internal func printAsJSON(_ data: Data) {
+private func printAsJSON(_ data: Data) {
     guard Logging.isEnabled else { return }
     do {
         let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])

@@ -77,5 +77,41 @@ class APIClientTests: XCTestCase {
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncValidCreateRequest() async throws {
+        let apiClientExpectation = expectation(description: "expect apiClient call back to be called.")
+        
+        let name = UUID().uuidString
+        let newUser = UserModel(id: Int.random(in: 0...1000),
+                                name: name,
+                                email: "\(name)@gmail.com",
+                                gender: .female,
+                                status: .active)
+        let validCreateRequest = CreateUsersRequest(userModel: newUser)
+        switch await apiClient.perform(validCreateRequest) {
+        case .success:
+            apiClientExpectation.fulfill()
+        case .failure:
+            XCTFail()
+        }
+        
+        await waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncInvalidCreateRequest() async throws {
+        let apiClientExpectation = expectation(description: "expect apiClient call back to be called.")
+        let invalidCreateRequest = InvalidCreateUsersRequest()
+        switch await apiClient.perform(invalidCreateRequest) {
+        case .success:
+            XCTFail()
+        case .failure(let error):
+            XCTAssertTrue(error is CreateUsersErrorResponse)
+            apiClientExpectation.fulfill()
+        }
+
+        await waitForExpectations(timeout: 10, handler: nil)
+    }
 
 }
