@@ -44,9 +44,16 @@ public final class APIClient: APIClientProtocol {
     /// Initializes the API client.
     ///
     /// - Parameters:
-    ///   - environment: The API environment.
-    public init(apiContext: AnyAPIContext) {
+    ///   - apiContext: The API context.
+    ///   - configuration: An optional `URLSessionConfiguration` to be used.
+    ///   If no value is provided - `URLSessionConfiguration.ephemereal` will be used.
+    public init(apiContext: AnyAPIContext, configuration: URLSessionConfiguration? = nil) {
         self.apiContext = apiContext
+        self.urlSession = URLSession(
+            configuration: configuration ?? Self.buildDefaultConfiguration(),
+            delegate: nil,
+            delegateQueue: .main
+        )
     }
     
     /// :nodoc:
@@ -137,24 +144,27 @@ public final class APIClient: APIClientProtocol {
     }
     
     /// :nodoc:
-    private lazy var urlSession: URLSession = {
-        let config = URLSessionConfiguration.ephemeral
-        config.urlCache = nil
-
-        if #available(iOS 13.0, *) {
-            config.tlsMinimumSupportedProtocolVersion = .TLSv12
-        } else {
-            config.tlsMinimumSupportedProtocol = .tlsProtocol12
-        }
-
-        return URLSession(configuration: config, delegate: nil, delegateQueue: .main)
-    }()
+    private let urlSession: URLSession
     
     /// :nodoc:
     private var requestCounter = 0 {
         didSet {
             UIApplication.shared.isNetworkActivityIndicatorVisible = self.requestCounter > 0
         }
+    }
+    
+    /// :nodoc:
+    private static func buildDefaultConfiguration() -> URLSessionConfiguration {
+        let config = URLSessionConfiguration.ephemeral
+        config.urlCache = nil
+        
+        if #available(iOS 13.0, *) {
+            config.tlsMinimumSupportedProtocolVersion = .TLSv12
+        } else {
+            config.tlsMinimumSupportedProtocol = .tlsProtocol12
+        }
+        
+        return config
     }
     
 }
