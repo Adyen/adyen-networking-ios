@@ -80,8 +80,6 @@ class APIClientTests: XCTestCase {
     
     @available(iOS 15.0.0, *)
     func testAsyncValidCreateRequest() async throws {
-        let apiClientExpectation = expectation(description: "expect apiClient call back to be called.")
-        
         let name = UUID().uuidString
         let newUser = UserModel(id: Int.random(in: 0...1000),
                                 name: name,
@@ -91,27 +89,21 @@ class APIClientTests: XCTestCase {
         let validCreateRequest = CreateUsersRequest(userModel: newUser)
         switch await apiClient.perform(validCreateRequest) {
         case .success:
-            apiClientExpectation.fulfill()
+            break
         case .failure:
             XCTFail()
         }
-        
-        await waitForExpectations(timeout: 10, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
     func testAsyncInvalidCreateRequest() async throws {
-        let apiClientExpectation = expectation(description: "expect apiClient call back to be called.")
         let invalidCreateRequest = InvalidCreateUsersRequest()
         switch await apiClient.perform(invalidCreateRequest) {
         case .success:
             XCTFail()
         case .failure(let error):
             XCTAssertTrue(error is CreateUsersErrorResponse)
-            apiClientExpectation.fulfill()
         }
-
-        await waitForExpectations(timeout: 10, handler: nil)
     }
 
 }
