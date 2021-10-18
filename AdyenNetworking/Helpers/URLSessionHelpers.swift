@@ -26,7 +26,7 @@ internal extension URLSession {
             } else if let data = data, let response = response as? HTTPURLResponse {
                 completion(.success(URLSessionSuccess(data: data, response: response)))
             } else {
-                fatalError("Invalid response.")
+                completion(.failure(APIClientError.invalidResponse))
             }
         }
     }

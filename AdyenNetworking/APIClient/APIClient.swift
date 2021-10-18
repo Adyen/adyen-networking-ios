@@ -8,6 +8,18 @@ import Foundation
 import UIKit
 
 /// :nodoc:
+/// Describes possible `APIClient` errors
+public enum APIClientError: LocalizedError {
+    
+    case invalidResponse
+    
+    var errorDescription: String {
+        return "Invalid Response"
+    }
+    
+}
+
+/// :nodoc:
 /// Describes any API Client.
 public protocol APIClientProtocol: AnyObject {
     
@@ -65,11 +77,11 @@ public final class APIClient: APIClientProtocol {
         do {
             let result = try await urlSession.data(for: try buildUrlRequest(from: request))
             
-            guard let httpResponse = result.1 as? HTTPURLResponse else {
-                fatalError("Invalid response.")
+            if let httpResponse = result.1 as? HTTPURLResponse {
+                return Self.handle(.success(.init(data: result.0, response: httpResponse)), request)
+            } else {
+                return .failure(APIClientError.invalidResponse)
             }
-            
-            return Self.handle(.success(.init(data: result.0, response: httpResponse)), request)
         } catch {
             return .failure(error)
         }
