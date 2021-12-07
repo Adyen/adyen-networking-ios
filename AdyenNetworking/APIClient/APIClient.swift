@@ -75,10 +75,11 @@ public final class APIClient: APIClientProtocol {
     @available(iOS 15.0.0, *)
     public func perform<R: Request>(_ request: R) async -> Result<R.ResponseType, Error> {
         do {
-            let result = try await urlSession.data(for: try buildUrlRequest(from: request))
+            let result = try await urlSession
+                .data(for: try buildUrlRequest(from: request)) as (data: Data, response: URLResponse)
             
-            if let httpResponse = result.1 as? HTTPURLResponse {
-                return Self.handle(.success(.init(data: result.0, response: httpResponse)), request)
+            if let httpResponse = result.response as? HTTPURLResponse {
+                return Self.handle(.success(.init(data: result.data, response: httpResponse)), request)
             } else {
                 return .failure(APIClientError.invalidResponse)
             }
