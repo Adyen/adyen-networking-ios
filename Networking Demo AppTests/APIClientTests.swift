@@ -77,5 +77,33 @@ class APIClientTests: XCTestCase {
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncValidCreateRequest() async throws {
+        let name = UUID().uuidString
+        let newUser = UserModel(id: Int.random(in: 0...1000),
+                                name: name,
+                                email: "\(name)@gmail.com",
+                                gender: .female,
+                                status: .active)
+        let validCreateRequest = CreateUsersRequest(userModel: newUser)
+        switch await apiClient.perform(validCreateRequest) {
+        case .success:
+            break
+        case .failure:
+            XCTFail()
+        }
+    }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncInvalidCreateRequest() async throws {
+        let invalidCreateRequest = InvalidCreateUsersRequest()
+        switch await apiClient.perform(invalidCreateRequest) {
+        case .success:
+            XCTFail()
+        case .failure(let error):
+            XCTAssertTrue(error is CreateUsersErrorResponse)
+        }
+    }
 
 }
