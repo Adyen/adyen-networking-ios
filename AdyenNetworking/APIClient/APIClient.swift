@@ -33,6 +33,17 @@ public protocol APIClientProtocol: AnyObject {
 }
 
 /// :nodoc:
+/// Describes any async API Client.
+@available(iOS 15.0.0, *)
+public protocol AsyncAPIClientProtocol: AnyObject {
+    
+    /// :nodoc:
+    /// Performs the API request asynchronously.
+    func perform<R: Request>(_ request: R) async -> Result<R.ResponseType, Error>
+    
+}
+
+/// :nodoc:
 extension APIClientProtocol {
 
     /// :nodoc:
@@ -43,7 +54,7 @@ extension APIClientProtocol {
 
 /// :nodoc:
 /// The Basic API Client.
-public final class APIClient: APIClientProtocol {
+public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     
     /// :nodoc:
     public typealias CompletionHandler<T> = (Result<T, Error>) -> Void
