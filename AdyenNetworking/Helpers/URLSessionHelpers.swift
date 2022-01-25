@@ -10,6 +10,16 @@ internal struct URLSessionSuccess {
     internal let data: Data
     
     internal let response: HTTPURLResponse
+    
+    internal init(data: Data?, response: URLResponse?) throws {
+        guard let data = data,
+              let httpResponse = response as? HTTPURLResponse else {
+                  throw APIClientError.invalidResponse
+        }
+        
+        self.data = data
+        self.response = httpResponse
+    }
 }
 
 /// :nodoc:
@@ -23,10 +33,8 @@ internal extension URLSession {
         dataTask(with: urlRequest) { data, response, error in
             if let error = error {
                 completion(.failure(error))
-            } else if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success(URLSessionSuccess(data: data, response: response)))
             } else {
-                completion(.failure(APIClientError.invalidResponse))
+                completion(.init(catching: { try URLSessionSuccess(data: data, response: response) }))
             }
         }
     }
