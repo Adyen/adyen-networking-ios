@@ -87,23 +87,16 @@ class APIClientTests: XCTestCase {
                                 gender: .female,
                                 status: .active)
         let validCreateRequest = CreateUsersRequest(userModel: newUser)
-        switch await apiClient.perform(validCreateRequest) {
-        case .success:
-            break
-        case .failure:
-            XCTFail()
-        }
+        _ = try await apiClient.perform(validCreateRequest)
     }
     
     @available(iOS 15.0.0, *)
     func testAsyncInvalidCreateRequest() async throws {
         let invalidCreateRequest = InvalidCreateUsersRequest()
-        switch await apiClient.perform(invalidCreateRequest) {
-        case .success:
-            XCTFail()
-        case .failure(let error):
-            XCTAssertTrue(error is CreateUsersErrorResponse)
-        }
+        do {
+            _ = try await apiClient.perform(invalidCreateRequest)
+            XCTFail("Expected an error to be thrown")
+        }  catch { }
     }
 
 }

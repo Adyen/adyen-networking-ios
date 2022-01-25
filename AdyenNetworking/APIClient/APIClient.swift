@@ -33,6 +33,17 @@ public protocol APIClientProtocol: AnyObject {
 }
 
 /// :nodoc:
+/// Describes any async API Client.
+@available(iOS 15.0.0, *)
+public protocol AsyncAPIClientProtocol: AnyObject {
+    
+    /// :nodoc:
+    /// Performs the API request asynchronously.
+    func perform<R: Request>(_ request: R) async throws -> R.ResponseType
+    
+}
+
+/// :nodoc:
 extension APIClientProtocol {
 
     /// :nodoc:
@@ -43,7 +54,7 @@ extension APIClientProtocol {
 
 /// :nodoc:
 /// The Basic API Client.
-public final class APIClient: APIClientProtocol {
+public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     
     /// :nodoc:
     public typealias CompletionHandler<T> = (Result<T, Error>) -> Void
@@ -73,26 +84,19 @@ public final class APIClient: APIClientProtocol {
     
     /// :nodoc:
     @available(iOS 15.0.0, *)
-    public func perform<R: Request>(_ request: R) async -> Result<R.ResponseType, Error> {
-        do {
-            let result = try await urlSession
+    public func perform<R: Request>(_ request: R) async throws -> R.ResponseType {
+        let result = try await urlSession
                 .data(for: try buildUrlRequest(from: request)) as (data: Data, response: URLResponse)
-            
-            if let httpResponse = result.response as? HTTPURLResponse {
-                return Self.handle(.success(.init(data: result.data, response: httpResponse)), request)
-            } else {
-                return .failure(APIClientError.invalidResponse)
-            }
-        } catch {
-            return .failure(error)
-        }
+        
+        return try Self.handle(.init(data: result.data, response: result.response), request)
     }
     
     /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         do {
             urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
-                completionHandler(Self.handle(result, request))
+                let result = result.flatMap { response in .init(catching: { try Self.handle(response, request) }) }
+                completionHandler(result)
             }.resume()
         } catch {
             completionHandler(.failure(error))
@@ -115,23 +119,22 @@ public final class APIClient: APIClientProtocol {
     }
     
     private static func handle<R: Request>(
-        _ result: Result<URLSessionSuccess, Error>,
+        _ result: URLSessionSuccess,
         _ request: R
-    ) -> Result<R.ResponseType, Error> {
-        result.flatMap { (result: URLSessionSuccess) -> Result<R.ResponseType, Error> in
-            do {
-                log(result: result, request: request)
-                return .success(try Coder.decode(result.data) as R.ResponseType)
-            } catch {
-                if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
-                    return .failure(errorResponse)
-                } else if (200...299).contains(result.response.statusCode) == false {
-                    return .failure(
-                        HttpError(errorCode: result.response.statusCode,
-                                  errorMessage: "Http \(result.response.statusCode) error"))
-                } else {
-                    return .failure(error)
-                }
+    ) throws -> R.ResponseType {
+        do {
+            log(result: result, request: request)
+            return try Coder.decode(result.data) as R.ResponseType
+        } catch {
+            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
+                throw errorResponse
+            } else if (200...299).contains(result.response.statusCode) == false {
+                throw HttpError(
+                    errorCode: result.response.statusCode,
+                    errorMessage: "Http \(result.response.statusCode) error"
+                )
+            } else {
+                throw error
             }
         }
     }
