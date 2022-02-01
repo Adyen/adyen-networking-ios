@@ -162,6 +162,9 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     }
     
     private static func log<R: Request>(result: URLSessionSuccess, request: R) {
+        adyenPrint("---- Response Code (/\(request.path)) ----")
+        adyenPrint(result.response.statusCode)
+        
         if let headers = result.response.allHeaderFields as? [String: String] {
             adyenPrint("---- Response Headers (/\(request.path)) ----")
             adyenPrint(headers)
