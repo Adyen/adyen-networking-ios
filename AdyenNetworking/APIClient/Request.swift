@@ -22,7 +22,7 @@ public protocol Request: Encodable {
     
     /// :nodoc:
     /// The type of the error response.
-    associatedtype ErrorResponseType: Error & Decodable
+    associatedtype ErrorResponseType: ErrorResponse
     
     /// :nodoc:
     /// The request path.
@@ -49,3 +49,7 @@ public protocol Request: Encodable {
 /// :nodoc:
 /// Represents an API response.
 public protocol Response: Decodable { }
+
+/// :nodoc:
+/// Represents an API response.
+public typealias ErrorResponse = Error & Decodable

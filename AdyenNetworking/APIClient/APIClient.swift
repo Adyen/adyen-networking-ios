@@ -8,18 +8,6 @@ import Foundation
 import UIKit
 
 /// :nodoc:
-/// Describes possible `APIClient` errors
-public enum APIClientError: LocalizedError {
-    
-    case invalidResponse
-    
-    var errorDescription: String {
-        return "Invalid Response"
-    }
-    
-}
-
-/// :nodoc:
 /// Describes any API Client.
 public protocol APIClientProtocol: AnyObject {
     
@@ -37,9 +25,12 @@ public protocol APIClientProtocol: AnyObject {
 @available(iOS 15.0.0, *)
 public protocol AsyncAPIClientProtocol: AnyObject {
     
-    /// :nodoc:
     /// Performs the API request asynchronously.
-    func perform<R: Request>(_ request: R) async throws -> R.ResponseType
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``HTTPError`` in case of an HTTP error.
+    /// - Throws: ``ParsingError`` in case of an error during response decoding.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    func perform<R: Request>(_ request: R) async throws -> HTTPResponse<R.ResponseType>
     
 }
 
@@ -66,7 +57,6 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     /// :nodoc:
     private let urlSession: URLSession
     
-    /// :nodoc:
     /// Initializes the API client.
     ///
     /// - Parameters:
@@ -82,20 +72,39 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         )
     }
     
-    /// :nodoc:
+    /// Performs the API request asynchronously.
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``HTTPError`` in case of an HTTP error.
+    /// - Throws: ``ParsingError`` in case of an error during response decoding.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     @available(iOS 15.0.0, *)
-    public func perform<R: Request>(_ request: R) async throws -> R.ResponseType {
+    public func perform<R>(
+        _ request: R
+    ) async throws -> HTTPResponse<R.ResponseType> where R : Request {
         let result = try await urlSession
-                .data(for: try buildUrlRequest(from: request)) as (data: Data, response: URLResponse)
-        
-        return try Self.handle(.init(data: result.data, response: result.response), request)
+            .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
+        let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
+        return try Self.handle(httpResult, request)
     }
     
     /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         do {
             urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
-                let result = result.flatMap { response in .init(catching: { try Self.handle(response, request) }) }
+                let result = result
+                    .flatMap { response in .init(catching: { try Self.handle(response, request) }) }
+                    .map(\.response)
+                    .mapError { (error) -> Error in
+                        switch error {
+                        case let httpError as HTTPError<R.ErrorResponseType>:
+                            return httpError.errorResponse
+                        case let parsingError as ParsingError:
+                            return parsingError.underlyingError
+                        default:
+                            return error
+                        }
+                    }
+                
                 completionHandler(result)
             }.resume()
         } catch {
@@ -121,21 +130,30 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     private static func handle<R: Request>(
         _ result: URLSessionSuccess,
         _ request: R
-    ) throws -> R.ResponseType {
+    ) throws -> HTTPResponse<R.ResponseType> {
+        log(result: result, request: request)
         do {
-            log(result: result, request: request)
-            return try Coder.decode(result.data) as R.ResponseType
-        } catch {
-            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
-                throw errorResponse
-            } else if (200...299).contains(result.response.statusCode) == false {
-                throw HttpError(
-                    errorCode: result.response.statusCode,
-                    errorMessage: "Http \(result.response.statusCode) error"
+            if (200...299).contains(result.statusCode) {
+                return HTTPResponse(
+                    headers: result.headers,
+                    statusCode: result.statusCode,
+                    response: try Coder.decode(result.data) as R.ResponseType
                 )
             } else {
-                throw error
+                throw HTTPError(
+                    headers: result.headers,
+                    statusCode: result.statusCode,
+                    errorResponse: try Coder.decode(result.data) as R.ErrorResponseType
+                )
             }
+        } catch let decodingError as DecodingError {
+            throw ParsingError(
+                headers: result.headers,
+                statusCode: result.statusCode,
+                underlyingError: decodingError
+            )
+        } catch {
+            throw error
         }
     }
     
@@ -163,12 +181,10 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     
     private static func log<R: Request>(result: URLSessionSuccess, request: R) {
         adyenPrint("---- Response Code (/\(request.path)) ----")
-        adyenPrint(result.response.statusCode)
+        adyenPrint(result.statusCode)
         
-        if let headers = result.response.allHeaderFields as? [String: String] {
-            adyenPrint("---- Response Headers (/\(request.path)) ----")
-            adyenPrint(headers)
-        }
+        adyenPrint("---- Response Headers (/\(request.path)) ----")
+        adyenPrint(result.headers)
         
         adyenPrint("---- Response (/\(request.path)) ----")
         printAsJSON(result.data)
