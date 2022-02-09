@@ -1,8 +1,7 @@
 //
-//  APIError.swift
-//  AdyenNetworking
+// Copyright (c) 2022 Adyen N.V.
 //
-//  Created by Mohamed Eldoheiri on 7/27/21.
+// This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation
