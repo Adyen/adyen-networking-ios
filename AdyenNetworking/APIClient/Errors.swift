@@ -18,20 +18,6 @@ public enum APIClientError: LocalizedError {
     
 }
 
-/// Represents an HTTP error object.
-public struct HTTPError<E: ErrorResponse>: LocalizedError {
-    
-    /// HTTP Headers.
-    public let headers: [String: String]
-    
-    /// HTTP Status Code.
-    public let statusCode: Int
-    
-    /// Error response body.
-    public let errorResponse: E
-    
-}
-
 /// Represents a parsing error object
 public struct ParsingError: LocalizedError {
     

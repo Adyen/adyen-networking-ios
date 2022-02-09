@@ -46,10 +46,8 @@ public protocol Request: Encodable {
     
 }
 
-/// :nodoc:
 /// Represents an API response.
 public protocol Response: Decodable { }
 
-/// :nodoc:
-/// Represents an API response.
-public typealias ErrorResponse = Error & Decodable
+/// Represents an API Error response.
+public protocol ErrorResponse: Response, Error { }

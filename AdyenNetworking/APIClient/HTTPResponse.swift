@@ -18,3 +18,7 @@ public struct HTTPResponse<R: Response> {
     public let responseBody: R
     
 }
+
+typealias HTTPErrorResponse<E: ErrorResponse> = HTTPResponse<E>
+
+extension HTTPResponse: Error where R: Error { }

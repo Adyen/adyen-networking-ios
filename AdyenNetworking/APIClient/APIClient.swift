@@ -27,7 +27,7 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     
     /// Performs the API request asynchronously.
     /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``HTTPError`` in case of an HTTP error.
+    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``ParsingError`` in case of an error during response decoding.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     func perform<R: Request>(_ request: R) async throws -> HTTPResponse<R.ResponseType>
@@ -74,7 +74,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     
     /// Performs the API request asynchronously.
     /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``HTTPError`` in case of an HTTP error.
+    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``ParsingError`` in case of an error during response decoding.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     @available(iOS 15.0.0, *)
@@ -140,10 +140,10 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                     responseBody: try Coder.decode(result.data) as R.ResponseType
                 )
             } else {
-                throw HTTPError(
+                throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    errorResponse: try Coder.decode(result.data) as R.ErrorResponseType
+                    responseBody: try Coder.decode(result.data) as R.ErrorResponseType
                 )
             }
         } catch let decodingError as DecodingError {
