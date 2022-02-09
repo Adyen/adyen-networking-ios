@@ -51,3 +51,5 @@ public protocol Response: Decodable { }
 
 /// Represents an API Error response.
 public protocol ErrorResponse: Response, Error { }
+
+public struct EmptyErrorResponse: ErrorResponse { }

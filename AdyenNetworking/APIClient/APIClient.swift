@@ -133,27 +133,28 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     ) throws -> HTTPResponse<R.ResponseType> {
         log(result: result, request: request)
         do {
-            if (200...299).contains(result.statusCode) {
-                return HTTPResponse(
-                    headers: result.headers,
-                    statusCode: result.statusCode,
-                    responseBody: try Coder.decode(result.data) as R.ResponseType
-                )
-            } else {
+            return HTTPResponse(
+                headers: result.headers,
+                statusCode: result.statusCode,
+                responseBody: try Coder.decode(result.data) as R.ResponseType
+            )
+        } catch {
+            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data),
+               (200...299).contains(result.statusCode) {
                 throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    responseBody: try Coder.decode(result.data) as R.ErrorResponseType
+                    responseBody: errorResponse
                 )
+            } else if let decodingError = error as? DecodingError {
+                throw ParsingError(
+                    headers: result.headers,
+                    statusCode: result.statusCode,
+                    underlyingError: decodingError
+                )
+            } else {
+                throw error
             }
-        } catch let decodingError as DecodingError {
-            throw ParsingError(
-                headers: result.headers,
-                statusCode: result.statusCode,
-                underlyingError: decodingError
-            )
-        } catch {
-            throw error
         }
     }
     
