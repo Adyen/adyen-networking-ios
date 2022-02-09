@@ -93,11 +93,11 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
             urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
                 let result = result
                     .flatMap { response in .init(catching: { try Self.handle(response, request) }) }
-                    .map(\.response)
+                    .map(\.responseBody)
                     .mapError { (error) -> Error in
                         switch error {
-                        case let httpError as HTTPError<R.ErrorResponseType>:
-                            return httpError.errorResponse
+                        case let httpError as HTTPErrorResponse<R.ErrorResponseType>:
+                            return httpError.responseBody
                         case let parsingError as ParsingError:
                             return parsingError.underlyingError
                         default:
@@ -137,7 +137,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                 return HTTPResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    response: try Coder.decode(result.data) as R.ResponseType
+                    responseBody: try Coder.decode(result.data) as R.ResponseType
                 )
             } else {
                 throw HTTPError(

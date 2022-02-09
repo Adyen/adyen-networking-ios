@@ -8,10 +8,13 @@ import Foundation
 
 public struct HTTPResponse<R: Response> {
     
+    /// HTTP Headers.
     public let headers: [String: String]
     
+    /// HTTP Status Code.
     public let statusCode: Int
     
-    public let response: R
+    /// Response body
+    public let responseBody: R
     
 }
