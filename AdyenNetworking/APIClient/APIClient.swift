@@ -139,8 +139,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                 responseBody: try Coder.decode(result.data) as R.ResponseType
             )
         } catch {
-            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data),
-               (200...299).contains(result.statusCode) {
+            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
                 throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
