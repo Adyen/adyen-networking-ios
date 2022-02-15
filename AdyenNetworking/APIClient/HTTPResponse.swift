@@ -19,6 +19,6 @@ public struct HTTPResponse<R: Response> {
     
 }
 
-typealias HTTPErrorResponse<E: ErrorResponse> = HTTPResponse<E>
+public typealias HTTPErrorResponse<E: ErrorResponse> = HTTPResponse<E>
 
 extension HTTPResponse: Error where R: Error { }
