@@ -8,7 +8,7 @@
 import Foundation
 import AdyenNetworking
 
-internal struct GetUsersErrorResponse: Decodable, Error {
+internal struct GetUsersErrorResponse: ErrorResponse {
     internal struct Data: Decodable {
         let message: String?
     }

@@ -9,16 +9,20 @@ import Foundation
 internal struct URLSessionSuccess {
     internal let data: Data
     
-    internal let response: HTTPURLResponse
+    internal let statusCode: Int
+    
+    internal let headers: [String: String]
     
     internal init(data: Data?, response: URLResponse?) throws {
         guard let data = data,
-              let httpResponse = response as? HTTPURLResponse else {
+              let httpResponse = response as? HTTPURLResponse,
+              let headers = httpResponse.allHeaderFields as? [String: String] else {
                   throw APIClientError.invalidResponse
         }
         
         self.data = data
-        self.response = httpResponse
+        self.headers = headers
+        self.statusCode = httpResponse.statusCode
     }
 }
 

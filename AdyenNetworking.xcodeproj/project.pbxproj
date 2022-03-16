@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */; };
 		F913B3AD26B1854F008F6CD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3AC26B1854F008F6CD2 /* AppDelegate.swift */; };
 		F913B3AF26B1854F008F6CD2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3AE26B1854F008F6CD2 /* SceneDelegate.swift */; };
 		F913B3B126B1854F008F6CD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3B026B1854F008F6CD2 /* ViewController.swift */; };
@@ -35,7 +36,7 @@
 		F938999E26B0061C0065561F /* Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938999D26B0061C0065561F /* Coder.swift */; };
 		F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A126B006610065561F /* URLSessionHelpers.swift */; };
 		F93899A526B006900065561F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A326B006900065561F /* Logging.swift */; };
-		F93899A826B007730065561F /* HttpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* HttpError.swift */; };
+		F93899A826B007730065561F /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* Errors.swift */; };
 		F93899AA26B008080065561F /* URLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A926B008080065561F /* URLHelpers.swift */; };
 		F9FCFF4426C6AACD00540FE1 /* InvalidCreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */; };
 		F9FCFF4826CB96E800540FE1 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */; };
@@ -80,6 +81,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
 		F913B3AA26B1854F008F6CD2 /* Networking Demo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Networking Demo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F913B3AC26B1854F008F6CD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F913B3AE26B1854F008F6CD2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -113,7 +115,7 @@
 		F938999D26B0061C0065561F /* Coder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coder.swift; sourceTree = "<group>"; };
 		F93899A126B006610065561F /* URLSessionHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionHelpers.swift; sourceTree = "<group>"; };
 		F93899A326B006900065561F /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
-		F93899A726B007730065561F /* HttpError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpError.swift; sourceTree = "<group>"; };
+		F93899A726B007730065561F /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		F93899A926B008080065561F /* URLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelpers.swift; sourceTree = "<group>"; };
 		F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvalidCreateUsersRequest.swift; sourceTree = "<group>"; };
 		F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
@@ -261,6 +263,8 @@
 				F938999926B005D70065561F /* AnyAPIContext.swift */,
 				F938999A26B005D70065561F /* AnyAPIEnvironment.swift */,
 				F938999726B005B00065561F /* Request.swift */,
+				5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */,
+				F93899A726B007730065561F /* Errors.swift */,
 				F938998B26B0059E0065561F /* APIClient.swift */,
 				F938998E26B0059E0065561F /* BackoffScheduler.swift */,
 				F938998926B0059E0065561F /* RetryAPIClient.swift */,
@@ -268,7 +272,6 @@
 				F938998C26B0059E0065561F /* Scheduler.swift */,
 				F938998A26B0059E0065561F /* SimpleScheduler.swift */,
 				F938998F26B0059E0065561F /* UniqueAssetAPIClient.swift */,
-				F93899A726B007730065561F /* HttpError.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -491,7 +494,8 @@
 				F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */,
 				F93899AA26B008080065561F /* URLHelpers.swift in Sources */,
 				F93899A526B006900065561F /* Logging.swift in Sources */,
-				F93899A826B007730065561F /* HttpError.swift in Sources */,
+				5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */,
+				F93899A826B007730065561F /* Errors.swift in Sources */,
 				F938999E26B0061C0065561F /* Coder.swift in Sources */,
 				F938999C26B005D70065561F /* AnyAPIEnvironment.swift in Sources */,
 			);
