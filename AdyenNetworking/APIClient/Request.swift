@@ -10,6 +10,18 @@ import Foundation
 public enum HTTPMethod: String {
     case post = "POST"
     case get = "GET"
+    case patch = "PATCH"
+    case put = "PUT"
+    case delete = "DELETE"
+    
+    internal var hasBody: Bool {
+        switch self {
+        case .post, .put, .patch:
+            return true
+        case .get, .delete:
+            return false
+        }
+    }
 }
 
 /// :nodoc:

@@ -118,7 +118,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         var urlRequest = URLRequest(url: add(queryParameters: request.queryParameters + apiContext.queryParameters, to: url))
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers.merging(apiContext.headers, uniquingKeysWith: { key1, _ in key1 })
-        if request.method == .post {
+        if request.method.hasBody {
             urlRequest.httpBody = try Coder.encode(request)
         }
         
