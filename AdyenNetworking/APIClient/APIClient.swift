@@ -67,7 +67,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     public init(
         apiContext: AnyAPIContext,
         configuration: URLSessionConfiguration? = nil,
-        delegate: URLSessionDelegate?
+        delegate: URLSessionDelegate? = nil
     ) {
         self.apiContext = apiContext
         self.urlSession = URLSession(
