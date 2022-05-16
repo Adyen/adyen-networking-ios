@@ -63,11 +63,16 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     ///   - apiContext: The API context.
     ///   - configuration: An optional `URLSessionConfiguration` to be used.
     ///   If no value is provided - `URLSessionConfiguration.ephemereal` will be used.
-    public init(apiContext: AnyAPIContext, configuration: URLSessionConfiguration? = nil) {
+    ///   - delegate: An optional `URLSessionDelegate` to handle the session events.
+    public init(
+        apiContext: AnyAPIContext,
+        configuration: URLSessionConfiguration? = nil,
+        delegate: URLSessionDelegate?
+    ) {
         self.apiContext = apiContext
         self.urlSession = URLSession(
             configuration: configuration ?? Self.buildDefaultConfiguration(),
-            delegate: nil,
+            delegate: delegate,
             delegateQueue: .main
         )
     }
