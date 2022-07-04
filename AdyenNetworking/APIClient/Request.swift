@@ -61,6 +61,9 @@ public protocol Request: Encodable {
 /// Represents an API response.
 public protocol Response: Decodable { }
 
+/// Represents an empty API response.
+public struct EmptyResponse: Response {}
+
 /// Represents an API Error response.
 public protocol ErrorResponse: Response, Error { }
 
