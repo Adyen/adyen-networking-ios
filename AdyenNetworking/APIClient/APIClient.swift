@@ -133,11 +133,19 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     ) throws -> HTTPResponse<R.ResponseType> {
         log(result: result, request: request)
         do {
-            return HTTPResponse(
-                headers: result.headers,
-                statusCode: result.statusCode,
-                responseBody: try Coder.decode(result.data) as R.ResponseType
-            )
+            if result.data.isEmpty, let emptyResponse = EmptyResponse() as? R.ResponseType {
+                return HTTPResponse(
+                    headers: result.headers,
+                    statusCode: result.statusCode,
+                    responseBody: emptyResponse
+                )
+            } else {
+                return HTTPResponse(
+                    headers: result.headers,
+                    statusCode: result.statusCode,
+                    responseBody: try Coder.decode(result.data) as R.ResponseType
+                )
+            }
         } catch {
             if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
                 throw HTTPErrorResponse(
