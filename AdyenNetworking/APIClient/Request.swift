@@ -62,7 +62,10 @@ public protocol Request: Encodable {
 public protocol Response: Decodable { }
 
 /// Represents an empty API response.
-public struct EmptyResponse: Response {}
+public struct EmptyResponse: Response {
+    
+    public init() { }
+}
 
 /// Represents an API Error response.
 public protocol ErrorResponse: Response, Error { }
