@@ -98,7 +98,8 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         do {
-            urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
+            urlSession.dataTask(with: try buildUrlRequest(from: request)) { [weak self] result in
+                guard let self = self else { return }
                 let result = result
                     .flatMap { response in .init(catching: { try self.handle(response, request) }) }
                     .map(\.responseBody)
@@ -228,7 +229,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         
         return config
     }
-    
+
 }
 
 private func printAsJSON(_ data: Data) {
