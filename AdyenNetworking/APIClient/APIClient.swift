@@ -57,19 +57,28 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     /// :nodoc:
     private let urlSession: URLSession
     
+    /// Encoding and Decoding
+    private let coder: AnyCoder
+
     /// Initializes the API client.
     ///
     /// - Parameters:
     ///   - apiContext: The API context.
     ///   - configuration: An optional `URLSessionConfiguration` to be used.
     ///   If no value is provided - `URLSessionConfiguration.ephemereal` will be used.
-    public init(apiContext: AnyAPIContext, configuration: URLSessionConfiguration? = nil) {
+    ///   - coder: The coder used for encoding request's body and parsing response's body
+    public init(
+        apiContext: AnyAPIContext,
+        configuration: URLSessionConfiguration? = nil,
+        coder: AnyCoder = Coder()
+    ) {
         self.apiContext = apiContext
         self.urlSession = URLSession(
             configuration: configuration ?? Self.buildDefaultConfiguration(),
             delegate: nil,
             delegateQueue: .main
         )
+        self.coder = coder
     }
     
     /// Performs the API request asynchronously.
@@ -84,15 +93,16 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         let result = try await urlSession
             .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
         let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
-        return try Self.handle(httpResult, request)
+        return try handle(httpResult, request)
     }
     
     /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         do {
-            urlSession.dataTask(with: try buildUrlRequest(from: request)) { result in
+            urlSession.dataTask(with: try buildUrlRequest(from: request)) { [weak self] result in
+                guard let self = self else { return }
                 let result = result
-                    .flatMap { response in .init(catching: { try Self.handle(response, request) }) }
+                    .flatMap { response in .init(catching: { try self.handle(response, request) }) }
                     .map(\.responseBody)
                     .mapError { (error) -> Error in
                         switch error {
@@ -119,7 +129,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers.merging(apiContext.headers, uniquingKeysWith: { key1, _ in key1 })
         if request.method.hasBody {
-            urlRequest.httpBody = try Coder.encode(request)
+            urlRequest.httpBody = try coder.encode(request)
         }
         
         log(urlRequest: urlRequest, request: request)
@@ -127,7 +137,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         return urlRequest
     }
     
-    private static func handle<R: Request>(
+    private func handle<R: Request>(
         _ result: URLSessionSuccess,
         _ request: R
     ) throws -> HTTPResponse<R.ResponseType> {
@@ -143,11 +153,11 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                 return HTTPResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    responseBody: try Coder.decode(result.data) as R.ResponseType
+                    responseBody: try coder.decode(R.ResponseType.self, from: result.data)
                 )
             }
         } catch {
-            if let errorResponse: R.ErrorResponseType = try? Coder.decode(result.data) {
+            if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: result.data){
                 throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
@@ -187,7 +197,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         
     }
     
-    private static func log<R: Request>(result: URLSessionSuccess, request: R) {
+    private func log<R: Request>(result: URLSessionSuccess, request: R) {
         adyenPrint("---- Response Code (/\(request.path)) ----")
         adyenPrint(result.statusCode)
         
@@ -220,7 +230,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         
         return config
     }
-    
+
 }
 
 private func printAsJSON(_ data: Data) {
