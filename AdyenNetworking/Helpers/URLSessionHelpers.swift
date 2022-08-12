@@ -11,12 +11,12 @@ internal struct URLSessionSuccess {
     
     internal let statusCode: Int
     
-    internal let headers: [String: Any]
+    internal let headers: [String: String]
     
     internal init(data: Data?, response: URLResponse?) throws {
         guard let data = data,
               let httpResponse = response as? HTTPURLResponse,
-              let headers = httpResponse.allHeaderFields as? [String: Any] else {
+              let headers = httpResponse.allHeaderFields as? [String: String] else {
                   throw APIClientError.invalidResponse
         }
         

@@ -21,7 +21,7 @@ public enum APIClientError: LocalizedError {
 public struct ParsingError: LocalizedError {
     
     /// HTTP Headers.
-    public let headers: [String: Any]
+    public let headers: [String: String]
     
     /// HTTP Status Code.
     public let statusCode: Int

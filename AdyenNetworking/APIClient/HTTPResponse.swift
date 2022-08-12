@@ -9,7 +9,7 @@ import Foundation
 public struct HTTPResponse<R: Response> {
     
     /// HTTP Headers.
-    public let headers: [String: Any]
+    public let headers: [String: String]
     
     /// HTTP Status Code.
     public let statusCode: Int
