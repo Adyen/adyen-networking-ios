@@ -179,7 +179,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         adyenPrint("---- Request (/\(request.path)) ----")
         
         if let body = urlRequest.httpBody {
-            printAsJSON(body)
+            adyenPrintAsJSON(body)
         }
         
         adyenPrint("---- Request base url (/\(request.path)) ----")
@@ -187,12 +187,12 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         
         if let headers = urlRequest.allHTTPHeaderFields {
             adyenPrint("---- Request Headers (/\(request.path)) ----")
-            adyenPrint(headers)
+            adyenPrintAsJSON(headers)
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
             adyenPrint("---- Request query (/\(request.path)) ----")
-            adyenPrint(queryParams)
+            adyenPrintAsJSON(queryParams)
         }
         
     }
@@ -202,10 +202,10 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         adyenPrint(result.statusCode)
         
         adyenPrint("---- Response Headers (/\(request.path)) ----")
-        adyenPrint(result.headers)
+        adyenPrintAsJSON(result.headers)
         
         adyenPrint("---- Response (/\(request.path)) ----")
-        printAsJSON(result.data)
+        adyenPrintAsJSON(result.data)
     }
     
     /// :nodoc:
@@ -231,19 +231,4 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         return config
     }
 
-}
-
-private func printAsJSON(_ data: Data) {
-    guard Logging.isEnabled else { return }
-    do {
-        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
-        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-
-        adyenPrint(jsonString)
-    } catch {
-        if let string = String(data: data, encoding: .utf8) {
-            adyenPrint(string)
-        }
-    }
 }
