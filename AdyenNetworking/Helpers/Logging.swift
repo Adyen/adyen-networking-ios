@@ -5,6 +5,7 @@
 //
 
 import func Darwin.fputs
+import Foundation
 
 /// Provides control over SDK logging.
 public enum Logging {
