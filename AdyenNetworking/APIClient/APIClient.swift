@@ -66,16 +66,18 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
     ///   - apiContext: The API context.
     ///   - configuration: An optional `URLSessionConfiguration` to be used.
     ///   If no value is provided - `URLSessionConfiguration.ephemereal` will be used.
-    ///   - coder: The coder used for encoding request's body and parsing response's body
+    ///   - coder: The coder used for encoding request's body and parsing response's body.
+    ///   - urlSessionDelegate: The delegate used for handling session-level events.
     public init(
         apiContext: AnyAPIContext,
         configuration: URLSessionConfiguration? = nil,
-        coder: AnyCoder = Coder()
+        coder: AnyCoder = Coder(),
+        urlSessionDelegate: URLSessionDelegate? = nil
     ) {
         self.apiContext = apiContext
         self.urlSession = URLSession(
             configuration: configuration ?? Self.buildDefaultConfiguration(),
-            delegate: nil,
+            delegate: urlSessionDelegate,
             delegateQueue: .main
         )
         self.coder = coder
