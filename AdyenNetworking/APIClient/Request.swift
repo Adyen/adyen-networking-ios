@@ -61,6 +61,25 @@ public protocol Request: Encodable {
 /// Represents an API response.
 public protocol Response: Decodable { }
 
+/// Represents an API download response.
+public struct DownloadResponse: Response {
+    
+    let url: URL
+    
+    public init(url: URL) {
+        self.url = url
+    }
+    
+    enum CodingKeys: CodingKey {
+        case url
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.url = try container.decode(URL.self, forKey: .url)
+    }
+}
+
 /// Represents an empty API response.
 public struct EmptyResponse: Response {
     
