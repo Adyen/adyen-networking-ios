@@ -64,7 +64,7 @@ public protocol Response: Decodable { }
 /// Represents an API download response.
 public struct DownloadResponse: Response {
     
-    let url: URL
+    public let url: URL
     
     public init(url: URL) {
         self.url = url

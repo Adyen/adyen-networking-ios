@@ -16,6 +16,10 @@ public protocol AnyRetryAPIClient: APIClientProtocol {
     /// :nodoc:
     /// Performs the API request, and takes a closure to decide whether to repeat the request.
     func perform<R>(_ request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request
+    
+    /// :nodoc:
+    /// Performs the API download request, and takes a closure to decide whether to repeat the request.
+    func performDownload<R>(_ request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R : Request, R.ResponseType == DownloadResponse
 }
 
 /// :nodoc:
@@ -65,7 +69,30 @@ public final class RetryAPIClient: AnyRetryAPIClient {
     }
     
     /// :nodoc:
+    public func performDownload<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R : Request, R.ResponseType == DownloadResponse {
+        performDownload(request, shouldRetry: nil, completionHandler: completionHandler)
+    }
+    
+    public func performDownload<R>(_ request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R : Request, R.ResponseType == DownloadResponse {
+        apiClient.performDownload(request) { [weak self] result in
+            var request = request
+            request.counter += 1
+            
+            self?.handleDownload(result: result, for: request, shouldRetry: shouldRetry, completionHandler: completionHandler)
+        }
+    }
+    
+    /// :nodoc:
     private func handle<R>(result: Result<R.ResponseType, Error>, for request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request {
+        if let shouldRetry = shouldRetry, shouldRetry(result) {
+            retry(request, result: result, shouldRetry: shouldRetry, completionHandler: completionHandler)
+        } else {
+            completionHandler(result)
+        }
+    }
+    
+    /// :nodoc:
+    private func handleDownload<R>(result: Result<R.ResponseType, Error>, for request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request, R.ResponseType == DownloadResponse {
         if let shouldRetry = shouldRetry, shouldRetry(result) {
             retry(request, result: result, shouldRetry: shouldRetry, completionHandler: completionHandler)
         } else {
@@ -76,6 +103,15 @@ public final class RetryAPIClient: AnyRetryAPIClient {
     private func retry<R>(_ request: R, result: Result<R.ResponseType, Error>, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request {
         let isDone = schedule(request.counter) { [weak self] in
             self?.perform(request, shouldRetry: shouldRetry, completionHandler: completionHandler)
+        }
+        if isDone {
+            completionHandler(result)
+        }
+    }
+    
+    private func retryDownload<R>(_ request: R, result: Result<R.ResponseType, Error>, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request, R.ResponseType == DownloadResponse {
+        let isDone = schedule(request.counter) { [weak self] in
+            self?.performDownload(request, shouldRetry: shouldRetry, completionHandler: completionHandler)
         }
         if isDone {
             completionHandler(result)

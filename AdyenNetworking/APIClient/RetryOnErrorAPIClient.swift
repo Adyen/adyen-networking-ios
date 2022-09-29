@@ -9,7 +9,7 @@ import Foundation
 /// :nodoc:
 /// An API Client that enables retying request on error.
 public final class RetryOnErrorAPIClient: APIClientProtocol {
-
+    
     /// :nodoc:
     private let apiClient: AnyRetryAPIClient
 
@@ -32,6 +32,19 @@ public final class RetryOnErrorAPIClient: APIClientProtocol {
                 return true
             }
         }, completionHandler: completionHandler)
+    }
+    
+    /// :nodoc:
+    public func performDownload<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R : Request, R.ResponseType == DownloadResponse {
+        apiClient.performDownload(request, shouldRetry: { result in
+            switch result {
+            case .success:
+                return false
+            case .failure:
+                return true
+            }
+        }, completionHandler: completionHandler)
+
     }
 
 }
