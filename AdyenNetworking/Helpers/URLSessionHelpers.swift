@@ -26,6 +26,26 @@ internal struct URLSessionSuccess {
     }
 }
 
+internal struct URLSessionDownloadSuccess {
+    internal let url: URL
+    
+    internal let statusCode: Int
+    
+    internal let headers: [String: String]
+    
+    internal init(url: URL?, response: URLResponse?) throws {
+        guard let url = url,
+              let httpResponse = response as? HTTPURLResponse,
+              let headers = httpResponse.allHeaderFields as? [String: String] else {
+                  throw APIClientError.invalidResponse
+        }
+        
+        self.url = url
+        self.headers = headers
+        self.statusCode = httpResponse.statusCode
+    }
+}
+
 /// :nodoc:
 internal extension URLSession {
 
@@ -39,6 +59,22 @@ internal extension URLSession {
                 completion(.failure(error))
             } else {
                 completion(.init(catching: { try URLSessionSuccess(data: data, response: response) }))
+            }
+        }
+    }
+    
+    /// :nodoc:
+    func downloadTask(
+        with urlRequest: URLRequest,
+        completion: @escaping ((Result<URLSessionDownloadSuccess, Error>) -> Void)
+    ) -> URLSessionDownloadTask {
+        downloadTask(with: urlRequest) { url, response, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.init(catching: {
+                    try URLSessionDownloadSuccess(url: url, response: response)
+                }))
             }
         }
     }

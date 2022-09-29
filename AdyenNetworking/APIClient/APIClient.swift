@@ -18,6 +18,9 @@ public protocol APIClientProtocol: AnyObject {
     /// Performs the API request.
     func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>)
     
+    /// :nodoc:
+    /// Performs the API download request.
+    func perform<R: Request>(downloadRequest request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R.ResponseType == DownloadResponse
 }
 
 /// :nodoc:
@@ -32,6 +35,11 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     func perform<R: Request>(_ request: R) async throws -> HTTPResponse<R.ResponseType>
     
+    /// Performs the API download request asynchronously.
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    func perform<R: Request>(downloadRequest request: R) async throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse
+    
 }
 
 /// :nodoc:
@@ -41,11 +49,12 @@ extension APIClientProtocol {
     public func retryAPIClient(with scheduler: Scheduler) -> AnyRetryAPIClient {
         RetryAPIClient(apiClient: self, scheduler: scheduler)
     }
+    
 }
 
 /// :nodoc:
 /// The Basic API Client.
-public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
+public final class APIClient: APIClientProtocol {
     
     /// :nodoc:
     public typealias CompletionHandler<T> = (Result<T, Error>) -> Void
@@ -83,21 +92,6 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         self.coder = coder
     }
     
-    /// Performs the API request asynchronously.
-    /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
-    /// - Throws: ``ParsingError`` in case of an error during response decoding.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
-    @available(iOS 15.0.0, *)
-    public func perform<R>(
-        _ request: R
-    ) async throws -> HTTPResponse<R.ResponseType> where R : Request {
-        let result = try await urlSession
-            .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
-        let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
-        return try handle(httpResult, request)
-    }
-    
     /// :nodoc:
     public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
         do {
@@ -117,6 +111,24 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                         }
                     }
                 
+                completionHandler(result)
+            }.resume()
+        } catch {
+            completionHandler(.failure(error))
+        }
+    }
+    
+    /// :nodoc:
+    public func perform<R: Request>(
+        downloadRequest request: R,
+        completionHandler: @escaping CompletionHandler<R.ResponseType>
+    ) where R.ResponseType == DownloadResponse {
+        do {
+            urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self] result in
+                guard let self = self else { return }
+                let result = result
+                    .map { response in self.handle(response, request) }
+                    .map(\.responseBody)
                 completionHandler(result)
             }.resume()
         } catch {
@@ -159,7 +171,7 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                 )
             }
         } catch {
-            if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: result.data){
+            if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: result.data) {
                 throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
@@ -175,6 +187,18 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
                 throw error
             }
         }
+    }
+    
+    private func handle<R: Request>(
+        _ result: URLSessionDownloadSuccess,
+        _ request: R
+    ) -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
+        log(result: result, request: request)
+        return HTTPResponse(
+            headers: result.headers,
+            statusCode: result.statusCode,
+            responseBody: DownloadResponse(url: result.url)
+        )
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
@@ -210,6 +234,17 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         adyenPrintAsJSON(result.data)
     }
     
+    private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
+        adyenPrint("---- Response Code (/\(request.path)) ----")
+        adyenPrint(result.statusCode)
+        
+        adyenPrint("---- Response Headers (/\(request.path)) ----")
+        adyenPrintAsJSON(result.headers)
+        
+        adyenPrint("---- Response (/\(request.path)) ----")
+        adyenPrint(result.url)
+    }
+    
     /// :nodoc:
     private func add(queryParameters: [URLQueryItem], to url: URL) -> URL {
         var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -233,4 +268,36 @@ public final class APIClient: APIClientProtocol, AsyncAPIClientProtocol {
         return config
     }
 
+}
+
+extension APIClient: AsyncAPIClientProtocol {
+    
+    /// Performs the API request asynchronously.
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
+    /// - Throws: ``ParsingError`` in case of an error during response decoding.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    @available(iOS 15.0.0, *)
+    public func perform<R>(
+        _ request: R
+    ) async throws -> HTTPResponse<R.ResponseType> where R : Request {
+        let result = try await urlSession
+            .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
+        let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
+        return try handle(httpResult, request)
+    }
+    
+    /// Performs the API download request asynchronously.
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    @available(iOS 15.0.0, *)
+    public func perform<R: Request>(
+        downloadRequest request: R
+    ) async throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
+        let result = try await urlSession
+            .download(for: try buildUrlRequest(from: request)) as (url: URL, urlResponse: URLResponse)
+        let httpResult = try URLSessionDownloadSuccess(url: result.url, response: result.urlResponse)
+        return handle(httpResult, request)
+    }
+    
 }

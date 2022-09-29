@@ -28,3 +28,15 @@ internal struct APIContext: AnyAPIContext {
     
     var queryParameters: [URLQueryItem] = []
 }
+
+internal struct SimpleAPIEnvironment: AnyAPIEnvironment {
+    let baseURL = URL(string: "https://www.adyen.com/")!
+}
+
+internal struct SimpleAPIContext: AnyAPIContext {
+    let environment: AnyAPIEnvironment = SimpleAPIEnvironment()
+    
+    let headers: [String : String] = [:]
+    
+    let queryParameters: [URLQueryItem] = []
+}

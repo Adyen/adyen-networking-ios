@@ -98,5 +98,56 @@ class APIClientTests: XCTestCase {
             XCTFail("Expected an error to be thrown")
         }  catch { }
     }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncDownloadRequest() async throws {
+        let request = DownloadRequest()
+        let api = APIClient(apiContext: SimpleAPIContext())
+        let fileManager = FileManager.default
+        
+        let result: DownloadResponse = try await api.perform(downloadRequest: request).responseBody
+        let fileCachePath = fileManager.temporaryDirectory
+            .appendingPathComponent("async-test-image.jpg", isDirectory: false)
+        
+        do {
+            try fileManager.copyItem(at: result.url, to: fileCachePath)
+            try fileManager.removeItem(at: result.url)
+            let image = UIImage(data: try Data(contentsOf: fileCachePath))
+            XCTAssertNotNil(image)
+            try fileManager.removeItem(at: fileCachePath)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testCompletionHandlerDownloadRequest() throws {
+        let apiClientExpectation = expectation(description: "Expect api client to download image file.")
+        let request = DownloadRequest()
+        let api = APIClient(apiContext: SimpleAPIContext())
+        let fileManager = FileManager.default
+        
+        api.perform(downloadRequest: request) { result in
+            switch result {
+            case .success(let downloadResponse):
+                let fileCachePath = fileManager.temporaryDirectory
+                    .appendingPathComponent("completion-test-image.jpg", isDirectory: false)
+                
+                do {
+                    try fileManager.copyItem(at: downloadResponse.url, to: fileCachePath)
+                    try fileManager.removeItem(at: downloadResponse.url)
+                    let image = UIImage(data: try Data(contentsOf: fileCachePath))
+                    XCTAssertNotNil(image)
+                    try fileManager.removeItem(at: fileCachePath)
+                    apiClientExpectation.fulfill()
+                } catch {
+                    XCTFail(error.localizedDescription)
+                }
+            case let .failure(error):
+                XCTFail(error.localizedDescription)
+                XCTAssertTrue(error is CreateUsersErrorResponse)
+            }
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
 
 }
