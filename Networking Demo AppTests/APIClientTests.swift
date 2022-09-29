@@ -105,7 +105,7 @@ class APIClientTests: XCTestCase {
         let api = APIClient(apiContext: SimpleAPIContext())
         let fileManager = FileManager.default
         
-        let result: DownloadResponse = try await api.performDownload(request).responseBody
+        let result: DownloadResponse = try await api.perform(downloadRequest: request).responseBody
         let fileCachePath = fileManager.temporaryDirectory
             .appendingPathComponent("async-test-image.jpg", isDirectory: false)
         
@@ -126,7 +126,7 @@ class APIClientTests: XCTestCase {
         let api = APIClient(apiContext: SimpleAPIContext())
         let fileManager = FileManager.default
         
-        api.performDownload(request) { result in
+        api.perform(downloadRequest: request) { result in
             switch result {
             case .success(let downloadResponse):
                 let fileCachePath = fileManager.temporaryDirectory
