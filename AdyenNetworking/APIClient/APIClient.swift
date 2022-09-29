@@ -289,7 +289,6 @@ extension APIClient: AsyncAPIClientProtocol {
     
     /// Performs the API download request asynchronously.
     /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     @available(iOS 15.0.0, *)
     public func perform<R: Request>(
