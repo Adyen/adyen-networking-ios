@@ -23,7 +23,10 @@ public final class RetryOnErrorAPIClient: APIClientProtocol {
     }
 
     /// :nodoc:
-    public func perform<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request {
+    public func perform<R>(
+        _ request: R,
+        completionHandler: @escaping CompletionHandler<R.ResponseType>
+    ) where R: Request {
         apiClient.perform(request, shouldRetry: { result in
             switch result {
             case .success:
@@ -35,8 +38,11 @@ public final class RetryOnErrorAPIClient: APIClientProtocol {
     }
     
     /// :nodoc:
-    public func perform<R>(downloadRequest request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R : Request, R.ResponseType == DownloadResponse {
-        apiClient.perform(downloadRequest: request, shouldRetry: { result in
+    public func perform<R>(
+        _ request: R,
+        completionHandler: @escaping CompletionHandler<R.ResponseType>
+    ) where R : Request, R.ResponseType == DownloadResponse {
+        apiClient.perform(request, shouldRetry: { result in
             switch result {
             case .success:
                 return false
@@ -44,7 +50,5 @@ public final class RetryOnErrorAPIClient: APIClientProtocol {
                 return true
             }
         }, completionHandler: completionHandler)
-
     }
-
 }
