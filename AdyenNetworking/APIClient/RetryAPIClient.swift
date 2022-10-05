@@ -14,7 +14,7 @@ public protocol AnyRetryAPIClient: APIClientProtocol {
     
     /// :nodoc:
     /// Performs the API request, and takes a closure to decide whether to repeat the request.
-    func perform<R>(_ request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request
+    func perform<R: Request>(_ request: R, shouldRetry: ShouldRetryHandler<R.ResponseType>?, completionHandler: @escaping CompletionHandler<R.ResponseType>)
 }
 
 /// :nodoc:

@@ -78,6 +78,30 @@ class APIClientTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
     
+    func testRetryInvalidCreateRequest() throws {
+        let numberOfTries = 2
+        let apiClientExpectation = expectation(description: "Expect apiClient callback to be called.")
+        let retryExpectation = expectation(description: "Expect scheduler to be called for retry twice.")
+        retryExpectation.expectedFulfillmentCount = numberOfTries
+        let invalidCreateRequest = InvalidCreateUsersRequest()
+        let retryClient = RetryAPIClient(
+            apiClient: apiClient,
+            scheduler: MockScheduler(maxCount: numberOfTries, onSchedule: {
+                retryExpectation.fulfill()
+            })
+        )
+        retryClient.perform(invalidCreateRequest, shouldRetry: { _ in true }) { result in
+            switch result {
+            case .success:
+                XCTFail()
+            case let .failure(error):
+                XCTAssertTrue(error is CreateUsersErrorResponse)
+                apiClientExpectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
     @available(iOS 15.0.0, *)
     func testAsyncValidCreateRequest() async throws {
         let name = UUID().uuidString
@@ -144,10 +168,8 @@ class APIClientTests: XCTestCase {
                 }
             case let .failure(error):
                 XCTFail(error.localizedDescription)
-                XCTAssertTrue(error is CreateUsersErrorResponse)
             }
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
-
 }

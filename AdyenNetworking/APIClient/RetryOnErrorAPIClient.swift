@@ -36,19 +36,4 @@ public final class RetryOnErrorAPIClient: APIClientProtocol {
             }
         }, completionHandler: completionHandler)
     }
-    
-    /// :nodoc:
-    public func perform<R>(
-        _ request: R,
-        completionHandler: @escaping CompletionHandler<R.ResponseType>
-    ) where R : Request, R.ResponseType == DownloadResponse {
-        apiClient.perform(request, shouldRetry: { result in
-            switch result {
-            case .success:
-                return false
-            case .failure:
-                return true
-            }
-        }, completionHandler: completionHandler)
-    }
 }
