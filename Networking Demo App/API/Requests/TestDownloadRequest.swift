@@ -1,5 +1,5 @@
 //
-//  DownloadRequest.swift
+//  TestDownloadRequest.swift
 //  Networking Demo App
 //
 //  Created by James McGuire on 29/09/2022.
@@ -12,10 +12,12 @@ internal struct DownloadError: ErrorResponse {
     
 }
 
-internal struct DownloadRequest: Request {
+internal struct TestDownloadRequest: AsyncDownloadRequest {
     typealias ResponseType = DownloadResponse
     
     typealias ErrorResponseType = DownloadError
+    
+    var delegate: URLSessionDownloadDelegate?
     
     var path: String = "dam/jcr:b07f6545-f41b-4afd-862c-66b7d953d886/presskit-photo-branded.jpg"
     

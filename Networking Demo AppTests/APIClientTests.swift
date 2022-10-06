@@ -125,7 +125,7 @@ class APIClientTests: XCTestCase {
     
     @available(iOS 15.0.0, *)
     func testAsyncDownloadRequest() async throws {
-        let request = DownloadRequest()
+        let request = TestDownloadRequest(delegate: <#T##URLSessionDownloadDelegate?#>)
         let api = APIClient(apiContext: SimpleAPIContext())
         let fileManager = FileManager.default
         
@@ -146,7 +146,7 @@ class APIClientTests: XCTestCase {
     
     func testCompletionHandlerDownloadRequest() throws {
         let apiClientExpectation = expectation(description: "Expect api client to download image file.")
-        let request = DownloadRequest()
+        let request = TestDownloadRequest()
         let api = APIClient(apiContext: SimpleAPIContext())
         let fileManager = FileManager.default
         

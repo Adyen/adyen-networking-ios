@@ -25,9 +25,8 @@ public enum HTTPMethod: String {
 }
 
 /// :nodoc:
-/// Represents an API request.
+/// Describes an API request.
 public protocol Request: Encodable {
-    
     /// :nodoc:
     /// The type of the expected response.
     associatedtype ResponseType: Response
@@ -55,15 +54,32 @@ public protocol Request: Encodable {
     /// :nodoc:
     /// The HTTP method.
     var method: HTTPMethod { get }
-    
 }
 
-/// Represents an API response.
+/// Describes a ``Request`` extension to be used for async downloading.
+///
+/// A ``DownloadProgressDelegate`` is provided for progress updates.
+@available(iOS 15.0.0, *)
+public protocol AsyncDownloadRequest: Request {
+    var progressDelegate: DownloadProgressDelegate? { get }
+}
+
+/// Describes a delegate to be implemented that receives progress updates during a ``AsyncDownloadRequest``.
+@available(iOS 15.0.0, *)
+public protocol DownloadProgressDelegate {
+    /// Delegate method that receives progress updates for a ``AsyncDownloadRequest``
+    ///
+    /// - Parameter progress: The progress percentage represented as a `Double`.
+    func progressUpdate(progress: Double)
+}
+
+/// Describes an API response.
 public protocol Response: Decodable { }
 
 /// Represents an API download response.
+///
+/// The `url` property provides the temporary path to the downloaded file.
 public struct DownloadResponse: Response {
-    
     public let url: URL
     
     public init(url: URL) {
@@ -82,11 +98,11 @@ public struct DownloadResponse: Response {
 
 /// Represents an empty API response.
 public struct EmptyResponse: Response {
-    
     public init() { }
 }
 
-/// Represents an API Error response.
+/// Describes an API Error response.
 public protocol ErrorResponse: Response, Error { }
 
+/// Represents an empty API Error response.
 public struct EmptyErrorResponse: ErrorResponse { }

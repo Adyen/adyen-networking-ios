@@ -9,36 +9,41 @@ import Foundation
 /// :nodoc:
 /// Describes any API Client.
 public protocol APIClientProtocol: AnyObject {
-    
-    /// :nodoc:
+    /// Callback to be executed when the API request is complete.
     typealias CompletionHandler<T> = (Result<T, Error>) -> Void
     
-    /// :nodoc:
     /// Performs the API request.
-    func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>)
+    /// - Parameter request: The ``Request`` to be performed.
+    func perform<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request
     
-    /// :nodoc:
-    /// Performs the API download request.
-    func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R.ResponseType == DownloadResponse
+    /// Performs the API request to download.
+    /// - Parameter request: The ``Request`` to be performed.
+    func perform<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request, R.ResponseType == DownloadResponse
 }
 
 /// :nodoc:
 /// Describes any async API Client.
 @available(iOS 15.0.0, *)
 public protocol AsyncAPIClientProtocol: AnyObject {
-    
     /// Performs the API request asynchronously.
+    /// - Parameter request: The ``Request`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``ParsingError`` in case of an error during response decoding.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
-    func perform<R: Request>(_ request: R) async throws -> HTTPResponse<R.ResponseType>
+    func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request
     
-    /// Performs the API download request asynchronously.
+    /// Performs the API request to download asynchronously.
+    /// - Parameter request: The ``Request`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
-    func perform<R: Request>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse
+    func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse
     
+    /// Performs the API download request asynchronously, providing progress updates to the ``AsyncDownloadRequest``'s ``DownloadProgressDelegate``.
+    /// - Parameter request: The ``AsyncDownloadRequest`` to be performed.
+    /// - Returns: ``HTTPResponse`` in case of successful response.
+    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse
 }
 
 /// :nodoc:
@@ -67,6 +72,9 @@ public final class APIClient: APIClientProtocol {
     
     /// Encoding and Decoding
     private let coder: AnyCoder
+    
+    /// Default file manager
+    private let fileManager = FileManager.default
 
     /// Initializes the API client.
     ///
@@ -91,8 +99,10 @@ public final class APIClient: APIClientProtocol {
         self.coder = coder
     }
     
-    /// :nodoc:
-    public func perform<R: Request>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) {
+    public func perform<R>(
+        _ request: R,
+        completionHandler: @escaping CompletionHandler<R.ResponseType>
+    ) where R: Request {
         do {
             urlSession.dataTask(with: try buildUrlRequest(from: request)) { [weak self] result in
                 guard let self = self else { return }
@@ -117,11 +127,10 @@ public final class APIClient: APIClientProtocol {
         }
     }
     
-    /// :nodoc:
-    public func perform<R: Request>(
+    public func perform<R>(
         _ request: R,
         completionHandler: @escaping CompletionHandler<R.ResponseType>
-    ) where R.ResponseType == DownloadResponse {
+    ) where R: Request, R.ResponseType == DownloadResponse {
         do {
             urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self] result in
                 guard let self = self else { return }
@@ -270,33 +279,63 @@ public final class APIClient: APIClientProtocol {
 }
 
 extension APIClient: AsyncAPIClientProtocol {
-    
-    /// Performs the API request asynchronously.
-    /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
-    /// - Throws: ``ParsingError`` in case of an error during response decoding.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     @available(iOS 15.0.0, *)
-    public func perform<R>(
-        _ request: R
-    ) async throws -> HTTPResponse<R.ResponseType> where R : Request {
+    public func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request {
         let result = try await urlSession
             .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
         let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
         return try handle(httpResult, request)
     }
     
-    /// Performs the API download request asynchronously.
-    /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     @available(iOS 15.0.0, *)
-    public func perform<R: Request>(
+    public func perform<R>(
         _ request: R
-    ) async throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
-        let result = try await urlSession
-            .download(for: try buildUrlRequest(from: request)) as (url: URL, urlResponse: URLResponse)
-        let httpResult = try URLSessionDownloadSuccess(url: result.url, response: result.urlResponse)
+    ) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse {
+        let urlRequest = try buildUrlRequest(from: request)
+        let (locationUrl, urlResponse) = try await urlSession.download(for: urlRequest)
+        let fileName = generateFileName(from: urlResponse, with: urlRequest)
+        let destinationUrl = try generateFileDestination(given: fileName)
+        try fileManager.moveItem(at: locationUrl, to: destinationUrl)
+        let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
         return handle(httpResult, request)
     }
     
+    @available(iOS 15.0.0, *)
+    public func perform<R>(
+        _ request: R
+    ) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse {
+        let urlRequest = try buildUrlRequest(from: request)
+        let (asyncBytes, urlResponse) = try await urlSession.bytes(for: urlRequest)
+        let contentLength = urlResponse.expectedContentLength
+        var data = Data()
+        
+        data.reserveCapacity(Int(contentLength))
+        for try await byte in asyncBytes {
+            data.append(byte)
+            let progress = Double(data.count) / Double(contentLength)
+            request.progressDelegate?.progressUpdate(progress: progress)
+        }
+        
+        let fileName = generateFileName(from: urlResponse, with: urlRequest)
+        let destinationUrl = try generateFileDestination(given: fileName)
+        fileManager.createFile(atPath: destinationUrl.path, contents: data)
+        
+        let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
+        return handle(httpResult, request)
+    }
+    
+    private func generateFileName(from urlResponse: URLResponse, with urlRequest: URLRequest) -> String {
+        urlResponse.suggestedFilename ??
+            urlResponse.url?.lastPathComponent ??
+            urlRequest.url?.lastPathComponent ??
+            "Unknown-\(UUID().uuidString).tmp"
+    }
+    
+    private func generateFileDestination(given fileName: String) throws -> URL {
+        let destinationUrl = fileManager.temporaryDirectory.appendingPathComponent(fileName)
+        if fileManager.fileExists(atPath: destinationUrl.path) {
+            try fileManager.removeItem(at: destinationUrl)
+        }
+        return destinationUrl
+    }
 }
