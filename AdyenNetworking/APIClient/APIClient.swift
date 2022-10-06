@@ -20,6 +20,8 @@ public protocol APIClientProtocol: AnyObject {
     /// - Parameter request: The ``Request`` to be performed which has a `ResponseType` of ``DownloadResponse``.
     ///
     /// The ``DownloadResponse`` `ResponseType` of the ``Request`` is returned with the default `URLSession` temporary `URL`.
+    ///
+    /// The asynchronous ``AsyncAPIClientProtocol`` provides further functionality including providing a destination `URL` with appropriate filename, as well as the ability to receive progress updates.
     func perform<R>(_ request: R, completionHandler: @escaping CompletionHandler<R.ResponseType>) where R: Request, R.ResponseType == DownloadResponse
 }
 
@@ -39,6 +41,8 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Parameter request: The ``Request`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    ///
+    /// The ``DownloadResponse`` `ResponseType` of the ``HTTPResponse`` contains the destination `URL` to the system's temporary directory containing the downloaded file including an appropriate filename.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse
     
     /// Performs the API download request asynchronously, providing progress updates to the `onProgressUpdate(Double)` callback on ``AsyncDownloadRequest``.
