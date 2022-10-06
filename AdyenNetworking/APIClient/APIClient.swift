@@ -39,7 +39,7 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse
     
-    /// Performs the API download request asynchronously, providing progress updates to the ``AsyncDownloadRequest``'s ``DownloadProgressDelegate``.
+    /// Performs the API download request asynchronously, providing progress updates to the `onProgressUpdate(Double)` callback on ``AsyncDownloadRequest``.
     /// - Parameter request: The ``AsyncDownloadRequest`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
@@ -275,7 +275,30 @@ public final class APIClient: APIClientProtocol {
         
         return config
     }
-
+    
+    /// Creates an appropriate filename.
+    /// - Parameter from: The `URLResponse` from a request used for the suggested filename.
+    /// - Parameter with: The `URLRequest` used in place of the response for the filename using the last path component of the request URL.
+    /// - Returns: A `String` representing the filename.
+    ///
+    /// If a filename from the `URLResponse` or `URLRequest` are `nil`, a default filename is given  in the form `Unknown-[UUID].tmp`.
+    private func generateFilename(from urlResponse: URLResponse, with urlRequest: URLRequest) -> String {
+        urlResponse.suggestedFilename ??
+            urlResponse.url?.lastPathComponent ??
+            urlRequest.url?.lastPathComponent ??
+            "Unknown-\(UUID().uuidString).tmp"
+    }
+    
+    /// Creates a destination URL in the `temporary directory` for a given filename.
+    /// - Parameter given: A `String` representing a filename.
+    /// - Returns: A destination `URL` file path with the filename.
+    private func generateFileDestination(given filename: String) throws -> URL {
+        let destinationUrl = fileManager.temporaryDirectory.appendingPathComponent(filename)
+        if fileManager.fileExists(atPath: destinationUrl.path) {
+            try fileManager.removeItem(at: destinationUrl)
+        }
+        return destinationUrl
+    }
 }
 
 extension APIClient: AsyncAPIClientProtocol {
@@ -293,8 +316,9 @@ extension APIClient: AsyncAPIClientProtocol {
     ) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse {
         let urlRequest = try buildUrlRequest(from: request)
         let (locationUrl, urlResponse) = try await urlSession.download(for: urlRequest)
-        let fileName = generateFileName(from: urlResponse, with: urlRequest)
-        let destinationUrl = try generateFileDestination(given: fileName)
+        let destinationUrl = try generateFileDestination(
+            given: generateFilename(from: urlResponse, with: urlRequest)
+        )
         try fileManager.moveItem(at: locationUrl, to: destinationUrl)
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
         return handle(httpResult, request)
@@ -313,29 +337,15 @@ extension APIClient: AsyncAPIClientProtocol {
         for try await byte in asyncBytes {
             data.append(byte)
             let progress = Double(data.count) / Double(contentLength)
-            request.progressDelegate?.progressUpdate(progress: progress)
+            request.onProgressUpdate?(progress)
         }
         
-        let fileName = generateFileName(from: urlResponse, with: urlRequest)
-        let destinationUrl = try generateFileDestination(given: fileName)
+        let destinationUrl = try generateFileDestination(
+            given: generateFilename(from: urlResponse, with: urlRequest)
+        )
         fileManager.createFile(atPath: destinationUrl.path, contents: data)
         
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
         return handle(httpResult, request)
-    }
-    
-    private func generateFileName(from urlResponse: URLResponse, with urlRequest: URLRequest) -> String {
-        urlResponse.suggestedFilename ??
-            urlResponse.url?.lastPathComponent ??
-            urlRequest.url?.lastPathComponent ??
-            "Unknown-\(UUID().uuidString).tmp"
-    }
-    
-    private func generateFileDestination(given fileName: String) throws -> URL {
-        let destinationUrl = fileManager.temporaryDirectory.appendingPathComponent(fileName)
-        if fileManager.fileExists(atPath: destinationUrl.path) {
-            try fileManager.removeItem(at: destinationUrl)
-        }
-        return destinationUrl
     }
 }

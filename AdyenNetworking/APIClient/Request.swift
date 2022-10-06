@@ -61,16 +61,7 @@ public protocol Request: Encodable {
 /// A ``DownloadProgressDelegate`` is provided for progress updates.
 @available(iOS 15.0.0, *)
 public protocol AsyncDownloadRequest: Request {
-    var progressDelegate: DownloadProgressDelegate? { get }
-}
-
-/// Describes a delegate to be implemented that receives progress updates during a ``AsyncDownloadRequest``.
-@available(iOS 15.0.0, *)
-public protocol DownloadProgressDelegate {
-    /// Delegate method that receives progress updates for a ``AsyncDownloadRequest``
-    ///
-    /// - Parameter progress: The progress percentage represented as a `Double`.
-    func progressUpdate(progress: Double)
+    var onProgressUpdate: ((_ progress: Double) -> Void)? { get }
 }
 
 /// Describes an API response.
