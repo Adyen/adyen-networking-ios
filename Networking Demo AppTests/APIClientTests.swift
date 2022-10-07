@@ -125,43 +125,39 @@ class APIClientTests: XCTestCase {
     
     @available(iOS 15.0.0, *)
     func testAsyncDownloadRequest() async throws {
-        let request = DownloadRequest()
+        let downloadProgressExpectation = expectation(description: "Expect download progress to reach 100%.")
+        let request = TestAsyncDownloadRequest { progress in
+            if progress == 1.0 {
+                downloadProgressExpectation.fulfill()
+            }
+            print("Download progress: \(progress)")
+        }
         let api = APIClient(apiContext: SimpleAPIContext())
-        let fileManager = FileManager.default
         
         let result: DownloadResponse = try await api.perform(request).responseBody
-        let fileCachePath = fileManager.temporaryDirectory
-            .appendingPathComponent("async-test-image.jpg", isDirectory: false)
-        
         do {
-            try fileManager.copyItem(at: result.url, to: fileCachePath)
-            try fileManager.removeItem(at: result.url)
-            let image = UIImage(data: try Data(contentsOf: fileCachePath))
+            let image = UIImage(data: try Data(contentsOf: result.url))
             XCTAssertNotNil(image)
-            try fileManager.removeItem(at: fileCachePath)
+            try FileManager.default.removeItem(at: result.url)
         } catch {
             XCTFail(error.localizedDescription)
         }
+        await waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testCompletionHandlerDownloadRequest() throws {
         let apiClientExpectation = expectation(description: "Expect api client to download image file.")
-        let request = DownloadRequest()
+        let request = TestDownloadRequest()
         let api = APIClient(apiContext: SimpleAPIContext())
         let fileManager = FileManager.default
         
         api.perform(request) { result in
             switch result {
             case .success(let downloadResponse):
-                let fileCachePath = fileManager.temporaryDirectory
-                    .appendingPathComponent("completion-test-image.jpg", isDirectory: false)
-                
                 do {
-                    try fileManager.copyItem(at: downloadResponse.url, to: fileCachePath)
-                    try fileManager.removeItem(at: downloadResponse.url)
-                    let image = UIImage(data: try Data(contentsOf: fileCachePath))
+                    let image = UIImage(data: try Data(contentsOf: downloadResponse.url))
                     XCTAssertNotNil(image)
-                    try fileManager.removeItem(at: fileCachePath)
+                    try fileManager.removeItem(at: downloadResponse.url)
                     apiClientExpectation.fulfill()
                 } catch {
                     XCTFail(error.localizedDescription)
