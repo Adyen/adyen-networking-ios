@@ -124,7 +124,7 @@ class APIClientTests: XCTestCase {
     }
     
     @available(iOS 15.0.0, *)
-    func testAsyncDownloadRequest() async throws {
+    func testAsyncCallbackDownloadRequest() async throws {
         let downloadProgressExpectation = expectation(description: "Expect download progress to reach 100%.")
         let request = TestAsyncDownloadRequest { progress in
             if progress == 1.0 {
@@ -146,10 +146,24 @@ class APIClientTests: XCTestCase {
     }
     
     @available(iOS 15.0.0, *)
-    func testAsyncFailedDownloadRequest() async throws {
+    func testAsyncCallbackFailedDownloadRequest() async throws {
         var request = TestAsyncDownloadRequest { progress in
             XCTFail("Callback should not be triggered for failed download.")
         }
+        request.path = "kljhfkajsdhfs/////df345.345345m34feg45435"
+        let api = APIClient(apiContext: SimpleAPIContext())
+        
+        do {
+            let _ = try await api.perform(request)
+            XCTFail("Error was not thrown as it should be.")
+        } catch let error {
+            XCTAssertNotNil(error)
+        }
+    }
+    
+    @available(iOS 15.0.0, *)
+    func testAsyncFailedDownloadRequest() async throws {
+        var request = TestDownloadRequest()
         request.path = "kljhfkajsdhfs/////df345.345345m34feg45435"
         let api = APIClient(apiContext: SimpleAPIContext())
         
