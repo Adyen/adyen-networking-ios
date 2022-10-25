@@ -338,10 +338,14 @@ extension APIClient: AsyncAPIClientProtocol {
     ) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse {
         let urlRequest = try buildUrlRequest(from: request)
         let (asyncBytes, urlResponse) = try await urlSession.bytes(for: urlRequest)
-        let contentLength = urlResponse.expectedContentLength
-        var data = Data()
+        try handleHttpErrorCodes(from: urlResponse)
         
-        data.reserveCapacity(Int(contentLength))
+        var data = Data()
+        let contentLength = urlResponse.expectedContentLength
+        if contentLength > 0 {
+            data.reserveCapacity(Int(contentLength))
+        }
+        
         for try await byte in asyncBytes {
             data.append(byte)
             let progress = Double(data.count) / Double(contentLength)
@@ -355,5 +359,17 @@ extension APIClient: AsyncAPIClientProtocol {
         
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
         return handle(httpResult, request)
+    }
+    
+    private func handleHttpErrorCodes(from urlResponse: URLResponse) throws {
+        if let httpResponse = urlResponse as? HTTPURLResponse,
+           (400...599).contains(httpResponse.statusCode),
+           let headers = httpResponse.allHeaderFields as? [String: String] {
+            throw HTTPErrorResponse(
+                headers: headers,
+                statusCode: httpResponse.statusCode,
+                responseBody: EmptyErrorResponse()
+            )
+        }
     }
 }
