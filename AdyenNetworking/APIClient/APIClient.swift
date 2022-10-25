@@ -49,6 +49,7 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Parameter request: The ``AsyncDownloadRequest`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    /// - Throws: ``HTTPErrorResponse`` in case of HTTP error code response. 
     ///
     /// The ``DownloadResponse`` `ResponseType` of the ``HTTPResponse`` contains the destination `URL` to the system's temporary directory containing the downloaded file including an appropriate filename.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse
