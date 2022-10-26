@@ -157,7 +157,11 @@ class APIClientTests: XCTestCase {
             let _ = try await api.perform(request)
             XCTFail("Error was not thrown as it should be.")
         } catch let error {
-            XCTAssertNotNil(error)
+            guard let errorResponse = error as? HTTPErrorResponse<EmptyErrorResponse> else {
+                XCTFail("Unknown error thrown")
+                return
+            }
+            XCTAssertTrue(errorResponse.statusCode == 400)
         }
     }
     
@@ -171,7 +175,11 @@ class APIClientTests: XCTestCase {
             let _ = try await api.perform(request)
             XCTFail("Error was not thrown as it should be.")
         } catch let error {
-            XCTAssertNotNil(error)
+            guard let errorResponse = error as? HTTPErrorResponse<EmptyErrorResponse> else {
+                XCTFail("Unknown error thrown")
+                return
+            }
+            XCTAssertTrue(errorResponse.statusCode == 400)
         }
     }
     
