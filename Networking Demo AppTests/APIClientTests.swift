@@ -161,7 +161,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertTrue(errorResponse.statusCode == 400)
+            XCTAssertEqual(errorResponse.statusCode, 400)
         }
     }
     
@@ -179,7 +179,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertTrue(errorResponse.statusCode == 400)
+            XCTAssertEqual(errorResponse.statusCode, 400)
         }
     }
     
