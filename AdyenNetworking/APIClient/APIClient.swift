@@ -34,13 +34,14 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Returns: ``HTTPResponse`` in case of successful response.
     /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``ParsingError`` in case of an error during response decoding.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    /// - Throws: ``APIClientError`` in case of invalid HTTP response.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request
     
     /// Performs the API request to download asynchronously.
     /// - Parameter request: The ``Request`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    /// - Throws: ``APIClientError`` in case of invalid HTTP response.
+    /// - Throws: ``HTTPErrorResponse`` in case of HTTP error.
     ///
     /// The ``DownloadResponse`` `ResponseType` of the ``HTTPResponse`` contains the destination `URL` to the system's temporary directory containing the downloaded file including an appropriate filename.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse
@@ -48,7 +49,8 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// Performs the API download request asynchronously, providing progress updates to the `onProgressUpdate(Double)` callback on ``AsyncDownloadRequest``.
     /// - Parameter request: The ``AsyncDownloadRequest`` to be performed.
     /// - Returns: ``HTTPResponse`` in case of successful response.
-    /// - Throws: ``APIClientError.invalidResponse`` in case of invalid HTTP response.
+    /// - Throws: ``APIClientError`` in case of invalid HTTP response.
+    /// - Throws: ``HTTPErrorResponse`` in case of HTTP error.
     ///
     /// The ``DownloadResponse`` `ResponseType` of the ``HTTPResponse`` contains the destination `URL` to the system's temporary directory containing the downloaded file including an appropriate filename.
     func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse
@@ -324,6 +326,7 @@ extension APIClient: AsyncAPIClientProtocol {
     ) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse {
         let urlRequest = try buildUrlRequest(from: request)
         let (locationUrl, urlResponse) = try await urlSession.download(for: urlRequest)
+        try handleHttpErrorCodes(from: urlResponse)
         let destinationUrl = try generateFileDestination(
             given: generateFilename(from: urlResponse, with: urlRequest)
         )
@@ -338,10 +341,14 @@ extension APIClient: AsyncAPIClientProtocol {
     ) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse {
         let urlRequest = try buildUrlRequest(from: request)
         let (asyncBytes, urlResponse) = try await urlSession.bytes(for: urlRequest)
-        let contentLength = urlResponse.expectedContentLength
-        var data = Data()
+        try handleHttpErrorCodes(from: urlResponse)
         
-        data.reserveCapacity(Int(contentLength))
+        var data = Data()
+        let contentLength = urlResponse.expectedContentLength
+        if contentLength > 0 {
+            data.reserveCapacity(Int(contentLength))
+        }
+        
         for try await byte in asyncBytes {
             data.append(byte)
             let progress = Double(data.count) / Double(contentLength)
@@ -355,5 +362,17 @@ extension APIClient: AsyncAPIClientProtocol {
         
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
         return handle(httpResult, request)
+    }
+    
+    private func handleHttpErrorCodes(from urlResponse: URLResponse) throws {
+        if let httpResponse = urlResponse as? HTTPURLResponse,
+           (400...599).contains(httpResponse.statusCode),
+           let headers = httpResponse.allHeaderFields as? [String: String] {
+            throw HTTPErrorResponse(
+                headers: headers,
+                statusCode: httpResponse.statusCode,
+                responseBody: EmptyErrorResponse()
+            )
+        }
     }
 }
