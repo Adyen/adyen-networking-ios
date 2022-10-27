@@ -351,8 +351,10 @@ extension APIClient: AsyncAPIClientProtocol {
         
         for try await byte in asyncBytes {
             data.append(byte)
-            let progress = Double(data.count) / Double(contentLength)
-            request.onProgressUpdate?(progress)
+            if contentLength > 0 {
+                let progress = Double(data.count) / Double(contentLength)
+                request.onProgressUpdate?(progress)
+            }
         }
         
         let destinationUrl = try generateFileDestination(
