@@ -9,7 +9,7 @@ import Foundation
 import AdyenNetworking
 
 internal struct GetUsersErrorResponse: ErrorResponse {
-    internal struct Data: Decodable {
+    internal struct Data: Codable {
         let message: String?
     }
     
