@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Adyen N.V.
+// Copyright (c) 2023 Adyen N.V.
 //
 // This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
@@ -35,7 +35,7 @@ public protocol AsyncAPIClientProtocol: AnyObject {
     /// - Throws: ``HTTPErrorResponse`` in case of an HTTP error.
     /// - Throws: ``ParsingError`` in case of an error during response decoding.
     /// - Throws: ``APIClientError`` in case of invalid HTTP response.
-    func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request
+    func perform<R>(_ request: R) async throws -> HTTPDataResponse<R.ResponseType> where R: Request
     
     /// Performs the API request to download asynchronously.
     /// - Parameter request: The ``Request`` to be performed.
@@ -172,20 +172,23 @@ public final class APIClient: APIClientProtocol {
     private func handle<R: Request>(
         _ result: URLSessionSuccess,
         _ request: R
-    ) throws -> HTTPResponse<R.ResponseType> {
+    ) throws -> HTTPDataResponse<R.ResponseType> {
         log(result: result, request: request)
+        
         do {
             if result.data.isEmpty, let emptyResponse = EmptyResponse() as? R.ResponseType {
-                return HTTPResponse(
+                return HTTPDataResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    responseBody: emptyResponse
+                    responseBody: emptyResponse,
+                    responseData: Data()
                 )
             } else {
-                return HTTPResponse(
+                return HTTPDataResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    responseBody: try coder.decode(R.ResponseType.self, from: result.data)
+                    responseBody: try coder.decode(R.ResponseType.self, from: result.data),
+                    responseData: result.data
                 )
             }
         } catch {
@@ -312,8 +315,9 @@ public final class APIClient: APIClientProtocol {
 }
 
 extension APIClient: AsyncAPIClientProtocol {
+    
     @available(iOS 15.0.0, *)
-    public func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request {
+    public func perform<R>(_ request: R) async throws -> HTTPDataResponse<R.ResponseType> where R : Request {
         let result = try await urlSession
             .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
         let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)

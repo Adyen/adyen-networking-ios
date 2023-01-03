@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2021 Adyen N.V.
+// Copyright (c) 2023 Adyen N.V.
 //
 // This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
@@ -33,6 +33,8 @@ internal struct URLSessionDownloadSuccess {
     
     internal let headers: [String: String]
     
+    internal let data: Data
+    
     internal init(url: URL?, response: URLResponse?) throws {
         guard let url = url,
               let httpResponse = response as? HTTPURLResponse,
@@ -43,6 +45,7 @@ internal struct URLSessionDownloadSuccess {
         self.url = url
         self.headers = headers
         self.statusCode = httpResponse.statusCode
+        self.data = (try? Data(contentsOf: url)) ?? Data()
     }
 }
 

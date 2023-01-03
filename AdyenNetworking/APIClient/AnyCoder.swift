@@ -1,8 +1,7 @@
 //
-//  File.swift
-//  
+// Copyright (c) 2023 Adyen N.V.
 //
-//  Created by Emrah Akgul on 05/08/2022.
+// This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation

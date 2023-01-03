@@ -134,11 +134,18 @@ class APIClientTests: XCTestCase {
         }
         let api = APIClient(apiContext: SimpleAPIContext())
         
-        let result: DownloadResponse = try await api.perform(request).responseBody
+        let result: HTTPResponse = try await api.perform(request)
+        let responseBody = result.responseBody
+        
         do {
-            let image = UIImage(data: try Data(contentsOf: result.url))
+            guard let fileData = try? Data(contentsOf: responseBody.url) else {
+                XCTFail("unable to read downloaded data file")
+                return
+            }
+            let image = UIImage(data: fileData)
             XCTAssertNotNil(image)
-            try FileManager.default.removeItem(at: result.url)
+            
+            try FileManager.default.removeItem(at: responseBody.url)
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -183,6 +190,29 @@ class APIClientTests: XCTestCase {
         }
     }
     
+    @available(iOS 15.0.0, *)
+    func testAsyncSuccessDownloadRequest() async throws {
+        let request = TestDownloadRequest()
+        let api = APIClient(apiContext: SimpleAPIContext())
+        let apiResult = try await api.perform(request)
+        
+        let downloadRequest = URLRequest(url: URL(string: "https://www.adyen.com/dam/jcr:b07f6545-f41b-4afd-862c-66b7d953d886/presskit-photo-branded.jpg")!)
+        let urlSession = URLSession(
+            configuration: URLSessionConfiguration.default,
+            delegate: nil,
+            delegateQueue: .main
+        )
+        
+        let downloadResult = try await urlSession.download(for: downloadRequest)
+        guard let _ = try? Data(contentsOf: downloadResult.0) else {
+            XCTFail("Error accessing downloaded data")
+            return
+        }
+        
+        try FileManager.default.removeItem(at: downloadResult.0)
+        try FileManager.default.removeItem(at: apiResult.responseBody.url)
+    }
+    
     func testCompletionHandlerDownloadRequest() throws {
         let apiClientExpectation = expectation(description: "Expect api client to download image file.")
         let request = TestDownloadRequest()
@@ -205,5 +235,49 @@ class APIClientTests: XCTestCase {
             }
         }
         waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    @available(iOS 15.0.0, *)
+    func testResponseDataIsCorrect() async throws {
+        let name = UUID().uuidString
+        let newUser = UserModel(id: Int.random(in: 0...1000),
+                                name: name,
+                                email: "\(name)@gmail.com",
+                                gender: .female,
+                                status: .active)
+        let validCreateRequest = CreateUsersRequest(userModel: newUser)
+        let apiResult: HTTPDataResponse<CreateUsersResponse> = try await apiClient.perform(validCreateRequest)
+        
+        let responseData: CreateUsersResponse = try Coder().decode(CreateUsersResponse.self, from: apiResult.responseData)
+        
+        XCTAssertEqual(responseData.data.email, apiResult.responseBody.data.email)
+        XCTAssertEqual(responseData.data.gender, apiResult.responseBody.data.gender)
+        XCTAssertEqual(responseData.data.id, apiResult.responseBody.data.id)
+        XCTAssertEqual(responseData.data.name, apiResult.responseBody.data.name)
+        XCTAssertEqual(responseData.data.status, apiResult.responseBody.data.status)
+    }
+    
+    /// Manually call the api using url session, and then call using the api client, and check the responseData from the APIClient response
+    /// is the same as the raw response received from the call to urlSession.data
+    @available(iOS 15.0.0, *)
+    func testResponseDataSuccess() async throws {
+        // Arrange
+        var request = URLRequest(url: URL(string: "https://gorest.co.in/public/v1/users")!)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = APIContext().headers
+        let urlSession = URLSession(
+            configuration: URLSessionConfiguration.default,
+            delegate: nil,
+            delegateQueue: .main
+        )
+        let getUsersRequest = GetUsersRequest()
+        
+        // Act
+        let apiResult: HTTPDataResponse<GetUsersResponse> = try await apiClient.perform(getUsersRequest)
+        let result = try await urlSession.data(for: request) as (data: Data, urlResponse: URLResponse)
+        
+        // Assert
+        let resultData = result.0
+        XCTAssertEqual(apiResult.responseData, resultData)
     }
 }

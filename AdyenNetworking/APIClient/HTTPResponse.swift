@@ -1,12 +1,28 @@
 //
-// Copyright (c) 2021 Adyen N.V.
+// Copyright (c) 2023 Adyen N.V.
 //
 // This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation
 
-public struct HTTPResponse<R: Response> {
+/// Protocol representing a HTTP response, containing headers, status code and body
+protocol AnyHTTPResponse {
+    
+    associatedtype R
+    
+    /// HTTP Headers.
+    var headers: [String: String] { get }
+    
+    /// HTTP Status Code.
+    var statusCode: Int { get }
+    
+    /// Response body
+    var responseBody: R { get }
+}
+
+/// Struct conforming to `AnyHTTPResponse` which contains standard HTTP response info, ie headers, status code and response body
+public struct HTTPResponse<R: Response>: AnyHTTPResponse {
     
     /// HTTP Headers.
     public let headers: [String: String]
@@ -16,7 +32,6 @@ public struct HTTPResponse<R: Response> {
     
     /// Response body
     public let responseBody: R
-    
 }
 
 public typealias HTTPErrorResponse<E: ErrorResponse> = HTTPResponse<E>
