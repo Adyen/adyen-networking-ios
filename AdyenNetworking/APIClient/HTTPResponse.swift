@@ -33,7 +33,3 @@ public struct HTTPResponse<R: Response>: AnyHTTPResponse {
     /// Response body
     public let responseBody: R
 }
-
-public typealias HTTPErrorResponse<E: ErrorResponse> = HTTPResponse<E>
-
-extension HTTPResponse: Error where R: Error { }

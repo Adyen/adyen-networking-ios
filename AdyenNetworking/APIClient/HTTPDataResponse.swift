@@ -8,7 +8,7 @@ import Foundation
 /// Protocol representing a HTTP response which contains raw response
 protocol AnyDataResponse: AnyHTTPResponse {
     
-    /// Response data representing the raw response info
+    /// Response data representing the raw response info in `Data`
     var responseData: Data { get }
 }
 
@@ -28,3 +28,7 @@ public struct HTTPDataResponse<R: Response>: AnyDataResponse {
     /// Raw data response
     public let responseData: Data
 }
+
+public typealias HTTPErrorResponse<E: ErrorResponse> = HTTPDataResponse<E>
+
+extension HTTPDataResponse: Error where R: Error { }

@@ -181,7 +181,7 @@ public final class APIClient: APIClientProtocol {
                     headers: result.headers,
                     statusCode: result.statusCode,
                     responseBody: emptyResponse,
-                    responseData: Data()
+                    responseData: result.data
                 )
             } else {
                 return HTTPDataResponse(
@@ -196,13 +196,16 @@ public final class APIClient: APIClientProtocol {
                 throw HTTPErrorResponse(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    responseBody: errorResponse
+                    responseBody: errorResponse,
+                    responseData: result.data
                 )
             } else if let decodingError = error as? DecodingError {
                 throw ParsingError(
                     headers: result.headers,
                     statusCode: result.statusCode,
-                    underlyingError: decodingError
+                    underlyingError: decodingError,
+                    responseBody: EmptyResponse(),
+                    responseData: result.data
                 )
             } else {
                 throw error
@@ -377,7 +380,8 @@ extension APIClient: AsyncAPIClientProtocol {
             throw HTTPErrorResponse(
                 headers: headers,
                 statusCode: httpResponse.statusCode,
-                responseBody: EmptyErrorResponse()
+                responseBody: EmptyErrorResponse(),
+                responseData: Data()
             )
         }
     }

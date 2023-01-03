@@ -39,3 +39,7 @@ public protocol ErrorResponse: Response, Error { }
 
 /// Represents an empty API Error response.
 public struct EmptyErrorResponse: ErrorResponse { }
+
+public struct ParsingErrorResponse: ErrorResponse {
+    public init() { }
+}

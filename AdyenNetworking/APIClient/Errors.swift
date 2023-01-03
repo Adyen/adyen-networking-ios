@@ -18,7 +18,9 @@ public enum APIClientError: LocalizedError {
 }
 
 /// Represents a parsing error object
-public struct ParsingError: LocalizedError {
+public struct ParsingError: LocalizedError, AnyDataResponse {
+    
+    typealias R = EmptyResponse
     
     /// HTTP Headers.
     public let headers: [String: String]
@@ -29,4 +31,9 @@ public struct ParsingError: LocalizedError {
     /// Underlying error of type ``DecodingError``
     public let underlyingError: DecodingError
     
+    /// Empty response body
+    var responseBody: EmptyResponse
+    
+    /// The response data which was failed to be parsed
+    var responseData: Data
 }
