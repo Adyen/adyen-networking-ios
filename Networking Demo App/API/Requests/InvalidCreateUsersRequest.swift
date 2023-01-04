@@ -22,7 +22,7 @@ internal struct InvalidCreateUsersRequest: Request {
     
     var counter: UInt = 0
     
-    let headers: [String : String] = [:]
+    var headers: [String : String] = [:]
     
     private enum CodingKeys: CodingKey {}
 }

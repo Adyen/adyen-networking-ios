@@ -33,7 +33,7 @@ internal struct CreateUsersRequest: Request {
     
     var counter: UInt = 0
     
-    let headers: [String : String] = [:]
+    var headers: [String : String] = [:]
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()

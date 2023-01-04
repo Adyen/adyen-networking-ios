@@ -32,7 +32,7 @@ internal struct GetUsersRequest: Request {
     
     var counter: UInt = 0
     
-    let headers: [String : String] = [:]
+    var headers: [String : String] = [:]
     
     private enum CodingKeys: CodingKey {}
 }

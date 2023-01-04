@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol representing a HTTP response, containing headers, status code and body
-protocol AnyHTTPResponse {
+public protocol AnyHTTPResponse {
     
     associatedtype R
     
