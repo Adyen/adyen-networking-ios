@@ -181,7 +181,7 @@ public final class APIClient: APIClientProtocol {
     ) throws -> HTTPResponse<R.ResponseType> {
         log(result: result, request: request)
         
-        try responseValidator?.validateReponse(result.data, for: request, with: result.headers)
+        try responseValidator?.validate(result.data, for: request, with: result.headers)
         
         do {
             if result.data.isEmpty, let emptyResponse = EmptyResponse() as? R.ResponseType {
@@ -225,7 +225,7 @@ public final class APIClient: APIClientProtocol {
         
         try DispatchQueue.global(qos: .default).sync {
             if let data = try? Data(contentsOf: result.url) {
-                try responseValidator?.validateReponse(data, for: request, with: result.headers)
+                try responseValidator?.validate(data, for: request, with: result.headers)
             }
         }
         

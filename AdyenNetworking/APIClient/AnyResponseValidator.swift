@@ -13,7 +13,7 @@ public protocol AnyResponseValidator {
     ///   - responseData: The raw response data received from the API call
     ///   - request: The original request associated with the response
     ///   - responseHeaders: The HTTP headers in the response
-    func validateReponse(_ responseData: Data,
+    func validate(_ responseData: Data,
                             for request: some Request,
                             with responseHeaders: [AnyHashable : Any]) throws
 }

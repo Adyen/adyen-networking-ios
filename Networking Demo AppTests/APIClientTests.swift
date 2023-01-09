@@ -314,7 +314,7 @@ public class MockResponseValidator: AnyResponseValidator {
     
     var onValidated: (() throws -> Void)?
     
-    public func validateReponse<R>(_ responseData: Data, for request: R, with responseHeaders: [AnyHashable : Any]) throws {
+    public func validate<R>(_ responseData: Data, for request: R, with responseHeaders: [AnyHashable : Any]) throws {
         try onValidated?()
     }
 }
