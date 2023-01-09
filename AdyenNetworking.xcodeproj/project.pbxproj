@@ -10,6 +10,7 @@
 		5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */; };
 		82D5C1D128E59D7F00179E66 /* TestDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */; };
 		82EC1A1828ED7D8600F47B10 /* MockScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */; };
+		AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE58F25E2968474500012D1A /* AnyResponseValidator.swift */; };
 		B14E1D8F28A27F1D00E36290 /* AnyCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E1D8E28A27F1D00E36290 /* AnyCoder.swift */; };
 		F913B3AD26B1854F008F6CD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3AC26B1854F008F6CD2 /* AppDelegate.swift */; };
 		F913B3AF26B1854F008F6CD2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3AE26B1854F008F6CD2 /* SceneDelegate.swift */; };
@@ -24,7 +25,6 @@
 		F913B3E626B4152C008F6CD2 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		F913B3E726B4152C008F6CD2 /* AdyenNetworking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F938997826B004EF0065561F /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
-		F938997D26B004EF0065561F /* AdyenNetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */; };
 		F938997F26B004EF0065561F /* AdyenNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = F938997126B004EE0065561F /* AdyenNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998926B0059E0065561F /* RetryAPIClient.swift */; };
 		F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998A26B0059E0065561F /* SimpleScheduler.swift */; };
@@ -87,6 +87,7 @@
 		5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
 		82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDownloadRequest.swift; sourceTree = "<group>"; };
 		82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScheduler.swift; sourceTree = "<group>"; };
+		AE58F25E2968474500012D1A /* AnyResponseValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyResponseValidator.swift; sourceTree = "<group>"; };
 		B14E1D8E28A27F1D00E36290 /* AnyCoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyCoder.swift; sourceTree = "<group>"; };
 		F913B3AA26B1854F008F6CD2 /* Networking Demo App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Networking Demo App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F913B3AC26B1854F008F6CD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,8 +107,6 @@
 		F938997126B004EE0065561F /* AdyenNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdyenNetworking.h; sourceTree = "<group>"; };
 		F938997226B004EE0065561F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdyenNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdyenNetworkingTests.swift; sourceTree = "<group>"; };
-		F938997E26B004EF0065561F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F938998926B0059E0065561F /* RetryAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryAPIClient.swift; sourceTree = "<group>"; };
 		F938998A26B0059E0065561F /* SimpleScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleScheduler.swift; sourceTree = "<group>"; };
 		F938998B26B0059E0065561F /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -234,7 +233,6 @@
 			isa = PBXGroup;
 			children = (
 				F938997026B004EE0065561F /* AdyenNetworking */,
-				F938997B26B004EF0065561F /* AdyenNetworkingTests */,
 				F913B3AB26B1854F008F6CD2 /* Networking Demo App */,
 				F913B3C226B18551008F6CD2 /* Networking Demo AppTests */,
 				F938996F26B004EE0065561F /* Products */,
@@ -264,18 +262,10 @@
 			path = AdyenNetworking;
 			sourceTree = "<group>";
 		};
-		F938997B26B004EF0065561F /* AdyenNetworkingTests */ = {
-			isa = PBXGroup;
-			children = (
-				F938997C26B004EF0065561F /* AdyenNetworkingTests.swift */,
-				F938997E26B004EF0065561F /* Info.plist */,
-			);
-			path = AdyenNetworkingTests;
-			sourceTree = "<group>";
-		};
 		F938998826B0056A0065561F /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
+				AE58F25E2968474500012D1A /* AnyResponseValidator.swift */,
 				B14E1D8E28A27F1D00E36290 /* AnyCoder.swift */,
 				F938999926B005D70065561F /* AnyAPIContext.swift */,
 				F938999A26B005D70065561F /* AnyAPIEnvironment.swift */,
@@ -509,6 +499,7 @@
 				F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */,
 				F938999626B0059E0065561F /* UniqueAssetAPIClient.swift in Sources */,
 				F938999226B0059E0065561F /* APIClient.swift in Sources */,
+				AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */,
 				F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */,
 				F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */,
 				F93899AA26B008080065561F /* URLHelpers.swift in Sources */,
@@ -525,7 +516,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F938997D26B004EF0065561F /* AdyenNetworkingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
