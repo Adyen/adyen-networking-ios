@@ -154,7 +154,6 @@ public final class APIClient: APIClientProtocol {
         do {
             urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self]
                 result in
-                assert(!Thread.isMainThread, "Should not be running on main thread!!")
                 guard let self = self else { return }
                 let result = result
                     .flatMap { response in .init(catching: { try self.handle(response, request) }) }
