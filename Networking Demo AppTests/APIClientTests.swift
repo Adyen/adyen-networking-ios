@@ -284,6 +284,7 @@ class APIClientTests: XCTestCase {
         let downloadProgressExpectation = expectation(description: "Expect download progress to reach 100%.")
         
         let request = TestAsyncDownloadRequest { progress in
+            XCTAssertFalse(Thread.isMainThread, "Shouldn't be on main thread")
             if progress == 1.0 {
                 downloadProgressExpectation.fulfill()
             }
@@ -291,6 +292,7 @@ class APIClientTests: XCTestCase {
         }
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
+            XCTAssertFalse(Thread.isMainThread, "Shouldn't be on main thread")
             responseValidationException.fulfill()
             throw ValidationError.invalidResponse
         }
@@ -303,6 +305,31 @@ class APIClientTests: XCTestCase {
             FileManager.default.clearTmpDirectory()
         }
         await waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    // todo remove 
+    func testDownloadThreading() throws {
+        let apiClientExpectation = expectation(description: "Expect api client to download image file.")
+        let request = TestDownloadRequest()
+        let api = APIClient(apiContext: SimpleAPIContext())
+        let fileManager = FileManager.default
+        
+        api.perform(request) { result in
+            switch result {
+                case .success(let downloadResponse):
+                    do {
+                        let image = UIImage(data: try Data(contentsOf: downloadResponse.url))
+                        XCTAssertNotNil(image)
+                        try fileManager.removeItem(at: downloadResponse.url)
+                        apiClientExpectation.fulfill()
+                    } catch {
+                        XCTFail(error.localizedDescription)
+                    }
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+            }
+        }
+        waitForExpectations(timeout: 10, handler: nil)
     }
 }
 

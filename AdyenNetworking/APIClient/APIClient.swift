@@ -109,7 +109,7 @@ public final class APIClient: APIClientProtocol {
         self.urlSession = URLSession(
             configuration: configuration ?? Self.buildDefaultConfiguration(),
             delegate: urlSessionDelegate,
-            delegateQueue: .main
+            delegateQueue: nil
         )
         self.responseValidator = responseValidator
         self.coder = coder
@@ -136,10 +136,14 @@ public final class APIClient: APIClientProtocol {
                         }
                     }
                 
-                completionHandler(result)
+                DispatchQueue.main.sync {
+                    completionHandler(result)
+                }
             }.resume()
         } catch {
-            completionHandler(.failure(error))
+            DispatchQueue.main.sync {
+                completionHandler(.failure(error))
+            }
         }
     }
     
@@ -148,15 +152,22 @@ public final class APIClient: APIClientProtocol {
         completionHandler: @escaping CompletionHandler<R.ResponseType>
     ) where R: Request, R.ResponseType == DownloadResponse {
         do {
-            urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self] result in
+            urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self]
+                result in
+                assert(!Thread.isMainThread, "Should not be running on main thread!!")
                 guard let self = self else { return }
                 let result = result
                     .flatMap { response in .init(catching: { try self.handle(response, request) }) }
                     .map(\.responseBody)
-                completionHandler(result)
+                
+                DispatchQueue.main.sync {
+                    completionHandler(result)
+                }
             }.resume()
         } catch {
-            completionHandler(.failure(error))
+            DispatchQueue.main.sync {
+                completionHandler(.failure(error))
+            }
         }
     }
     
@@ -224,11 +235,13 @@ public final class APIClient: APIClientProtocol {
         
         
         try DispatchQueue.global(qos: .default).sync {
+            assert(!Thread.isMainThread, "Should not be running on main thread!!")
             if let data = try? Data(contentsOf: result.url) {
                 try responseValidator?.validate(data, for: request, with: result.headers)
             }
         }
         
+        assert(!Thread.isMainThread, "Should not be running on main thread!!")
         return HTTPResponse(
             headers: result.headers,
             statusCode: result.statusCode,
