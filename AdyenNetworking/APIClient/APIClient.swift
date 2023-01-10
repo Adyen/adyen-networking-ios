@@ -136,12 +136,12 @@ public final class APIClient: APIClientProtocol {
                         }
                     }
                 
-                DispatchQueue.main.sync {
+                DispatchQueue.main.async {
                     completionHandler(result)
                 }
             }.resume()
         } catch {
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 completionHandler(.failure(error))
             }
         }
@@ -160,12 +160,12 @@ public final class APIClient: APIClientProtocol {
                     .flatMap { response in .init(catching: { try self.handle(response, request) }) }
                     .map(\.responseBody)
                 
-                DispatchQueue.main.sync {
+                DispatchQueue.main.async {
                     completionHandler(result)
                 }
             }.resume()
         } catch {
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 completionHandler(.failure(error))
             }
         }
