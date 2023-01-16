@@ -306,31 +306,6 @@ class APIClientTests: XCTestCase {
         }
         await waitForExpectations(timeout: 10, handler: nil)
     }
-    
-    // todo remove 
-    func testDownloadThreading() throws {
-        let apiClientExpectation = expectation(description: "Expect api client to download image file.")
-        let request = TestDownloadRequest()
-        let api = APIClient(apiContext: SimpleAPIContext())
-        let fileManager = FileManager.default
-        
-        api.perform(request) { result in
-            switch result {
-                case .success(let downloadResponse):
-                    do {
-                        let image = UIImage(data: try Data(contentsOf: downloadResponse.url))
-                        XCTAssertNotNil(image)
-                        try fileManager.removeItem(at: downloadResponse.url)
-                        apiClientExpectation.fulfill()
-                    } catch {
-                        XCTFail(error.localizedDescription)
-                    }
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-            }
-        }
-        waitForExpectations(timeout: 10, handler: nil)
-    }
 }
 
 enum ValidationError: Error {
