@@ -232,15 +232,10 @@ public final class APIClient: APIClientProtocol {
     ) throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
         log(result: result, request: request)
         
-        
-        try DispatchQueue.global(qos: .default).sync {
-            assert(!Thread.isMainThread, "Should not be running on main thread!!")
-            if let data = try? Data(contentsOf: result.url) {
-                try responseValidator?.validate(data, for: request, with: result.headers)
-            }
+        if let data = try? Data(contentsOf: result.url) {
+            try responseValidator?.validate(data, for: request, with: result.headers)
         }
         
-        assert(!Thread.isMainThread, "Should not be running on main thread!!")
         return HTTPResponse(
             headers: result.headers,
             statusCode: result.statusCode,
