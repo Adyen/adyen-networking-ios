@@ -1,8 +1,7 @@
 //
-//  TestDownloadRequest.swift
-//  Networking Demo App
+// Copyright (c) 2023 Adyen N.V.
 //
-//  Created by James McGuire on 29/09/2022.
+// This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation

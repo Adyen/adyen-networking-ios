@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Adyen N.V.
+// Copyright (c) 2023 Adyen N.V.
 //
 // This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
@@ -58,7 +58,7 @@ public protocol AsyncAPIClientProtocol: AnyObject {
 
 /// :nodoc:
 extension APIClientProtocol {
-
+    
     /// :nodoc:
     public func retryAPIClient(with scheduler: Scheduler) -> AnyRetryAPIClient {
         RetryAPIClient(apiClient: self, scheduler: scheduler)
@@ -85,6 +85,9 @@ public final class APIClient: APIClientProtocol {
     
     /// Default file manager
     private let fileManager = FileManager.default
+    
+    /// :nodoc:
+    private let responseValidator: AnyResponseValidator?
 
     /// Initializes the API client.
     ///
@@ -93,19 +96,22 @@ public final class APIClient: APIClientProtocol {
     ///   - configuration: An optional `URLSessionConfiguration` to be used.
     ///   If no value is provided - `URLSessionConfiguration.ephemereal` will be used.
     ///   - coder: The coder used for encoding request's body and parsing response's body.
+    ///   - responseValidator: Optional validator that can be used to validate the raw response received from the API
     ///   - urlSessionDelegate: The delegate used for handling session-level events.
     public init(
         apiContext: AnyAPIContext,
         configuration: URLSessionConfiguration? = nil,
         coder: AnyCoder = Coder(),
+        responseValidator: (any AnyResponseValidator)? = nil,
         urlSessionDelegate: URLSessionDelegate? = nil
     ) {
         self.apiContext = apiContext
         self.urlSession = URLSession(
             configuration: configuration ?? Self.buildDefaultConfiguration(),
             delegate: urlSessionDelegate,
-            delegateQueue: .main
+            delegateQueue: nil
         )
+        self.responseValidator = responseValidator
         self.coder = coder
     }
     
@@ -121,19 +127,23 @@ public final class APIClient: APIClientProtocol {
                     .map(\.responseBody)
                     .mapError { (error) -> Error in
                         switch error {
-                        case let httpError as HTTPErrorResponse<R.ErrorResponseType>:
-                            return httpError.responseBody
-                        case let parsingError as ParsingError:
-                            return parsingError.underlyingError
-                        default:
-                            return error
+                            case let httpError as HTTPErrorResponse<R.ErrorResponseType>:
+                                return httpError.responseBody
+                            case let parsingError as ParsingError:
+                                return parsingError.underlyingError
+                            default:
+                                return error
                         }
                     }
                 
-                completionHandler(result)
+                DispatchQueue.main.async {
+                    completionHandler(result)
+                }
             }.resume()
         } catch {
-            completionHandler(.failure(error))
+            DispatchQueue.main.async {
+                completionHandler(.failure(error))
+            }
         }
     }
     
@@ -142,15 +152,21 @@ public final class APIClient: APIClientProtocol {
         completionHandler: @escaping CompletionHandler<R.ResponseType>
     ) where R: Request, R.ResponseType == DownloadResponse {
         do {
-            urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self] result in
+            urlSession.downloadTask(with: try buildUrlRequest(from: request)) { [weak self]
+                result in
                 guard let self = self else { return }
                 let result = result
-                    .map { response in self.handle(response, request) }
+                    .flatMap { response in .init(catching: { try self.handle(response, request) }) }
                     .map(\.responseBody)
-                completionHandler(result)
+                
+                DispatchQueue.main.async {
+                    completionHandler(result)
+                }
             }.resume()
         } catch {
-            completionHandler(.failure(error))
+            DispatchQueue.main.async {
+                completionHandler(.failure(error))
+            }
         }
     }
     
@@ -174,6 +190,9 @@ public final class APIClient: APIClientProtocol {
         _ request: R
     ) throws -> HTTPResponse<R.ResponseType> {
         log(result: result, request: request)
+        
+        try responseValidator?.validate(result.data, for: request, with: result.headers)
+        
         do {
             if result.data.isEmpty, let emptyResponse = EmptyResponse() as? R.ResponseType {
                 return HTTPResponse(
@@ -210,8 +229,13 @@ public final class APIClient: APIClientProtocol {
     private func handle<R: Request>(
         _ result: URLSessionDownloadSuccess,
         _ request: R
-    ) -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
+    ) throws -> HTTPResponse<R.ResponseType> where R.ResponseType == DownloadResponse {
         log(result: result, request: request)
+        
+        if let data = try? Data(contentsOf: result.url) {
+            try responseValidator?.validate(data, for: request, with: result.headers)
+        }
+        
         return HTTPResponse(
             headers: result.headers,
             statusCode: result.statusCode,
@@ -294,9 +318,9 @@ public final class APIClient: APIClientProtocol {
     /// If a filename from the `URLResponse` or `URLRequest` are `nil`, a default filename is given  in the form `Unknown-[UUID].tmp`.
     private func generateFilename(from urlResponse: URLResponse, with urlRequest: URLRequest) -> String {
         urlResponse.suggestedFilename ??
-            urlResponse.url?.lastPathComponent ??
-            urlRequest.url?.lastPathComponent ??
-            "Unknown-\(UUID().uuidString).tmp"
+        urlResponse.url?.lastPathComponent ??
+        urlRequest.url?.lastPathComponent ??
+        "Unknown-\(UUID().uuidString).tmp"
     }
     
     /// Creates a destination URL in the `temporary directory` for a given filename.
@@ -332,7 +356,7 @@ extension APIClient: AsyncAPIClientProtocol {
         )
         try fileManager.moveItem(at: locationUrl, to: destinationUrl)
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
-        return handle(httpResult, request)
+        return try handle(httpResult, request)
     }
     
     @available(iOS 15.0.0, *)
@@ -363,7 +387,7 @@ extension APIClient: AsyncAPIClientProtocol {
         fileManager.createFile(atPath: destinationUrl.path, contents: data)
         
         let httpResult = try URLSessionDownloadSuccess(url: destinationUrl, response: urlResponse)
-        return handle(httpResult, request)
+        return try handle(httpResult, request)
     }
     
     private func handleHttpErrorCodes(from urlResponse: URLResponse) throws {
