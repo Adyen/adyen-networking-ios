@@ -45,7 +45,7 @@ public protocol Request: Encodable {
     
     /// :nodoc:
     /// The HTTP headers.
-    var headers: [String: String] { get }
+    var headers: [String: String] { get set }
     
     /// :nodoc:
     /// The query parameters.
@@ -62,6 +62,51 @@ public protocol Request: Encodable {
 @available(iOS 15.0.0, *)
 public protocol AsyncDownloadRequest: Request {
     var onProgressUpdate: ((_ progress: Double) -> Void)? { get }
+}
+
+public struct OpaqueRequest: Request, Decodable {
+    
+    public typealias ResponseType = EmptyResponse
+    public typealias ErrorResponseType = EmptyErrorResponse
+    
+    public var headers: [String: String] = [:]
+
+    public var path: String = ""
+    
+    public var counter: UInt = 0
+    
+    public var body: Data?
+    
+    public var queryParameters: [URLQueryItem] = []
+    
+    public var method: HTTPMethod = .post
+    
+    public var expirationDate: Date = Date()
+    
+    private enum CodingKeys: CodingKey {}
+    
+    public func encode(to encoder: Encoder) throws {}
+    
+    public var isExpired: Bool {
+        Date() > expirationDate
+    }
+    
+    public init(
+        headers: [String : String],
+        path: String,
+        counter: UInt,
+        body: Data?,
+        expirationDate: Date,
+        queryParameters: [URLQueryItem],
+        method: HTTPMethod
+    ) {
+        self.headers = headers
+        self.path = path
+        self.counter = counter
+        self.body = body
+        self.queryParameters = queryParameters
+        self.method = method
+    }
 }
 
 /// Describes an API response.

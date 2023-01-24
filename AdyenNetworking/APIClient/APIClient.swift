@@ -161,7 +161,11 @@ public final class APIClient: APIClientProtocol {
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers.merging(apiContext.headers, uniquingKeysWith: { key1, _ in key1 })
         if request.method.hasBody {
-            urlRequest.httpBody = try coder.encode(request)
+            if let request = request as? OpaqueRequest {
+                urlRequest.httpBody = request.body
+            } else {
+                urlRequest.httpBody = try coder.encode(request)
+            }
         }
         
         log(urlRequest: urlRequest, request: request)
