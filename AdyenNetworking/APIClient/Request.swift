@@ -45,7 +45,7 @@ public protocol Request: Encodable {
     
     /// :nodoc:
     /// The HTTP headers.
-    var headers: [String: String] { get }
+    var headers: [String: String] { get set }
     
     /// :nodoc:
     /// The query parameters.
