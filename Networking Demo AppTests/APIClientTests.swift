@@ -313,10 +313,10 @@ enum ValidationError: Error {
 }
 
 public class MockResponseValidator: AnyResponseValidator {
-    
+
     var onValidated: (() throws -> Void)?
     
-    public func validate<R>(_ responseData: Data, for request: R, with responseHeaders: [AnyHashable : Any]) throws {
+    public func validate<R>(_ responseData: Data, for request: R, with responseHeaders: [String : String]) throws {
         try onValidated?()
     }
 }
