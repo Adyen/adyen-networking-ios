@@ -65,7 +65,7 @@ public protocol AsyncDownloadRequest: Request {
 }
 
 /// Describes an API response.
-public protocol Response: Decodable { }
+public protocol Response: Decodable, Sendable { }
 
 /// Represents an API download response.
 ///

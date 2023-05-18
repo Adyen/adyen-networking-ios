@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct HTTPResponse<R: Response> {
+public struct HTTPResponse<R: Response>: Sendable {
     
     /// HTTP Headers.
     public let headers: [String: String]
