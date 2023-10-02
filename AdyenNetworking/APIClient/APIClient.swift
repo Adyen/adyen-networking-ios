@@ -244,47 +244,47 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        adyenPrint("---- Request (/\(request.path)) ----")
+        Logging.log("---- Request (/\(request.path)) ----")
         
         if let body = urlRequest.httpBody {
-            adyenPrintAsJSON(body)
+            Logging.log(body.asJsonString ?? String(describing: body))
         }
         
-        adyenPrint("---- Request base url (/\(request.path)) ----")
-        adyenPrint(apiContext.environment.baseURL)
+        Logging.log("---- Request base url (/\(request.path)) ----")
+        Logging.log(apiContext.environment.baseURL.absoluteString)
         
         if let headers = urlRequest.allHTTPHeaderFields {
-            adyenPrint("---- Request Headers (/\(request.path)) ----")
-            adyenPrintAsJSON(headers)
+            Logging.log("---- Request Headers (/\(request.path)) ----")
+            Logging.log(headers.asJsonString ?? String(describing: headers))
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
-            adyenPrint("---- Request query (/\(request.path)) ----")
-            adyenPrintAsJSON(queryParams)
+            Logging.log("---- Request query (/\(request.path)) ----")
+            Logging.log(queryParams.asJsonString ?? String(describing: queryParams))
         }
         
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        adyenPrint("---- Response Code (/\(request.path)) ----")
-        adyenPrint(result.statusCode)
+        Logging.log("---- Response Code (/\(request.path)) ----")
+        Logging.log("\(result.statusCode)")
         
-        adyenPrint("---- Response Headers (/\(request.path)) ----")
-        adyenPrintAsJSON(result.headers)
+        Logging.log("---- Response Headers (/\(request.path)) ----")
+        Logging.log(result.headers.asJsonString ?? String(describing: result.headers))
         
-        adyenPrint("---- Response (/\(request.path)) ----")
-        adyenPrintAsJSON(result.data)
+        Logging.log("---- Response (/\(request.path)) ----")
+        Logging.log(result.data.asJsonString ?? String(describing: result.data))
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        adyenPrint("---- Response Code (/\(request.path)) ----")
-        adyenPrint(result.statusCode)
+        Logging.log("---- Response Code (/\(request.path)) ----")
+        Logging.log("\(result.statusCode)")
         
-        adyenPrint("---- Response Headers (/\(request.path)) ----")
-        adyenPrintAsJSON(result.headers)
+        Logging.log("---- Response Headers (/\(request.path)) ----")
+        Logging.log(result.headers.asJsonString ?? String(describing: result.headers))
         
-        adyenPrint("---- Response (/\(request.path)) ----")
-        adyenPrint(result.url)
+        Logging.log("---- Response (/\(request.path)) ----")
+        Logging.log(result.url.absoluteString)
     }
     
     /// :nodoc:
