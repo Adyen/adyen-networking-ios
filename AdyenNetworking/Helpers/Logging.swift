@@ -6,6 +6,7 @@
 
 import func Darwin.fputs
 import Foundation
+import OSLog
 
 /// Provides control over SDK logging.
 public enum Logging {
@@ -13,52 +14,57 @@ public enum Logging {
     public static var isEnabled: Bool = false
 }
 
-@_spi(AdyenInternal)
-public func adyenPrint(_ items: Any..., separator: String = " ", terminator: String = "\n", fileId: String = #fileID) {
-    guard Logging.isEnabled else { return }
-    let moduleName = fileId.split(separator: "/").first ?? "AdyenNetworking"
+extension Logging {
     
-    var items = items
-    items.insert("[\(moduleName)]", at: 0)
-    items.insert(ISO8601DateFormatter().string(from: Date()), at: 0)
-    
-    var idx = items.startIndex
-    let endIdx = items.endIndex
-    
-    repeat {
-        Swift.print(items[idx], separator: separator, terminator: idx == (endIdx - 1) ? terminator : separator)
-        idx += 1
-    } while idx < endIdx
-}
-
-@_spi(AdyenInternal)
-public func adyenPrintAsJSON(_ dictionary: [String: Any]) {
-    guard Logging.isEnabled else { return }
-    do {
-        let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: jsonOptions())
-        adyenPrintAsJSON(jsonData)
-    } catch {
-        adyenPrint(dictionary)
+    static var apiClient: AdyenLogger {
+        .init(subsystem: "AdyenNetworking", category: "APIClient")
     }
 }
 
-@_spi(AdyenInternal)
-public func adyenPrintAsJSON(_ data: Data) {
-    guard Logging.isEnabled else { return }
-    do {
-        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: jsonOptions())
-        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-
-        adyenPrint(jsonString)
-    } catch {
-        if let string = String(data: data, encoding: .utf8) {
-            adyenPrint(string)
+struct AdyenLogger {
+    let subsystem: String
+    let category: String
+    
+    func log(_ message: String, as level: OSLogType = .debug) {
+        guard Logging.isEnabled else { return }
+        
+        if #available(iOS 17.0, *) {
+            Logger(subsystem: subsystem, category: category).log(level: level, "\(message)")
+        } else {
+            print(message)
         }
     }
 }
 
-private func jsonOptions() -> JSONSerialization.WritingOptions {
+extension Dictionary where Key == String {
+    
+    var asJsonString: String? {
+        guard
+            let jsonData = try? JSONSerialization.data(withJSONObject: self, options: jsonOptions)
+        else {
+            return nil
+        }
+        
+        return String(data: jsonData, encoding: .utf8)
+    }
+}
+
+extension Data {
+    
+    var asJsonString: String? {
+        guard
+            let jsonObject = try? JSONSerialization.jsonObject(with: self, options: []),
+            let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: jsonOptions)
+        else {
+            return nil
+        }
+        
+        return String(data: jsonData, encoding: .utf8)
+    }
+}
+
+private var jsonOptions: JSONSerialization.WritingOptions {
+    
     if #available(iOS 13.0, *) {
         return [.prettyPrinted, .withoutEscapingSlashes]
     } else {
