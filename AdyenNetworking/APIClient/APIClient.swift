@@ -244,47 +244,57 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        Logging.log("---- Request (/\(request.path)) ----")
-        
-        if let body = urlRequest.httpBody {
-            Logging.log(body.asJsonString ?? String(describing: body))
+        var log = ["[Request]"]
+        if let method = urlRequest.httpMethod {
+            log.append("Method: \(method)")
         }
-        
-        Logging.log("---- Request base url (/\(request.path)) ----")
-        Logging.log(apiContext.environment.baseURL.absoluteString)
+        log.append("Base URL: \(apiContext.environment.baseURL.absoluteString)")
+        log.append("Path: \(request.path)")
         
         if let headers = urlRequest.allHTTPHeaderFields {
-            Logging.log("---- Request Headers (/\(request.path)) ----")
-            Logging.log(headers.asJsonString ?? String(describing: headers))
+            log.append("\nHeaders:")
+            log.append(headers.asJsonString ?? String(describing: headers))
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
-            Logging.log("---- Request query (/\(request.path)) ----")
-            Logging.log(queryParams.asJsonString ?? String(describing: queryParams))
+            log.append("\nQuery:")
+            log.append(queryParams.asJsonString ?? String(describing: queryParams))
         }
         
+        if let body = urlRequest.httpBody {
+            log.append("\nBody:")
+            log.append(body.asJsonString ?? String(describing: body))
+        }
+        
+        Logging.apiClient.log(log.joined(separator: "\n"))
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        Logging.log("---- Response Code (/\(request.path)) ----")
-        Logging.log("\(result.statusCode)")
+        var log = ["[Response]"]
+        log.append("Code: \(result.statusCode)")
+        log.append("Path: \(request.path)")
         
-        Logging.log("---- Response Headers (/\(request.path)) ----")
-        Logging.log(result.headers.asJsonString ?? String(describing: result.headers))
+        log.append("\nHeaders:")
+        log.append(result.headers.asJsonString ?? String(describing: result.headers))
         
-        Logging.log("---- Response (/\(request.path)) ----")
-        Logging.log(result.data.asJsonString ?? String(describing: result.data))
+        log.append("\nResponse:")
+        log.append(result.data.asJsonString ?? String(describing: result.data))
+        
+        Logging.apiClient.log(log.joined(separator: "\n"))
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        Logging.log("---- Response Code (/\(request.path)) ----")
-        Logging.log("\(result.statusCode)")
+        var log = ["[Response]"]
+        log.append("Code: \(result.statusCode)")
+        log.append("Path: \(request.path)")
         
-        Logging.log("---- Response Headers (/\(request.path)) ----")
-        Logging.log(result.headers.asJsonString ?? String(describing: result.headers))
+        log.append("\nHeaders:")
+        log.append(result.headers.asJsonString ?? String(describing: result.headers))
         
-        Logging.log("---- Response (/\(request.path)) ----")
-        Logging.log(result.url.absoluteString)
+        log.append("\nResponse:")
+        log.append(result.url.absoluteString)
+        
+        Logging.apiClient.log(log.joined(separator: "\n"))
     }
     
     /// :nodoc:

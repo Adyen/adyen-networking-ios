@@ -16,14 +16,20 @@ public enum Logging {
 
 extension Logging {
     
-    @available(iOS 14.0, *)
-    static var logger: Logger { return Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.adyen.Adyen", category: "AdyenNetworking") }
+    static var apiClient: AdyenLogger {
+        .init(subsystem: "AdyenNetworking", category: "APIClient")
+    }
+}
+
+struct AdyenLogger {
+    let subsystem: String
+    let category: String
     
-    static func log(_ message: String, as level: OSLogType = .info) {
+    func log(_ message: String, as level: OSLogType = .debug) {
         guard Logging.isEnabled else { return }
         
-        if #available(iOS 14.0, *) {
-            logger.log(level: level, "\(message)")
+        if #available(iOS 17.0, *) {
+            Logger(subsystem: subsystem, category: category).log(level: level, "\(message)")
         } else {
             print(message)
         }
