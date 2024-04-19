@@ -27,7 +27,7 @@ public protocol APIClientProtocol: AnyObject {
 
 /// :nodoc:
 /// Describes any async API Client.
-@available(iOS 15.0.0, *)
+@available(iOS 13.0.0, *)
 public protocol AsyncAPIClientProtocol: AnyObject {
     /// Performs the API request asynchronously.
     /// - Parameter request: The ``Request`` to be performed.
@@ -336,7 +336,7 @@ public final class APIClient: APIClientProtocol {
 }
 
 extension APIClient: AsyncAPIClientProtocol {
-    @available(iOS 15.0.0, *)
+    @available(iOS 13.0.0, *)
     public func perform<R>(_ request: R) async throws -> HTTPResponse<R.ResponseType> where R: Request {
         let result = try await urlSession
             .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
@@ -344,7 +344,7 @@ extension APIClient: AsyncAPIClientProtocol {
         return try handle(httpResult, request)
     }
     
-    @available(iOS 15.0.0, *)
+    @available(iOS 13.0.0, *)
     public func perform<R>(
         _ request: R
     ) async throws -> HTTPResponse<R.ResponseType> where R: Request, R.ResponseType == DownloadResponse {
@@ -359,7 +359,7 @@ extension APIClient: AsyncAPIClientProtocol {
         return try handle(httpResult, request)
     }
     
-    @available(iOS 15.0.0, *)
+    @available(iOS 13.0.0, *)
     public func perform<R>(
         _ request: R
     ) async throws -> HTTPResponse<R.ResponseType> where R: AsyncDownloadRequest, R.ResponseType == DownloadResponse {
