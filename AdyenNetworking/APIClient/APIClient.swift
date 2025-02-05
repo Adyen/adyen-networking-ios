@@ -123,7 +123,10 @@ public final class APIClient: APIClientProtocol {
             urlSession.dataTask(with: try buildUrlRequest(from: request)) { [weak self] result in
                 guard let self = self else { return }
                 let result = result
-                    .flatMap { response in .init(catching: { try self.handle(response, request) }) }
+                    .flatMap { response in .init(catching: {
+                        try self.handleHttpError(from: response, request: request)
+                        return try self.handle(response, request)
+                    })}
                     .map(\.responseBody)
                     .mapError { (error) -> Error in
                         switch error {
@@ -333,6 +336,27 @@ public final class APIClient: APIClientProtocol {
         }
         return destinationUrl
     }
+    
+    private func handleHttpError<R: Request>(
+        from response: URLSessionSuccess,
+        request: R
+    ) throws {
+        if (400...599).contains(response.statusCode) {
+            if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: response.data) {
+                throw HTTPErrorResponse<R.ErrorResponseType>(
+                    headers: response.headers,
+                    statusCode: response.statusCode,
+                    responseBody: errorResponse
+                )
+            } else {
+                throw HTTPErrorResponse(
+                    headers: response.headers,
+                    statusCode: response.statusCode,
+                    responseBody: EmptyErrorResponse()
+                )
+            }
+        }
+    }
 }
 
 extension APIClient: AsyncAPIClientProtocol {
@@ -341,6 +365,7 @@ extension APIClient: AsyncAPIClientProtocol {
         let result = try await urlSession
             .data(for: try buildUrlRequest(from: request)) as (data: Data, urlResponse: URLResponse)
         let httpResult = try URLSessionSuccess(data: result.data, response: result.urlResponse)
+        try handleHttpError(from: httpResult, request: request)
         return try handle(httpResult, request)
     }
     
