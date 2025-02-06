@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "F8E6A66B-5769-4451-8250-88E856A6BD44",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:AdyenNetworking.xcodeproj",
+        "identifier" : "8193C9F12D55068C00F7445D",
+        "name" : "AdyenNetworkingTests"
+      }
+    }
+  ],
+  "version" : 1
+}

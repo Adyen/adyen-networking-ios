@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */; };
+		8193C9F62D55068C00F7445D /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; platformFilter = ios; };
 		82D5C1D128E59D7F00179E66 /* TestDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */; };
 		82EC1A1828ED7D8600F47B10 /* MockScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */; };
 		AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE58F25E2968474500012D1A /* AnyResponseValidator.swift */; };
@@ -24,7 +25,6 @@
 		F913B3E426B41116008F6CD2 /* CreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3E326B41116008F6CD2 /* CreateUsersRequest.swift */; };
 		F913B3E626B4152C008F6CD2 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		F913B3E726B4152C008F6CD2 /* AdyenNetworking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F938997826B004EF0065561F /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		F938997F26B004EF0065561F /* AdyenNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = F938997126B004EE0065561F /* AdyenNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998926B0059E0065561F /* RetryAPIClient.swift */; };
 		F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F938998A26B0059E0065561F /* SimpleScheduler.swift */; };
@@ -42,25 +42,17 @@
 		F93899A826B007730065561F /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A726B007730065561F /* Errors.swift */; };
 		F93899AA26B008080065561F /* URLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93899A926B008080065561F /* URLHelpers.swift */; };
 		F9FCFF4426C6AACD00540FE1 /* InvalidCreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */; };
-		F9FCFF4826CB96E800540FE1 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F913B3C026B18551008F6CD2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F938996526B004EE0065561F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F913B3A926B1854F008F6CD2;
-			remoteInfo = "Networking Demo App";
-		};
-		F913B3E826B4152C008F6CD2 /* PBXContainerItemProxy */ = {
+		8193C9F72D55068C00F7445D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F938996526B004EE0065561F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = F938996D26B004EE0065561F;
 			remoteInfo = AdyenNetworking;
 		};
-		F938997926B004EF0065561F /* PBXContainerItemProxy */ = {
+		F913B3E826B4152C008F6CD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F938996526B004EE0065561F /* Project object */;
 			proxyType = 1;
@@ -85,6 +77,8 @@
 
 /* Begin PBXFileReference section */
 		5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
+		81403EC52D55075900FF0E59 /* AdyenNetworkingTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AdyenNetworkingTests.xctestplan; sourceTree = "<group>"; };
+		8193C9F22D55068C00F7445D /* AdyenNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdyenNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDownloadRequest.swift; sourceTree = "<group>"; };
 		82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScheduler.swift; sourceTree = "<group>"; };
 		AE58F25E2968474500012D1A /* AnyResponseValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyResponseValidator.swift; sourceTree = "<group>"; };
@@ -97,8 +91,6 @@
 		F913B3B526B18551008F6CD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F913B3B826B18551008F6CD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F913B3BA26B18551008F6CD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F913B3BF26B18551008F6CD2 /* Networking Demo AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Networking Demo AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F913B3C526B18551008F6CD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F913B3DB26B40C0F008F6CD2 /* GetUsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersRequest.swift; sourceTree = "<group>"; };
 		F913B3DE26B40C5B008F6CD2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		F913B3E026B40E0B008F6CD2 /* APIContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIContext.swift; sourceTree = "<group>"; };
@@ -106,7 +98,6 @@
 		F938996E26B004EE0065561F /* AdyenNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdyenNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F938997126B004EE0065561F /* AdyenNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdyenNetworking.h; sourceTree = "<group>"; };
 		F938997226B004EE0065561F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdyenNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F938998926B0059E0065561F /* RetryAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryAPIClient.swift; sourceTree = "<group>"; };
 		F938998A26B0059E0065561F /* SimpleScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleScheduler.swift; sourceTree = "<group>"; };
 		F938998B26B0059E0065561F /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -123,10 +114,21 @@
 		F93899A726B007730065561F /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		F93899A926B008080065561F /* URLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHelpers.swift; sourceTree = "<group>"; };
 		F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvalidCreateUsersRequest.swift; sourceTree = "<group>"; };
-		F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8193C9F32D55068C00F7445D /* AdyenNetworkingTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AdyenNetworkingTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		8193C9EF2D55068C00F7445D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8193C9F62D55068C00F7445D /* AdyenNetworking.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F913B3A726B1854F008F6CD2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -135,25 +137,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F913B3BC26B18551008F6CD2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F938996B26B004EE0065561F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F938997426B004EF0065561F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F938997826B004EF0065561F /* AdyenNetworking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,15 +168,6 @@
 				F913B3BA26B18551008F6CD2 /* Info.plist */,
 			);
 			path = "Networking Demo App";
-			sourceTree = "<group>";
-		};
-		F913B3C226B18551008F6CD2 /* Networking Demo AppTests */ = {
-			isa = PBXGroup;
-			children = (
-				F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */,
-				F913B3C526B18551008F6CD2 /* Info.plist */,
-			);
-			path = "Networking Demo AppTests";
 			sourceTree = "<group>";
 		};
 		F913B3DA26B40BEA008F6CD2 /* Requests */ = {
@@ -232,9 +210,10 @@
 		F938996426B004EE0065561F = {
 			isa = PBXGroup;
 			children = (
+				81403EC52D55075900FF0E59 /* AdyenNetworkingTests.xctestplan */,
 				F938997026B004EE0065561F /* AdyenNetworking */,
 				F913B3AB26B1854F008F6CD2 /* Networking Demo App */,
-				F913B3C226B18551008F6CD2 /* Networking Demo AppTests */,
+				8193C9F32D55068C00F7445D /* AdyenNetworkingTests */,
 				F938996F26B004EE0065561F /* Products */,
 				F913B3E526B4152C008F6CD2 /* Frameworks */,
 			);
@@ -244,9 +223,8 @@
 			isa = PBXGroup;
 			children = (
 				F938996E26B004EE0065561F /* AdyenNetworking.framework */,
-				F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */,
 				F913B3AA26B1854F008F6CD2 /* Networking Demo App.app */,
-				F913B3BF26B18551008F6CD2 /* Networking Demo AppTests.xctest */,
+				8193C9F22D55068C00F7445D /* AdyenNetworkingTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -308,6 +286,29 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		8193C9F12D55068C00F7445D /* AdyenNetworkingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8193C9F92D55068C00F7445D /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */;
+			buildPhases = (
+				8193C9EE2D55068C00F7445D /* Sources */,
+				8193C9EF2D55068C00F7445D /* Frameworks */,
+				8193C9F02D55068C00F7445D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8193C9F82D55068C00F7445D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8193C9F32D55068C00F7445D /* AdyenNetworkingTests */,
+			);
+			name = AdyenNetworkingTests;
+			packageProductDependencies = (
+			);
+			productName = AdyenNetworkingTests;
+			productReference = 8193C9F22D55068C00F7445D /* AdyenNetworkingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F913B3A926B1854F008F6CD2 /* Networking Demo App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F913B3D726B18552008F6CD2 /* Build configuration list for PBXNativeTarget "Networking Demo App" */;
@@ -327,24 +328,6 @@
 			productReference = F913B3AA26B1854F008F6CD2 /* Networking Demo App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F913B3BE26B18551008F6CD2 /* Networking Demo AppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F913B3D826B18552008F6CD2 /* Build configuration list for PBXNativeTarget "Networking Demo AppTests" */;
-			buildPhases = (
-				F913B3BB26B18551008F6CD2 /* Sources */,
-				F913B3BC26B18551008F6CD2 /* Frameworks */,
-				F913B3BD26B18551008F6CD2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F913B3C126B18551008F6CD2 /* PBXTargetDependency */,
-			);
-			name = "Networking Demo AppTests";
-			productName = "Networking Demo AppTests";
-			productReference = F913B3BF26B18551008F6CD2 /* Networking Demo AppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		F938996D26B004EE0065561F /* AdyenNetworking */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F938998226B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworking" */;
@@ -363,46 +346,24 @@
 			productReference = F938996E26B004EE0065561F /* AdyenNetworking.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		F938997626B004EF0065561F /* AdyenNetworkingTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F938998526B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */;
-			buildPhases = (
-				F938997326B004EF0065561F /* Sources */,
-				F938997426B004EF0065561F /* Frameworks */,
-				F938997526B004EF0065561F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F938997A26B004EF0065561F /* PBXTargetDependency */,
-			);
-			name = AdyenNetworkingTests;
-			productName = AdyenNetworkingTests;
-			productReference = F938997726B004EF0065561F /* AdyenNetworkingTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		F938996526B004EE0065561F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
+					8193C9F12D55068C00F7445D = {
+						CreatedOnToolsVersion = 16.1;
+					};
 					F913B3A926B1854F008F6CD2 = {
 						CreatedOnToolsVersion = 12.5;
-					};
-					F913B3BE26B18551008F6CD2 = {
-						CreatedOnToolsVersion = 12.5;
-						TestTargetID = F913B3A926B1854F008F6CD2;
 					};
 					F938996D26B004EE0065561F = {
 						CreatedOnToolsVersion = 12.5;
 						LastSwiftMigration = 1250;
-					};
-					F938997626B004EF0065561F = {
-						CreatedOnToolsVersion = 12.5;
 					};
 				};
 			};
@@ -420,14 +381,20 @@
 			projectRoot = "";
 			targets = (
 				F938996D26B004EE0065561F /* AdyenNetworking */,
-				F938997626B004EF0065561F /* AdyenNetworkingTests */,
 				F913B3A926B1854F008F6CD2 /* Networking Demo App */,
-				F913B3BE26B18551008F6CD2 /* Networking Demo AppTests */,
+				8193C9F12D55068C00F7445D /* AdyenNetworkingTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8193C9F02D55068C00F7445D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F913B3A826B1854F008F6CD2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -438,21 +405,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F913B3BD26B18551008F6CD2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F938996C26B004EE0065561F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F938997526B004EF0065561F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -462,6 +415,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8193C9EE2D55068C00F7445D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F913B3A626B1854F008F6CD2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -476,14 +436,6 @@
 				F913B3E126B40E0B008F6CD2 /* APIContext.swift in Sources */,
 				F913B3DC26B40C0F008F6CD2 /* GetUsersRequest.swift in Sources */,
 				82EC1A1828ED7D8600F47B10 /* MockScheduler.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F913B3BB26B18551008F6CD2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F9FCFF4826CB96E800540FE1 /* APIClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,30 +464,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F938997326B004EF0065561F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F913B3C126B18551008F6CD2 /* PBXTargetDependency */ = {
+		8193C9F82D55068C00F7445D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F913B3A926B1854F008F6CD2 /* Networking Demo App */;
-			targetProxy = F913B3C026B18551008F6CD2 /* PBXContainerItemProxy */;
+			platformFilter = ios;
+			target = F938996D26B004EE0065561F /* AdyenNetworking */;
+			targetProxy = 8193C9F72D55068C00F7445D /* PBXContainerItemProxy */;
 		};
 		F913B3E926B4152C008F6CD2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F938996D26B004EE0065561F /* AdyenNetworking */;
 			targetProxy = F913B3E826B4152C008F6CD2 /* PBXContainerItemProxy */;
-		};
-		F938997A26B004EF0065561F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F938996D26B004EE0065561F /* AdyenNetworking */;
-			targetProxy = F938997926B004EF0065561F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -559,6 +500,61 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		8193C9FA2D55068C00F7445D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MTHKLN76CG;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Debug;
+		};
+		8193C9FB2D55068C00F7445D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MTHKLN76CG;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				XROS_DEPLOYMENT_TARGET = 2.1;
+			};
+			name = Release;
+		};
 		F913B3D126B18552008F6CD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -596,50 +592,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		F913B3D326B18552008F6CD2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B2NYSS5932;
-				INFOPLIST_FILE = "Networking Demo AppTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adyen.Networking-Demo-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Networking Demo App.app/Networking Demo App";
-			};
-			name = Debug;
-		};
-		F913B3D426B18552008F6CD2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B2NYSS5932;
-				INFOPLIST_FILE = "Networking Demo AppTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adyen.Networking-Demo-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Networking Demo App.app/Networking Demo App";
 			};
 			name = Release;
 		};
@@ -820,61 +772,23 @@
 			};
 			name = Release;
 		};
-		F938998626B004EF0065561F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B2NYSS5932;
-				INFOPLIST_FILE = AdyenNetworkingTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		F938998726B004EF0065561F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B2NYSS5932;
-				INFOPLIST_FILE = AdyenNetworkingTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adyen.AdyenNetworkingTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8193C9F92D55068C00F7445D /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8193C9FA2D55068C00F7445D /* Debug */,
+				8193C9FB2D55068C00F7445D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F913B3D726B18552008F6CD2 /* Build configuration list for PBXNativeTarget "Networking Demo App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F913B3D126B18552008F6CD2 /* Debug */,
 				F913B3D226B18552008F6CD2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F913B3D826B18552008F6CD2 /* Build configuration list for PBXNativeTarget "Networking Demo AppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F913B3D326B18552008F6CD2 /* Debug */,
-				F913B3D426B18552008F6CD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -893,15 +807,6 @@
 			buildConfigurations = (
 				F938998326B004EF0065561F /* Debug */,
 				F938998426B004EF0065561F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F938998526B004EF0065561F /* Build configuration list for PBXNativeTarget "AdyenNetworkingTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F938998626B004EF0065561F /* Debug */,
-				F938998726B004EF0065561F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
