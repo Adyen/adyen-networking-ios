@@ -13,7 +13,6 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:AdyenNetworking.xcodeproj",
         "identifier" : "81EA9E482D563B4E00C077C9",
