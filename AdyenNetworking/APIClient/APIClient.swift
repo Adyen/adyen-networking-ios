@@ -115,6 +115,20 @@ public final class APIClient: APIClientProtocol {
         self.coder = coder
     }
     
+    /// Init for dependency injection / testing
+    internal init(
+        apiContext: AnyAPIContext,
+        urlSession: URLSession,
+        coder: AnyCoder = Coder(),
+        responseValidator: (any AnyResponseValidator)? = nil,
+        urlSessionDelegate: URLSessionDelegate? = nil
+    ) {
+        self.apiContext = apiContext
+        self.urlSession = urlSession
+        self.responseValidator = responseValidator
+        self.coder = coder
+    }
+    
     public func perform<R>(
         _ request: R,
         completionHandler: @escaping CompletionHandler<R.ResponseType>
