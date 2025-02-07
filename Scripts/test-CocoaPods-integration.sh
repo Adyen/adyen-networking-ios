@@ -71,19 +71,19 @@ pod install
 
 # Archive for generic iOS device
 echo '############# Archive for generic iOS device ###############'
-xcodebuild archive -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS'
+xcodebuild archive -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO GENERATE_INFOPLIST_FILE=YES
 
 # Build for generic iOS device
 echo '############# Build for generic iOS device ###############'
-xcodebuild clean build -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS'
+xcodebuild clean build -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO GENERATE_INFOPLIST_FILE=YES
 
 # Archive for x86_64 simulator
 echo '############# Archive for simulator ###############'
-xcodebuild archive -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS Simulator'
+xcodebuild archive -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS Simulator' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO GENERATE_INFOPLIST_FILE=YES
 
 # Build for x86_64 simulator
 echo '############# Build for simulator ###############'
-xcodebuild clean build -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS Simulator'
+xcodebuild clean build -scheme TempProject-Package -workspace TempProject.xcworkspace -destination 'generic/platform=iOS Simulator' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO GENERATE_INFOPLIST_FILE=YES
 
 # Clean up.
 cd ../
