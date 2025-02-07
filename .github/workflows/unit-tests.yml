@@ -27,9 +27,8 @@ jobs:
     - name: 🧪 Run Unit Tests
       run: |
         xcodebuild test \
-          -project "AdyenNetworking" \
+          -project "AdyenNetworking.xcodeproj" \
           -scheme "AdyenNetworkingTests" \
           -testPlan "AdyenNetworkingTests" \
           -enableCodeCoverage YES \
-          -resultBundlePath "UnitTests.xcresult" \
-          -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
+          -resultBundlePath "UnitTests.xcresult" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
