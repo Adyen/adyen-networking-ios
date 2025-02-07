@@ -10,6 +10,22 @@ import XCTest
 
 class APIClientTests: XCTestCase {
     
+    struct TestResponse {
+        let data: Data?
+        let response: HTTPURLResponse?
+        let error: Error?
+        
+        init(
+            data: Data? = nil,
+            statusCode: Int? = nil,
+            error: Error? = nil
+        ) {
+            self.data = data
+            self.response = statusCode.map { .with(statusCode: $0) }
+            self.error = error
+        }
+    }
+    
     func apiClient(with urlSession: URLSession) -> APIClient {
         APIClient(apiContext: MockAPIContext(), urlSession: urlSession, coder: Coder())
     }
@@ -22,21 +38,15 @@ class APIClientTests: XCTestCase {
     /// URLSession returns empty response (no data, response or error)
     func test_emptyResponse_fails() throws {
         
-        // Setup
-        
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: nil,
-            nextResponse: nil,
-            nextError: nil
-        )
+        // Given
         
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
+        let response = TestResponse()
         
-        // Request
+        // Then
         
-        apiClient(with: mockURLSession).perform(request) { result in
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
             switch result {
             case .success:
                 XCTFail("Expecting api call to fail")
@@ -49,157 +59,155 @@ class APIClientTests: XCTestCase {
                 apiClientExpectation.fulfill()
             }
         }
-        
         waitForExpectations(timeout: 1, handler: nil)
     }
     
     /// URLSession returns empty response (no data, response or error)
     func test_requestEmptyResponseEmptyErrorResponse_successStatusCodeAndEmptyData_succeeds() throws {
         
-        // Setup
-        
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: "".data(using: .utf8),
-            nextResponse: HTTPURLResponse.with(statusCode: 200),
-            nextError: nil
-        )
+        // Given
         
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
+        let response = TestResponse(
+            data: "".data(using: .utf8),
+            statusCode: 200
+        )
         
-        // Request
+        // Then
         
-        apiClient(with: mockURLSession).perform(request) {
-            self.fullfill(apiClientExpectation, ifSuccess: $0)
-        }
-        
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response, successExpectation: apiClientExpectation)
         waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestEmptyResponseEmptyErrorResponse_successStatusCode_succeeds() throws {
         
-        // Setup
+        // Given
         
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: "{}".data(using: .utf8),
-            nextResponse: HTTPURLResponse.with(statusCode: 200),
-            nextError: nil
+        let request = MockRequest<EmptyResponse, MockErrorResponse>()
+        let response = TestResponse(
+            data: "{}".data(using: .utf8),
+            statusCode: 200
         )
         
-        let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
+        // Then
         
-        // Request
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response, successExpectation: apiClientExpectation)
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func test_requestEmptyResponseEmptyErrorResponse_successStatusCodeButInvalidResponse_fails() throws {
         
-        apiClient(with: mockURLSession).perform(request) {
-            self.fullfill(apiClientExpectation, ifSuccess: $0)
+        // Given
+        
+        let request = MockRequest<MockResponse, MockErrorResponse>()
+        let response = TestResponse(
+            data: "{}".data(using: .utf8),
+            statusCode: 200
+        )
+        
+        // Then
+        
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
+            switch result {
+            case .success:
+                XCTFail("Expecting api call to fail")
+            case let .failure(error):
+                XCTAssertTrue(error is DecodingError)
+                apiClientExpectation.fulfill()
+            }
         }
-        
         waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestEmptyResponseMockErrorResponse_nonSuccessStatusCodeButValidResponse_fails() throws {
         
-        // Setup
-        
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: "{}".data(using: .utf8),
-            nextResponse: HTTPURLResponse.with(statusCode: 500),
-            nextError: nil
-        )
-        
-        // Request
+        // Given
         
         let request = MockRequest<EmptyResponse, MockErrorResponse>()
-        apiClient(with: mockURLSession).perform(request) { result in
+        let response = TestResponse(
+            data: "{}".data(using: .utf8),
+            statusCode: 500
+        )
+        
+        // Then
+        
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
             switch result {
             case .success:
-                // TODO: This should actually fail once fixed
+                XCTFail("Expecting api call to fail")
+            case let .failure(error):
+                guard let errorResponse = error as? HTTPErrorResponse<EmptyErrorResponse> else {
+                    XCTFail("Expecting `HTTPErrorResponse<EmptyErrorResponse>`")
+                    return
+                }
+                XCTAssertEqual(errorResponse.statusCode, response.response?.statusCode)
                 apiClientExpectation.fulfill()
-            case .failure:
-                XCTFail("Expecting api call to succeed")
             }
         }
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestEmptyResponseEmptyErrorResponse_nonSuccessStatusCodeButValidResponse_fails() throws {
         
-        // Setup
-        
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: "{}".data(using: .utf8),
-            nextResponse: HTTPURLResponse.with(statusCode: 500),
-            nextError: nil
-        )
+        // Given
         
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
+        let response = TestResponse(
+            data: "{}".data(using: .utf8),
+            statusCode: 500
+        )
         
-        // Request
+        // Then
         
-        apiClient(with: mockURLSession).perform(request) { result in
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
             switch result {
             case .success:
-                // TODO: This should actually fail once fixed
+                XCTFail("Expecting api call to fail")
+            case let .failure(error):
+                XCTAssertTrue(error is EmptyErrorResponse)
                 apiClientExpectation.fulfill()
-            case .failure:
-                XCTFail("Expecting api call to succeed")
             }
         }
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestMockResponseEmptyErrorResponse_successStatusCodeAndValidResponse_succeeds() throws {
         
-        // Setup
+        // Given
         
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let response = try JSONEncoder().encode(MockResponse(someField: "Hello"))
-        
-        let mockURLSession = MockURLSession(
-            nextData: response,
-            nextResponse: HTTPURLResponse.with(statusCode: 200),
-            nextError: nil
+        let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
+        let response = TestResponse(
+            data: try JSONEncoder().encode(MockResponse(someField: "Hello")),
+            statusCode: 200
         )
         
-        let request = MockRequest<MockResponse, MockErrorResponse>()
+        // Then
         
-        // Request
-        
-        apiClient(with: mockURLSession).perform(request) {
-            self.fullfill(apiClientExpectation, ifSuccess: $0)
-        }
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response, successExpectation: apiClientExpectation)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestMockResponseEmptyErrorResponse_nonSuccessStatusCodeAndValidErrorResponse_fails() throws {
         
-        // Setup
+        // Given
         
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        let request = MockRequest<EmptyResponse, MockErrorResponse>()
         let mockErrorResponse = MockErrorResponse(someErrorField: "Hello World")
-        
-        let mockURLSession = MockURLSession(
-            nextData: try JSONEncoder().encode(mockErrorResponse),
-            nextResponse: HTTPURLResponse.with(statusCode: 404),
-            nextError: nil
+        let response = TestResponse(
+            data: try JSONEncoder().encode(mockErrorResponse),
+            statusCode: 404
         )
         
-        let request = MockRequest<MockResponse, MockErrorResponse>()
+        // Then
         
-        // Request
-        
-        apiClient(with: mockURLSession).perform(request) { result in
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
             switch result {
             case .success:
                 XCTFail("Expecting api call to fail")
@@ -213,26 +221,23 @@ class APIClientTests: XCTestCase {
             }
         }
         
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func test_requestMockResponseEmptyErrorResponse_successStatusCodeButInvalidResponse_fails() throws {
         
-        // Setup
-        
-        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
-        
-        let mockURLSession = MockURLSession(
-            nextData: "{".data(using: .utf8),
-            nextResponse: HTTPURLResponse.with(statusCode: 200),
-            nextError: nil
-        )
+        // When
         
         let request = MockRequest<MockResponse, MockErrorResponse>()
+        let response = TestResponse(
+            data: "{".data(using: .utf8),
+            statusCode: 200
+        )
         
-        // Request
+        // Then
         
-        apiClient(with: mockURLSession).perform(request) { result in
+        let apiClientExpectation = expectation(description: "Expecting apiClient call back to be called.")
+        perform(request: request, testResponse: response) { result in
             switch result {
             case .success:
                 XCTFail("Expecting api call to fail")
@@ -241,9 +246,11 @@ class APIClientTests: XCTestCase {
                 apiClientExpectation.fulfill()
             }
         }
-        
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
+    
+    // TODO: Tests to add
+    // - Test swift concurrency paths
     
     /*
     func testValidCreateRequest() throws {
@@ -266,7 +273,7 @@ class APIClientTests: XCTestCase {
                 XCTFail()
             }
         }
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testInvalidCreateRequest() throws {
@@ -281,7 +288,7 @@ class APIClientTests: XCTestCase {
                 apiClientExpectation.fulfill()
             }
         }
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testRetryInvalidCreateRequest() throws {
@@ -305,7 +312,7 @@ class APIClientTests: XCTestCase {
                 apiClientExpectation.fulfill()
             }
         }
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
@@ -350,7 +357,7 @@ class APIClientTests: XCTestCase {
             XCTFail(error.localizedDescription)
         }
         
-        await fulfillment(of: [downloadProgressExpectation], timeout: 10)
+        await fulfillment(of: [downloadProgressExpectation], timeout: 1)
     }
     
     @available(iOS 15.0.0, *)
@@ -412,7 +419,7 @@ class APIClientTests: XCTestCase {
                 XCTFail(error.localizedDescription)
             }
         }
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
@@ -436,7 +443,7 @@ class APIClientTests: XCTestCase {
             XCTAssertEqual(error, ValidationError.invalidResponse)
         }
         
-        await waitForExpectations(timeout: 10, handler: nil)
+        await waitForExpectations(timeout: 1, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
@@ -455,7 +462,7 @@ class APIClientTests: XCTestCase {
             XCTFail("Exception thrown while validating response")
         }
         
-        await waitForExpectations(timeout: 10, handler: nil)
+        await waitForExpectations(timeout: 1, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
@@ -484,7 +491,7 @@ class APIClientTests: XCTestCase {
         } catch {
             XCTFail(error.localizedDescription)
         }
-        await waitForExpectations(timeout: 10, handler: nil)
+        await waitForExpectations(timeout: 1, handler: nil)
     }
     
     @available(iOS 15.0.0, *)
@@ -513,7 +520,7 @@ class APIClientTests: XCTestCase {
         } catch {
             FileManager.default.clearTmpDirectory()
         }
-        await waitForExpectations(timeout: 10, handler: nil)
+        await waitForExpectations(timeout: 1, handler: nil)
     }
      */
 }
@@ -522,12 +529,38 @@ class APIClientTests: XCTestCase {
 
 extension APIClientTests {
     
-    func fullfill<T>(_ expectation: XCTestExpectation, ifSuccess result: Result<T, Error>) {
-        switch result {
-        case .success:
-            expectation.fulfill()
-        case .failure:
-            XCTFail("Expecting api call to succeed")
+    func perform<RequestType: Request>(
+        request: RequestType,
+        testResponse: TestResponse,
+        responseHandler: @escaping (Result<RequestType.ResponseType, Error>) -> Void
+    ) {
+        let mockURLSession = MockURLSession(
+            nextData: testResponse.data,
+            nextResponse: testResponse.response,
+            nextError: testResponse.error
+        )
+        
+        apiClient(with: mockURLSession).perform(request, completionHandler: responseHandler)
+    }
+    
+    func perform<RequestType: Request>(
+        request: RequestType,
+        testResponse: TestResponse,
+        successExpectation: XCTestExpectation
+    ) {
+        let mockURLSession = MockURLSession(
+            nextData: testResponse.data,
+            nextResponse: testResponse.response,
+            nextError: testResponse.error
+        )
+        
+        apiClient(with: mockURLSession).perform(request) { result in
+            switch result {
+            case .success:
+                successExpectation.fulfill()
+            case .failure:
+                XCTFail("Expecting api call to succeed")
+            }
         }
     }
 }
