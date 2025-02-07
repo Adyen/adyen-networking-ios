@@ -1,0 +1,35 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+  push:
+    branches:
+    - main
+    - develop
+
+jobs:
+
+  tests:
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - uses: n1hility/cancel-previous-runs@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Select latest Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '16.1'
+
+    - name: 🧪 Run Unit Tests
+      run: |
+        xcodebuild test \
+          -project "AdyenNetworking" \
+          -scheme "AdyenNetworkingTests" \
+          -testPlan "AdyenNetworkingTests" \
+          -enableCodeCoverage YES \
+          -resultBundlePath "UnitTests.xcresult" \
+          -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
