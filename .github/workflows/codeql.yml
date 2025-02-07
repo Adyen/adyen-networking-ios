@@ -28,9 +28,11 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
+        verbosity: debug
 
     - name: "Run, Build Application using script"
       run: |
+        set -o pipefail
         xcodebuild -project AdyenNetworking.xcodeproj -scheme AdyenNetworking -destination 'generic/platform=iOS' SKIP_INSTALL=NO build | xcpretty --utf --color
 
     - name: Perform CodeQL Analysis
