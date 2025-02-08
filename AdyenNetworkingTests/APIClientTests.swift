@@ -57,7 +57,7 @@ struct APIClientTests {
             TestResponse(data: try! JSONEncoder().encode(MockResponse(someField: "SomeValue")), statusCode: 200)
         ]
     )
-    func validEmptyResponsesWithSuccessStatusCode(_ response: TestResponse) async throws {
+    func validResponsesWithSuccessStatusCode(_ response: TestResponse) async throws {
 
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
 
