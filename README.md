@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/Adyen/adyen-networking-ios/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/Adyen/adyen-networking-ios/actions/workflows/unit-tests.yml)
+
 # Adyen Networking for iOS
 
 Adyen Networking for iOS provides a reusable, easy to use, generic http/https API client functionalities.

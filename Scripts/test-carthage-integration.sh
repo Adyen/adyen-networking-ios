@@ -48,7 +48,7 @@ then
   CURRENT_COMMIT=$(git rev-parse HEAD)
 
   echo "git \"file://$CWD/../\" \"$CURRENT_COMMIT\"" > Cartfile
-  ../Scripts/carthage.sh update --use-xcframeworks
+  carthage update --use-xcframeworks --configuration Debug
 else
   cd $PROJECT_NAME
 fi
@@ -82,7 +82,7 @@ cp -a "../Networking Demo App/." Source/
 xcodegen generate
 
 echo_header "Build"
-xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone 11" | xcpretty && exit ${PIPESTATUS[0]}
+xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone 16" | xcpretty && exit ${PIPESTATUS[0]}
 
 if [ "$NEED_CLEANUP" == true ]
 then
