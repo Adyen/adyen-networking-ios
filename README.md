@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/Adyen/adyen-networking-ios/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/Adyen/adyen-networking-ios/actions/workflows/unit-tests.yml)
+
 # Adyen Networking for iOS
 
 Adyen Networking for iOS provides a reusable, easy to use, generic http/https API client functionalities.
@@ -55,7 +57,7 @@ Please check the `Networking Demo App` folder, for some code examples.
 
 ## Support
 
-If you have a feature request, or spotted a bug or a technical problem, create a GitHub issue. For other questions, contact our [support team](https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420).
+If you have a feature request, or spotted a bug or a technical problem, create a GitHub issue. For other questions, contact our Support Team via [Customer Area](https://ca-live.adyen.com/ca/ca/contactUs/support.shtml) or via email: support@adyen.com
 
 ## Contributing
 We strongly encourage you to join us in contributing to this repository so everyone can benefit from it:

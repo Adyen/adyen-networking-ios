@@ -1,4 +1,4 @@
-name: Test Swift Package Manager Integration
+name: Unit Tests
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  SPM:
+  tests:
     runs-on: macos-14
     steps:
     - uses: actions/checkout@v4
@@ -24,6 +24,12 @@ jobs:
       with:
         xcode-version: '16.1'
 
-    - name: Test Swift Package Manager Integration
+    - name: 🧪 Run Unit Tests
       run: |
-        Scripts/test-SPM-integration.sh
+        xcodebuild test \
+          -project "AdyenNetworking.xcodeproj" \
+          -scheme "AdyenNetworkingTests" \
+          -testPlan "AdyenNetworkingTests" \
+          -enableCodeCoverage YES \
+          -resultBundlePath "UnitTests.xcresult" \
+          -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
