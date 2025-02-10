@@ -28,7 +28,7 @@ struct APIClientTests {
         }
     }
     
-    @Test func emptyResponse() async throws {
+    @Test func client_fails_onEmptyUrlSessionResponse() async throws {
 
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
         let response = TestResponse()
@@ -57,7 +57,7 @@ struct APIClientTests {
             TestResponse(data: try! JSONEncoder().encode(MockResponse(someField: "SomeValue")), statusCode: 200)
         ]
     )
-    func validResponsesWithSuccessStatusCode(_ response: TestResponse) async throws {
+    func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
 
@@ -79,7 +79,7 @@ struct APIClientTests {
             TestResponse(data: try! JSONEncoder().encode(MockResponse(someField: "SomeValue")), statusCode: 456)
         ]
     )
-    func validResponsesWithFailureStatusCode(_ response: TestResponse) async throws {
+    func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
 
@@ -92,6 +92,28 @@ struct APIClientTests {
             Issue.record("Expecting api call to fail")
         case let .failure(error):
             #expect(error is EmptyErrorResponse)
+        }
+    }
+    
+    @Test
+    func client_succeeds_onValidMockResponse_withSuccessStatusCode() async throws {
+
+        let expectedResponse = MockResponse(someField: "SomeValue")
+        let request = MockRequest<MockResponse, EmptyErrorResponse>(
+            queryParameters: [.init(name: "name", value: "value")],
+            headers: ["HeaderName": "HeaderValue"]
+        )
+        let testResponse = TestResponse(data: try! JSONEncoder().encode(expectedResponse), statusCode: 200)
+
+        // Then
+
+        let result = await perform(request: request, testResponse: testResponse)
+        
+        switch result {
+        case let .success(response):
+            #expect(response == expectedResponse)
+        case .failure:
+            Issue.record("Expecting api call to succeed")
         }
     }
 }
