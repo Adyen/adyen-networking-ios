@@ -2,7 +2,13 @@
 
 # Adyen Networking for iOS
 
-Adyen Networking for iOS provides a reusable, easy to use, generic http/https API client functionalities.
+Adyen Networking for iOS provides reusable and user-friendly, generic http/https API client functionalities.
+
+## Requirements
+
+- iOS 12.0+
+- Xcode 12.0+
+- Swift 5.3
 
 ## Installation
 
@@ -48,12 +54,6 @@ apiClient.perform(request) { result in
 Please check the `Networking Demo App` folder, for some code examples.
 
 :warning: _Please make sure to retain the `APIClient` instance, otherwise the completion handler will not be called._
-
-## Requirements
-
-- iOS 11.0+
-- Xcode 11.0+
-- Swift 5.1
 
 ## Support
 
