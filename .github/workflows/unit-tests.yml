@@ -1,4 +1,4 @@
-name: Test Cocoapods Integration
+name: Unit Tests
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  pods:
+  tests:
     runs-on: macos-14
     steps:
     - uses: actions/checkout@v4
@@ -23,12 +23,13 @@ jobs:
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '16.1'
-        
-    - name: Test Cocoapods Integration
+
+    - name: 🧪 Run Unit Tests
       run: |
-        brew update
-        brew install xcodegen
-        gem install cocoapods -v 1.10.2
-        pod repo update
-        pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
-        Scripts/test-CocoaPods-integration.sh
+        xcodebuild test \
+          -project "AdyenNetworking.xcodeproj" \
+          -scheme "AdyenNetworkingTests" \
+          -testPlan "AdyenNetworkingTests" \
+          -enableCodeCoverage YES \
+          -resultBundlePath "UnitTests.xcresult" \
+          -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}

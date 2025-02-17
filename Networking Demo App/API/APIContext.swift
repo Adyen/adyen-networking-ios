@@ -1,8 +1,7 @@
 //
-//  APIContext.swift
-//  Networking Demo App
+// Copyright (c) 2023 Adyen N.V.
 //
-//  Created by Mohamed Eldoheiri on 7/30/21.
+// This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation
@@ -27,4 +26,16 @@ internal struct APIContext: AnyAPIContext {
     ]
     
     var queryParameters: [URLQueryItem] = []
+}
+
+internal struct SimpleAPIEnvironment: AnyAPIEnvironment {
+    let baseURL = URL(string: "https://www.adyen.com/")!
+}
+
+internal struct SimpleAPIContext: AnyAPIContext {
+    let environment: AnyAPIEnvironment = SimpleAPIEnvironment()
+    
+    let headers: [String : String] = [:]
+    
+    let queryParameters: [URLQueryItem] = []
 }

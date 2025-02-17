@@ -1,8 +1,7 @@
 //
-//  CreateUsersRequest.swift
-//  Networking Demo App
+// Copyright (c) 2023 Adyen N.V.
 //
-//  Created by Mohamed Eldoheiri on 7/30/21.
+// This file is open source and available under the MIT license. See the LICENSE file for more info.
 //
 
 import Foundation
@@ -33,7 +32,7 @@ internal struct CreateUsersRequest: Request {
     
     var counter: UInt = 0
     
-    let headers: [String : String] = [:]
+    var headers: [String : String] = [:]
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
