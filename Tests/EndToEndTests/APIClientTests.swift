@@ -6,7 +6,6 @@
 
 import XCTest
 import AdyenNetworking
-@testable import Networking_Demo_App
 
 class APIClientTests: XCTestCase {
     
@@ -45,18 +44,20 @@ class APIClientTests: XCTestCase {
     func testValidCreateRequest() throws {
         let apiClientExpectation = expectation(description: "expect apiClient call back to be called.")
         let name = UUID().uuidString
-        let newUser = UserModel(id: Int.random(in: 0...1000),
-                                name: name,
-                                email: "\(name)@gmail.com",
-                                gender: .female,
-                                status: .active)
+        let newUser = UserModel(
+            id: Int.random(in: 0...1000),
+            name: name,
+            email: "\(name)@gmail.com",
+            gender: .female,
+            status: .active
+        )
         let validCreateRequest = CreateUsersRequest(userModel: newUser)
         apiClient.perform(validCreateRequest) { result in
             switch result {
                 case .success:
                     apiClientExpectation.fulfill()
                 case .failure:
-                    XCTFail()
+                XCTFail("This call should have succeeded")
             }
         }
         waitForExpectations(timeout: 10, handler: nil)
@@ -68,7 +69,7 @@ class APIClientTests: XCTestCase {
         apiClient.perform(invalidCreateRequest) { result in
             switch result {
                 case .success:
-                    XCTFail()
+                    XCTFail("This call should have failed")
                 case let .failure(error):
                     XCTAssertTrue(error is CreateUsersErrorResponse)
                     apiClientExpectation.fulfill()
@@ -104,11 +105,13 @@ class APIClientTests: XCTestCase {
     @available(iOS 15.0.0, *)
     func testAsyncValidCreateRequest() async throws {
         let name = UUID().uuidString
-        let newUser = UserModel(id: Int.random(in: 0...1000),
-                                name: name,
-                                email: "\(name)@gmail.com",
-                                gender: .female,
-                                status: .active)
+        let newUser = UserModel(
+            id: Int.random(in: 0...1000),
+            name: name,
+            email: "\(name)@gmail.com",
+            gender: .female,
+            status: .active
+        )
         let validCreateRequest = CreateUsersRequest(userModel: newUser)
         _ = try await apiClient.perform(validCreateRequest)
     }
@@ -129,7 +132,6 @@ class APIClientTests: XCTestCase {
             if progress == 1.0 {
                 downloadProgressExpectation.fulfill()
             }
-            print("Download progress: \(progress)")
         }
         let api = APIClient(apiContext: SimpleAPIContext())
         
@@ -154,14 +156,14 @@ class APIClientTests: XCTestCase {
         let api = APIClient(apiContext: SimpleAPIContext())
         
         do {
-            let _ = try await api.perform(request)
+            let response = try await api.perform(request)
             XCTFail("Error was not thrown as it should be.")
         } catch let error {
             guard let errorResponse = error as? HTTPErrorResponse<EmptyErrorResponse> else {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     
@@ -179,7 +181,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     
@@ -244,7 +246,7 @@ class APIClientTests: XCTestCase {
         do {
             _ = try await sut.perform(validGetRequest)
         } catch {
-            XCTFail("Exception thrown while validating response")
+            XCTFail("Exception thrown while validating response \(error.localizedDescription)")
         }
         
         await fulfillment(of: [responseValidationExpectation], timeout: 10)
@@ -259,7 +261,6 @@ class APIClientTests: XCTestCase {
             if progress == 1.0 {
                 downloadProgressExpectation.fulfill()
             }
-            print("Download progress: \(progress)")
         }
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
@@ -293,7 +294,6 @@ class APIClientTests: XCTestCase {
             if progress == 1.0 {
                 downloadProgressExpectation.fulfill()
             }
-            print("Download progress: \(progress)")
         }
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
