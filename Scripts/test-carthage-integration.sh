@@ -77,12 +77,12 @@ schemes:
 " > project.yml
 
 mkdir -p Source
-cp -a "../Networking Demo App/." Source/
+cp -a "../AdyenNetworking/." Source/
 
 xcodegen generate
 
 echo_header "Build"
-xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone 16" | xcpretty && exit ${PIPESTATUS[0]}
+xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme AdyenNetworking -destination "name=iPhone 16" | xcpretty && exit ${PIPESTATUS[0]}
 
 if [ "$NEED_CLEANUP" == true ]
 then

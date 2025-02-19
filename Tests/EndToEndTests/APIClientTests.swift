@@ -156,7 +156,7 @@ class APIClientTests: XCTestCase {
         let api = APIClient(apiContext: SimpleAPIContext())
         
         do {
-            let response = try await api.perform(request)
+            let _ = try await api.perform(request)
             XCTFail("Error was not thrown as it should be.")
         } catch let error {
             guard let errorResponse = error as? HTTPErrorResponse<EmptyErrorResponse> else {
