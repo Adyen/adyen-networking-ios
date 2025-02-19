@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */; };
 		8168074A2D66358E00359BE6 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
-		8168074B2D66358E00359BE6 /* AdyenNetworking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8168074F2D66359E00359BE6 /* TestDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */; };
 		816807502D66359E00359BE6 /* InvalidCreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */; };
 		816807512D66359E00359BE6 /* GetUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3DB26B40C0F008F6CD2 /* GetUsersRequest.swift */; };
@@ -17,6 +16,7 @@
 		816807532D6635A500359BE6 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3DE26B40C5B008F6CD2 /* UserModel.swift */; };
 		816807542D6635A500359BE6 /* APIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3E026B40E0B008F6CD2 /* APIContext.swift */; };
 		816807552D6635A500359BE6 /* MockScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */; };
+		8189E29E2D66386D00D6694C /* EndToEndTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */; };
 		81EA9E4D2D563B4E00C077C9 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE58F25E2968474500012D1A /* AnyResponseValidator.swift */; };
 		B14E1D8F28A27F1D00E36290 /* AnyCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E1D8E28A27F1D00E36290 /* AnyCoder.swift */; };
@@ -72,17 +72,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8168074E2D66358E00359BE6 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				8168074B2D66358E00359BE6 /* AdyenNetworking.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F913B3EA26B4152C008F6CD2 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -98,7 +87,7 @@
 
 /* Begin PBXFileReference section */
 		5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
-		816807492D66354B00359BE6 /* EndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EndToEndTests.xctestplan; sourceTree = "<group>"; };
+		8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EndToEndTests.xctestplan; sourceTree = "<group>"; };
 		81EA9E492D563B4E00C077C9 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDownloadRequest.swift; sourceTree = "<group>"; };
 		82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScheduler.swift; sourceTree = "<group>"; };
@@ -205,8 +194,8 @@
 			isa = PBXGroup;
 			children = (
 				F913B3E226B410C3008F6CD2 /* Mocks */,
-				816807492D66354B00359BE6 /* EndToEndTests.xctestplan */,
 				F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */,
+				8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */,
 			);
 			path = EndToEndTests;
 			sourceTree = "<group>";
@@ -376,7 +365,6 @@
 				F913B3BB26B18551008F6CD2 /* Sources */,
 				F913B3BC26B18551008F6CD2 /* Frameworks */,
 				F913B3BD26B18551008F6CD2 /* Resources */,
-				8168074E2D66358E00359BE6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -474,6 +462,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8189E29E2D66386D00D6694C /* EndToEndTests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,7 +579,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MTHKLN76CG;
+				DEVELOPMENT_TEAM = B2NYSS5932;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -610,7 +599,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MTHKLN76CG;
+				DEVELOPMENT_TEAM = B2NYSS5932;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -664,7 +653,6 @@
 		F913B3D326B18552008F6CD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B2NYSS5932;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -683,7 +671,6 @@
 		F913B3D426B18552008F6CD2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B2NYSS5932;
 				GENERATE_INFOPLIST_FILE = YES;
