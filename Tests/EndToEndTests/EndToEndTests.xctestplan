@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "59C569B9-3F85-4E49-BCFB-416B96C0DCFF",
+      "id" : "892C2224-F730-4730-A366-3321F7F30700",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:AdyenNetworking.xcodeproj",
-        "identifier" : "81EA9E482D563B4E00C077C9",
-        "name" : "AdyenNetworkingTests"
+        "identifier" : "F913B3BE26B18551008F6CD2",
+        "name" : "EndToEndTests"
       }
     }
   ],
