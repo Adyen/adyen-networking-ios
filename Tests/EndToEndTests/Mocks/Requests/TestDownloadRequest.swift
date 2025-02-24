@@ -18,7 +18,7 @@ internal struct TestDownloadRequest: Request {
     
     var delegate: URLSessionDownloadDelegate?
     
-    var path: String = "dam/jcr:b07f6545-f41b-4afd-862c-66b7d953d886/presskit-photo-branded.jpg"
+    var path: String = "images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
     
     var counter: UInt = 0
     
@@ -41,7 +41,7 @@ internal struct TestAsyncDownloadRequest: AsyncDownloadRequest {
     
     var delegate: URLSessionDownloadDelegate?
     
-    var path: String = "dam/jcr:b07f6545-f41b-4afd-862c-66b7d953d886/presskit-photo-branded.jpg"
+    var path: String = "images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
     
     var counter: UInt = 0
     

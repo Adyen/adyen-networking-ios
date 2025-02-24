@@ -6,13 +6,5 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-
-
-}
-
+/// Empty ViewController - Used for Carthage testing
+class ViewController: UIViewController {}

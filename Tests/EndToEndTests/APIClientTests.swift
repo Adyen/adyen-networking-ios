@@ -6,7 +6,6 @@
 
 import XCTest
 import AdyenNetworking
-@testable import Networking_Demo_App
 
 class APIClientTests: XCTestCase {
     
@@ -161,7 +160,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     
@@ -179,7 +178,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     

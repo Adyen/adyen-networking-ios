@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "1D0EC72C-E374-4809-9788-7D2C843FC2FD",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:AdyenNetworking.xcodeproj",
+        "identifier" : "F913B3BE26B18551008F6CD2",
+        "name" : "EndToEndTests"
+      }
+    }
+  ],
+  "version" : 1
+}

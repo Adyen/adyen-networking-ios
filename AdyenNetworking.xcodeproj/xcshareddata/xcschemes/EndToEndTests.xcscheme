@@ -14,7 +14,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:AdyenNetworkingTests/AdyenNetworkingTests.xctestplan"
+            reference = "container:Tests/EndToEndTests/EndToEndTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -23,9 +23,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81EA9E482D563B4E00C077C9"
-               BuildableName = "AdyenNetworkingTests.xctest"
-               BlueprintName = "AdyenNetworkingTests"
+               BlueprintIdentifier = "F913B3BE26B18551008F6CD2"
+               BuildableName = "EndToEndTests.xctest"
+               BlueprintName = "EndToEndTests"
                ReferencedContainer = "container:AdyenNetworking.xcodeproj">
             </BuildableReference>
          </TestableReference>

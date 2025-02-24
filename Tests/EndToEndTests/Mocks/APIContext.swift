@@ -29,7 +29,7 @@ internal struct APIContext: AnyAPIContext {
 }
 
 internal struct SimpleAPIEnvironment: AnyAPIEnvironment {
-    let baseURL = URL(string: "https://www.adyen.com/")!
+    let baseURL = URL(string: "https://www.google.com/")!
 }
 
 internal struct SimpleAPIContext: AnyAPIContext {
