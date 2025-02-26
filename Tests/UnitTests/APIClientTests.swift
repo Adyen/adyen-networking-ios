@@ -63,21 +63,21 @@ struct APIClientTests {
     )
     func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs = [
-            "---- Request (/) ----",
-            "---- Request base url (/) ----",
-            "https://www.adyen.com/",
-            "---- Request Headers (/) ----",
-            "{}",
-            "---- Request query (/) ----",
-            "{}",
-            "---- Response Code (/) ----",
-            "\(response.response!.statusCode)",
-            "---- Response Headers (/) ----",
-            "{}",
-            "---- Response (/) ----",
-            "\(String(data: response.data!, encoding: .utf8)!)"
-        ] as [Any]
+        let expectedLogs: [MockDebugLogger.Log] = [
+            .init("---- Request (/) ----"),
+            .init("---- Request base url (/) ----"),
+            .init("https://www.adyen.com/"),
+            .init("---- Request Headers (/) ----"),
+            .init("{}"),
+            .init("---- Request query (/) ----"),
+            .init("{}"),
+            .init("---- Response Code (/) ----"),
+            .init("\(response.response!.statusCode)"),
+            .init("---- Response Headers (/) ----"),
+            .init("{}"),
+            .init("---- Response (/) ----"),
+            .init(String(data: response.data!, encoding: .utf8)!)
+        ]
         
         Logging.isEnabled = true
         let debugLogger = MockDebugLogger()
@@ -92,14 +92,12 @@ struct APIClientTests {
             debugLogger: debugLogger
         )
         
-        print(debugLogger.printStatements)
-        
         switch result {
         case .success: break
         case .failure: Issue.record("Expecting api call to succeed")
         }
         
-        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
+        #expect(debugLogger.logs == expectedLogs)
     }
     
     @Test(
@@ -112,21 +110,21 @@ struct APIClientTests {
     )
     func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs = [
-            "---- Request (/) ----",
-            "---- Request base url (/) ----",
-            "https://www.adyen.com/",
-            "---- Request Headers (/) ----",
-            "{}",
-            "---- Request query (/) ----",
-            "{}",
-            "---- Response Code (/) ----",
-            "\(response.response!.statusCode)",
-            "---- Response Headers (/) ----",
-            "{}",
-            "---- Response (/) ----",
-            "\(String(data: response.data!, encoding: .utf8)!)"
-        ] as [Any]
+        let expectedLogs: [MockDebugLogger.Log] = [
+            .init("---- Request (/) ----"),
+            .init("---- Request base url (/) ----"),
+            .init("https://www.adyen.com/"),
+            .init("---- Request Headers (/) ----"),
+            .init("{}"),
+            .init("---- Request query (/) ----"),
+            .init("{}"),
+            .init("---- Response Code (/) ----"),
+            .init("\(response.response!.statusCode)"),
+            .init("---- Response Headers (/) ----"),
+            .init("{}"),
+            .init("---- Response (/) ----"),
+            .init(String(data: response.data!, encoding: .utf8)!)
+        ]
         
         Logging.isEnabled = true
         let debugLogger = MockDebugLogger()
@@ -148,27 +146,27 @@ struct APIClientTests {
             #expect(error is EmptyErrorResponse)
         }
         
-        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
+        #expect(debugLogger.logs == expectedLogs)
     }
     
     @Test
     func client_succeeds_onValidMockResponse_withSuccessStatusCode() async throws {
 
-        let expectedLogs = [
-            "---- Request (/) ----",
-            "---- Request base url (/) ----",
-            "https://www.adyen.com/",
-            "---- Request Headers (/) ----",
-            "{\"HeaderName\":\"HeaderValue\"}",
-            "---- Request query (/) ----",
-            "{\"name\":\"value\"}",
-            "---- Response Code (/) ----",
-            "200",
-            "---- Response Headers (/) ----",
-            "{}",
-            "---- Response (/) ----",
-            "{\"someField\":\"SomeValue\"}"
-        ] as [Any]
+        let expectedLogs: [MockDebugLogger.Log] = [
+            .init("---- Request (/) ----"),
+            .init("---- Request base url (/) ----"),
+            .init("https://www.adyen.com/"),
+            .init("---- Request Headers (/) ----"),
+            .init("{\"HeaderName\":\"HeaderValue\"}"),
+            .init("---- Request query (/) ----"),
+            .init("{\"name\":\"value\"}"),
+            .init("---- Response Code (/) ----"),
+            .init("200"),
+            .init("---- Response Headers (/) ----"),
+            .init("{}"),
+            .init("---- Response (/) ----"),
+            .init("{\"someField\":\"SomeValue\"}")
+        ]
         
         let expectedResponse = MockResponse(someField: "SomeValue")
         
@@ -197,7 +195,7 @@ struct APIClientTests {
             Issue.record("Expecting api call to succeed")
         }
         
-        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
+        #expect(debugLogger.logs == expectedLogs)
     }
 }
 

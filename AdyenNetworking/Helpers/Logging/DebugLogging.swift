@@ -5,10 +5,14 @@
 //  Created by Alexander Guretzki on 26/02/2025.
 //
 
+import Foundation
+
 internal protocol DebugLogging {
     
     func print(_ items: Any..., separator: String, terminator: String, fileId: String)
 }
+
+// MARK: - Convenience Extensions
 
 internal extension DebugLogging {
     
@@ -34,10 +38,10 @@ internal extension DebugLogging {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
 
-            print(jsonString)
+            print(jsonString, fileId: fileId)
         } catch {
             if let string = String(data: data, encoding: .utf8) {
-                print(string)
+                print(string, fileId: fileId)
             }
         }
     }
