@@ -83,6 +83,9 @@ public final class APIClient: APIClientProtocol {
     /// Encoding and Decoding
     private let coder: AnyCoder
     
+    /// The debug logger to be used for printing to the console
+    private let logger: any DebugLogging
+    
     /// Default file manager
     private let fileManager = FileManager.default
     
@@ -113,6 +116,7 @@ public final class APIClient: APIClientProtocol {
         )
         self.responseValidator = responseValidator
         self.coder = coder
+        self.logger = DebugLogger()
     }
     
     /// Init for dependency injection / testing
@@ -120,6 +124,7 @@ public final class APIClient: APIClientProtocol {
         apiContext: AnyAPIContext,
         urlSession: URLSession,
         coder: AnyCoder = Coder(),
+        debugLogger: any DebugLogging = DebugLogger(),
         responseValidator: (any AnyResponseValidator)? = nil,
         urlSessionDelegate: URLSessionDelegate? = nil
     ) {
@@ -127,6 +132,7 @@ public final class APIClient: APIClientProtocol {
         self.urlSession = urlSession
         self.responseValidator = responseValidator
         self.coder = coder
+        self.logger = debugLogger
     }
     
     public func perform<R>(
@@ -261,47 +267,47 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        adyenPrint("---- Request (/\(request.path)) ----")
+        logger.print("---- Request (/\(request.path)) ----")
         
         if let body = urlRequest.httpBody {
-            adyenPrintAsJSON(body)
+            logger.printAsJSON(body)
         }
         
-        adyenPrint("---- Request base url (/\(request.path)) ----")
-        adyenPrint(apiContext.environment.baseURL)
+        logger.print("---- Request base url (/\(request.path)) ----")
+        logger.print(apiContext.environment.baseURL)
         
         if let headers = urlRequest.allHTTPHeaderFields {
-            adyenPrint("---- Request Headers (/\(request.path)) ----")
-            adyenPrintAsJSON(headers)
+            logger.print("---- Request Headers (/\(request.path)) ----")
+            logger.printAsJSON(headers)
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
-            adyenPrint("---- Request query (/\(request.path)) ----")
-            adyenPrintAsJSON(queryParams)
+            logger.print("---- Request query (/\(request.path)) ----")
+            logger.printAsJSON(queryParams)
         }
         
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        adyenPrint("---- Response Code (/\(request.path)) ----")
-        adyenPrint(result.statusCode)
+        logger.print("---- Response Code (/\(request.path)) ----")
+        logger.print(result.statusCode)
         
-        adyenPrint("---- Response Headers (/\(request.path)) ----")
-        adyenPrintAsJSON(result.headers)
+        logger.print("---- Response Headers (/\(request.path)) ----")
+        logger.printAsJSON(result.headers)
         
-        adyenPrint("---- Response (/\(request.path)) ----")
-        adyenPrintAsJSON(result.data)
+        logger.print("---- Response (/\(request.path)) ----")
+        logger.printAsJSON(result.data)
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        adyenPrint("---- Response Code (/\(request.path)) ----")
-        adyenPrint(result.statusCode)
+        logger.print("---- Response Code (/\(request.path)) ----")
+        logger.print(result.statusCode)
         
-        adyenPrint("---- Response Headers (/\(request.path)) ----")
-        adyenPrintAsJSON(result.headers)
+        logger.print("---- Response Headers (/\(request.path)) ----")
+        logger.printAsJSON(result.headers)
         
-        adyenPrint("---- Response (/\(request.path)) ----")
-        adyenPrint(result.url)
+        logger.print("---- Response (/\(request.path)) ----")
+        logger.print(result.url)
     }
     
     /// :nodoc:
@@ -355,20 +361,23 @@ public final class APIClient: APIClientProtocol {
         from response: URLSessionSuccess,
         request: R
     ) throws {
-        if (400...599).contains(response.statusCode) {
-            if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: response.data) {
-                throw HTTPErrorResponse<R.ErrorResponseType>(
-                    headers: response.headers,
-                    statusCode: response.statusCode,
-                    responseBody: errorResponse
-                )
-            } else {
-                throw HTTPErrorResponse(
-                    headers: response.headers,
-                    statusCode: response.statusCode,
-                    responseBody: EmptyErrorResponse()
-                )
-            }
+        // If we're not in the range of an error status code we return early
+        guard (400...599).contains(response.statusCode) else { return }
+        
+        log(result: response, request: request)
+        
+        if let errorResponse = try? coder.decode(R.ErrorResponseType.self, from: response.data) {
+            throw HTTPErrorResponse<R.ErrorResponseType>(
+                headers: response.headers,
+                statusCode: response.statusCode,
+                responseBody: errorResponse
+            )
+        } else {
+            throw HTTPErrorResponse(
+                headers: response.headers,
+                statusCode: response.statusCode,
+                responseBody: EmptyErrorResponse()
+            )
         }
     }
 }
