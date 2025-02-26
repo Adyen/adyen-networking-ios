@@ -28,14 +28,18 @@ struct APIClientTests {
         }
     }
     
-    @Test func client_fails_onEmptyUrlSessionResponse() async throws {
+    @Test
+    func client_fails_onEmptyUrlSessionResponse() async throws {
 
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
         let response = TestResponse()
 
         // Then
         
-        let result = await perform(request: request, testResponse: response)
+        let result = await perform(
+            request: request,
+            testResponse: response
+        )
         
         switch result {
         case .success:
@@ -59,16 +63,43 @@ struct APIClientTests {
     )
     func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
+        let expectedLogs = [
+            "---- Request (/) ----",
+            "---- Request base url (/) ----",
+            "https://www.adyen.com/",
+            "---- Request Headers (/) ----",
+            "{}",
+            "---- Request query (/) ----",
+            "{}",
+            "---- Response Code (/) ----",
+            "\(response.response!.statusCode)",
+            "---- Response Headers (/) ----",
+            "{}",
+            "---- Response (/) ----",
+            "\(String(data: response.data!, encoding: .utf8)!)"
+        ] as [Any]
+        
+        Logging.isEnabled = true
+        let debugLogger = MockDebugLogger()
+        
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
-
+        
         // Then
 
-        let result = await perform(request: request, testResponse: response)
+        let result = await perform(
+            request: request,
+            testResponse: response,
+            debugLogger: debugLogger
+        )
+        
+        print(debugLogger.printStatements)
         
         switch result {
         case .success: break
         case .failure: Issue.record("Expecting api call to succeed")
         }
+        
+        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
     }
     
     @Test(
@@ -81,11 +112,34 @@ struct APIClientTests {
     )
     func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
+        let expectedLogs = [
+            "---- Request (/) ----",
+            "---- Request base url (/) ----",
+            "https://www.adyen.com/",
+            "---- Request Headers (/) ----",
+            "{}",
+            "---- Request query (/) ----",
+            "{}",
+            "---- Response Code (/) ----",
+            "\(response.response!.statusCode)",
+            "---- Response Headers (/) ----",
+            "{}",
+            "---- Response (/) ----",
+            "\(String(data: response.data!, encoding: .utf8)!)"
+        ] as [Any]
+        
+        Logging.isEnabled = true
+        let debugLogger = MockDebugLogger()
+        
         let request = MockRequest<EmptyResponse, EmptyErrorResponse>()
-
+        
         // Then
 
-        let result = await perform(request: request, testResponse: response)
+        let result = await perform(
+            request: request,
+            testResponse: response,
+            debugLogger: debugLogger
+        )
         
         switch result {
         case .success:
@@ -93,21 +147,48 @@ struct APIClientTests {
         case let .failure(error):
             #expect(error is EmptyErrorResponse)
         }
+        
+        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
     }
     
     @Test
     func client_succeeds_onValidMockResponse_withSuccessStatusCode() async throws {
 
+        let expectedLogs = [
+            "---- Request (/) ----",
+            "---- Request base url (/) ----",
+            "https://www.adyen.com/",
+            "---- Request Headers (/) ----",
+            "{\"HeaderName\":\"HeaderValue\"}",
+            "---- Request query (/) ----",
+            "{\"name\":\"value\"}",
+            "---- Response Code (/) ----",
+            "200",
+            "---- Response Headers (/) ----",
+            "{}",
+            "---- Response (/) ----",
+            "{\"someField\":\"SomeValue\"}"
+        ] as [Any]
+        
         let expectedResponse = MockResponse(someField: "SomeValue")
+        
+        Logging.isEnabled = true
+        let debugLogger = MockDebugLogger()
+        
         let request = MockRequest<MockResponse, EmptyErrorResponse>(
             queryParameters: [.init(name: "name", value: "value")],
             headers: ["HeaderName": "HeaderValue"]
         )
+        
         let testResponse = TestResponse(data: try! JSONEncoder().encode(expectedResponse), statusCode: 200)
-
+        
         // Then
 
-        let result = await perform(request: request, testResponse: testResponse)
+        let result = await perform(
+            request: request,
+            testResponse: testResponse,
+            debugLogger: debugLogger
+        )
         
         switch result {
         case let .success(response):
@@ -115,6 +196,8 @@ struct APIClientTests {
         case .failure:
             Issue.record("Expecting api call to succeed")
         }
+        
+        #expect(debugLogger.printStatements.map { "\($0)" } == expectedLogs.map { "\($0)"})
     }
 }
 
@@ -124,7 +207,8 @@ private extension APIClientTests {
 
     func perform<RequestType: Request>(
         request: RequestType,
-        testResponse: TestResponse
+        testResponse: TestResponse,
+        debugLogger: any DebugLogging = MockDebugLogger()
     ) async -> Result<RequestType.ResponseType, Error> {
         await withCheckedContinuation { continuation in
             let mockURLSession = MockURLSession(
@@ -133,7 +217,11 @@ private extension APIClientTests {
                 nextError: testResponse.error
             )
 
-            APIClient(apiContext: MockAPIContext(), urlSession: mockURLSession, coder: Coder()).perform(request) { result in
+            APIClient(
+                apiContext: MockAPIContext(),
+                urlSession: mockURLSession,
+                debugLogger: debugLogger
+            ).perform(request) { result in
                 continuation.resume(returning: result)
             }
         }
