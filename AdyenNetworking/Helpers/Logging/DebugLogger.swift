@@ -13,9 +13,10 @@ internal struct DebugLogger: DebugLogging {
         guard Logging.isEnabled else { return }
         let moduleName = fileId.split(separator: "/").first ?? "AdyenNetworking"
         
-        var items = items
-        items.insert("[\(moduleName)]", at: 0)
-        items.insert(ISO8601DateFormatter().string(from: Date()), at: 0)
+        let items = [
+            ISO8601DateFormatter().string(from: Date()),
+            "[\(moduleName)]"
+        ] + items
         
         var idx = items.startIndex
         let endIdx = items.endIndex
