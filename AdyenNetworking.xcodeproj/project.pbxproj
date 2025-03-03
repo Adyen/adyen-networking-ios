@@ -3,11 +3,20 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		5A2AEC7327B1A871004694C9 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */; };
+		81571B682D6F37E10043F876 /* MockAPIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B602D6F37E10043F876 /* MockAPIContext.swift */; };
+		81571B692D6F37E10043F876 /* MockRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B612D6F37E10043F876 /* MockRequest.swift */; };
+		81571B6A2D6F37E10043F876 /* MockResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B622D6F37E10043F876 /* MockResponse.swift */; };
+		81571B6B2D6F37E10043F876 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B632D6F37E10043F876 /* MockURLSession.swift */; };
+		81571B6C2D6F37E10043F876 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B652D6F37E10043F876 /* APIClientTests.swift */; };
+		81571B6D2D6F37E10043F876 /* UnitTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 81571B662D6F37E10043F876 /* UnitTests.xctestplan */; };
+		81571B7C2D6F3B4B0043F876 /* DebugLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B7B2D6F3B4B0043F876 /* DebugLogging.swift */; };
+		81571B7E2D6F3CE30043F876 /* MockDebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B7D2D6F3CD60043F876 /* MockDebugLogger.swift */; };
+		81571B802D6F3F160043F876 /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81571B7F2D6F3F160043F876 /* DebugLogger.swift */; };
 		8168074A2D66358E00359BE6 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		8168074F2D66359E00359BE6 /* TestDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */; };
 		816807502D66359E00359BE6 /* InvalidCreateUsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FCFF4326C6AACD00540FE1 /* InvalidCreateUsersRequest.swift */; };
@@ -87,6 +96,15 @@
 
 /* Begin PBXFileReference section */
 		5A2AEC7227B1A871004694C9 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
+		81571B602D6F37E10043F876 /* MockAPIContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIContext.swift; sourceTree = "<group>"; };
+		81571B612D6F37E10043F876 /* MockRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequest.swift; sourceTree = "<group>"; };
+		81571B622D6F37E10043F876 /* MockResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockResponse.swift; sourceTree = "<group>"; };
+		81571B632D6F37E10043F876 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
+		81571B652D6F37E10043F876 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		81571B662D6F37E10043F876 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTests.xctestplan; sourceTree = "<group>"; };
+		81571B7B2D6F3B4B0043F876 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
+		81571B7D2D6F3CD60043F876 /* MockDebugLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDebugLogger.swift; sourceTree = "<group>"; };
+		81571B7F2D6F3F160043F876 /* DebugLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
 		8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EndToEndTests.xctestplan; sourceTree = "<group>"; };
 		81EA9E492D563B4E00C077C9 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDownloadRequest.swift; sourceTree = "<group>"; };
@@ -128,10 +146,6 @@
 		F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		81EA9E4A2D563B4E00C077C9 /* UnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UnitTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		81EA9E462D563B4E00C077C9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -167,11 +181,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		81571B642D6F37E10043F876 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				81571B602D6F37E10043F876 /* MockAPIContext.swift */,
+				81571B7D2D6F3CD60043F876 /* MockDebugLogger.swift */,
+				81571B612D6F37E10043F876 /* MockRequest.swift */,
+				81571B622D6F37E10043F876 /* MockResponse.swift */,
+				81571B632D6F37E10043F876 /* MockURLSession.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		81571B672D6F37E10043F876 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				81571B642D6F37E10043F876 /* Mocks */,
+				81571B652D6F37E10043F876 /* APIClientTests.swift */,
+				81571B662D6F37E10043F876 /* UnitTests.xctestplan */,
+			);
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		81571B812D6F3F270043F876 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				F93899A326B006900065561F /* Logging.swift */,
+				81571B7B2D6F3B4B0043F876 /* DebugLogging.swift */,
+				81571B7F2D6F3F160043F876 /* DebugLogger.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
 		816807562D6635AE00359BE6 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				F913B3C226B18551008F6CD2 /* EndToEndTests */,
-				81EA9E4A2D563B4E00C077C9 /* UnitTests */,
+				81571B672D6F37E10043F876 /* UnitTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -295,7 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				F93899A926B008080065561F /* URLHelpers.swift */,
-				F93899A326B006900065561F /* Logging.swift */,
+				81571B812D6F3F270043F876 /* Logging */,
 				F93899A126B006610065561F /* URLSessionHelpers.swift */,
 				F938999D26B0061C0065561F /* Coder.swift */,
 			);
@@ -328,9 +374,6 @@
 			);
 			dependencies = (
 				81EA9E4F2D563B4E00C077C9 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				81EA9E4A2D563B4E00C077C9 /* UnitTests */,
 			);
 			name = UnitTests;
 			packageProductDependencies = (
@@ -445,6 +488,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81571B6D2D6F37E10043F876 /* UnitTests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +524,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81571B682D6F37E10043F876 /* MockAPIContext.swift in Sources */,
+				81571B692D6F37E10043F876 /* MockRequest.swift in Sources */,
+				81571B6A2D6F37E10043F876 /* MockResponse.swift in Sources */,
+				81571B7E2D6F3CE30043F876 /* MockDebugLogger.swift in Sources */,
+				81571B6B2D6F37E10043F876 /* MockURLSession.swift in Sources */,
+				81571B6C2D6F37E10043F876 /* APIClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +565,7 @@
 				F938999526B0059E0065561F /* BackoffScheduler.swift in Sources */,
 				F938999826B005B00065561F /* Request.swift in Sources */,
 				F938999026B0059E0065561F /* RetryAPIClient.swift in Sources */,
+				81571B802D6F3F160043F876 /* DebugLogger.swift in Sources */,
 				F938999326B0059E0065561F /* Scheduler.swift in Sources */,
 				F938999B26B005D70065561F /* AnyAPIContext.swift in Sources */,
 				F938999126B0059E0065561F /* SimpleScheduler.swift in Sources */,
@@ -523,6 +574,7 @@
 				AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */,
 				F93899A226B006610065561F /* URLSessionHelpers.swift in Sources */,
 				F938999426B0059E0065561F /* RetryOnErrorAPIClient.swift in Sources */,
+				81571B7C2D6F3B4B0043F876 /* DebugLogging.swift in Sources */,
 				F93899AA26B008080065561F /* URLHelpers.swift in Sources */,
 				B14E1D8F28A27F1D00E36290 /* AnyCoder.swift in Sources */,
 				F93899A526B006900065561F /* Logging.swift in Sources */,
