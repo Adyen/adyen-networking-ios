@@ -15,11 +15,6 @@ public enum Logging {
 // MARK: - Backwards compatible global print
 
 @_spi(AdyenInternal)
-public func adyenPrintAsJSON(_ dictionary: [String: Any], fileId: String = #fileID) {
-    DebugLogger().printAsJSON(dictionary, fileId: fileId)
-}
-
-@_spi(AdyenInternal)
 public func adyenPrintAsJSON(_ data: Data, fileId: String = #fileID) {
     DebugLogger().printAsJSON(data, fileId: fileId)
 }
