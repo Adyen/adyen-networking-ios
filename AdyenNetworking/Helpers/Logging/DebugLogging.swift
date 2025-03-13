@@ -24,7 +24,7 @@ internal extension DebugLogging {
     func printAsJSON(_ dictionary: [String : Any], fileId: String = #fileID) {
         guard Logging.isEnabled else { return }
         do {
-            let jsonData = try JSONSerialization.data(withJSONObject: dictionary)
+            let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .jsonOptions)
             printAsJSON(jsonData, fileId: fileId)
         } catch {
             print(dictionary, fileId: fileId)
@@ -35,7 +35,7 @@ internal extension DebugLogging {
         guard Logging.isEnabled else { return }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .jsonOptions)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
 
             print(jsonString, fileId: fileId)
