@@ -68,15 +68,15 @@ struct APIClientTests {
             .init("---- Request base url (/) ----"),
             .init("https://www.adyen.com/"),
             .init("---- Request Headers (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Request query (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Response Code (/) ----"),
             .init("\(response.response!.statusCode)"),
             .init("---- Response Headers (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Response (/) ----"),
-            .init(String(data: response.data!, encoding: .utf8)!)
+            .init(formattedJson(for: response.data!))
         ]
         
         Logging.isEnabled = true
@@ -115,15 +115,15 @@ struct APIClientTests {
             .init("---- Request base url (/) ----"),
             .init("https://www.adyen.com/"),
             .init("---- Request Headers (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Request query (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Response Code (/) ----"),
             .init("\(response.response!.statusCode)"),
             .init("---- Response Headers (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Response (/) ----"),
-            .init(String(data: response.data!, encoding: .utf8)!)
+            .init(formattedJson(for: response.data!))
         ]
         
         Logging.isEnabled = true
@@ -151,24 +151,24 @@ struct APIClientTests {
     
     @Test
     func client_succeeds_onValidMockResponse_withSuccessStatusCode() async throws {
-
+        
+        let expectedResponse = MockResponse(someField: "SomeValue")
+        
         let expectedLogs: [MockDebugLogger.Log] = [
             .init("---- Request (/) ----"),
             .init("---- Request base url (/) ----"),
             .init("https://www.adyen.com/"),
             .init("---- Request Headers (/) ----"),
-            .init("{\"HeaderName\":\"HeaderValue\"}"),
+            .init("{\n  \"HeaderName\" : \"HeaderValue\"\n}"),
             .init("---- Request query (/) ----"),
-            .init("{\"name\":\"value\"}"),
+            .init("{\n  \"name\" : \"value\"\n}"),
             .init("---- Response Code (/) ----"),
             .init("200"),
             .init("---- Response Headers (/) ----"),
-            .init("{}"),
+            .init("{\n\n}"),
             .init("---- Response (/) ----"),
-            .init("{\"someField\":\"SomeValue\"}")
+            .init("{\n  \"someField\" : \"SomeValue\"\n}")
         ]
-        
-        let expectedResponse = MockResponse(someField: "SomeValue")
         
         Logging.isEnabled = true
         let debugLogger = MockDebugLogger()
@@ -222,6 +222,16 @@ private extension APIClientTests {
             ).perform(request) { result in
                 continuation.resume(returning: result)
             }
+        }
+    }
+    
+    func formattedJson(for data: Data) -> String {
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted, .withoutEscapingSlashes])
+            return String(data: jsonData, encoding: .utf8)!
+        } catch {
+            return String(data: data, encoding: .utf8)!
         }
     }
 }
