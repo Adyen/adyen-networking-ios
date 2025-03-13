@@ -6,7 +6,6 @@
 
 import XCTest
 import AdyenNetworking
-@testable import Networking_Demo_App
 
 class APIClientTests: XCTestCase {
     
@@ -141,7 +140,8 @@ class APIClientTests: XCTestCase {
         } catch {
             XCTFail(error.localizedDescription)
         }
-        await waitForExpectations(timeout: 10, handler: nil)
+        
+        await fulfillment(of: [downloadProgressExpectation], timeout: 10)
     }
     
     @available(iOS 15.0.0, *)
@@ -160,7 +160,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     
@@ -178,7 +178,7 @@ class APIClientTests: XCTestCase {
                 XCTFail("Unknown error thrown")
                 return
             }
-            XCTAssertEqual(errorResponse.statusCode, 400)
+            XCTAssertEqual(errorResponse.statusCode, 404)
         }
     }
     
@@ -208,10 +208,10 @@ class APIClientTests: XCTestCase {
     
     @available(iOS 15.0.0, *)
     func testGetRequestValidationForValidationFailed() async throws {
-        let responseValidationException = expectation(description: "Expect response validator to be called")
+        let responseValidationExpectation = expectation(description: "Expect response validator to be called")
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
-            responseValidationException.fulfill()
+            responseValidationExpectation.fulfill()
             throw ValidationError.invalidResponse
         }
         let sut = APIClient(apiContext: APIContext(), responseValidator: mockValidator)
@@ -227,15 +227,15 @@ class APIClientTests: XCTestCase {
             XCTAssertEqual(error, ValidationError.invalidResponse)
         }
         
-        await waitForExpectations(timeout: 10, handler: nil)
+        await fulfillment(of: [responseValidationExpectation], timeout: 10)
     }
     
     @available(iOS 15.0.0, *)
     func testGetRequestValidationForValidationSuccess() async throws {
-        let responseValidationException = expectation(description: "Expect response validator to be called")
+        let responseValidationExpectation = expectation(description: "Expect response validator to be called")
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
-            responseValidationException.fulfill()
+            responseValidationExpectation.fulfill()
             return
         }
         let sut = APIClient(apiContext: APIContext(), responseValidator: mockValidator)
@@ -246,12 +246,12 @@ class APIClientTests: XCTestCase {
             XCTFail("Exception thrown while validating response")
         }
         
-        await waitForExpectations(timeout: 10, handler: nil)
+        await fulfillment(of: [responseValidationExpectation], timeout: 10)
     }
     
     @available(iOS 15.0.0, *)
     func testFileDownloadValidationForValidationSuccess() async throws {
-        let responseValidationException = expectation(description: "Expect response validator to be called")
+        let responseValidationExpectation = expectation(description: "Expect response validator to be called")
         let downloadProgressExpectation = expectation(description: "Expect download progress to reach 100%.")
         
         let request = TestAsyncDownloadRequest { progress in
@@ -262,7 +262,7 @@ class APIClientTests: XCTestCase {
         }
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
-            responseValidationException.fulfill()
+            responseValidationExpectation.fulfill()
             return
         }
         let api = APIClient(apiContext: SimpleAPIContext(), responseValidator: mockValidator)
@@ -275,12 +275,16 @@ class APIClientTests: XCTestCase {
         } catch {
             XCTFail(error.localizedDescription)
         }
-        await waitForExpectations(timeout: 10, handler: nil)
+
+        await fulfillment(
+            of: [responseValidationExpectation, downloadProgressExpectation],
+            timeout: 10
+        )
     }
     
     @available(iOS 15.0.0, *)
     func testFileDownloadValidationForValidationFailed() async throws {
-        let responseValidationException = expectation(description: "Expect response validator to be called")
+        let responseValidationExpectation = expectation(description: "Expect response validator to be called")
         let downloadProgressExpectation = expectation(description: "Expect download progress to reach 100%.")
         
         let request = TestAsyncDownloadRequest { progress in
@@ -293,7 +297,7 @@ class APIClientTests: XCTestCase {
         let mockValidator = MockResponseValidator()
         mockValidator.onValidated = {
             XCTAssertFalse(Thread.isMainThread, "Shouldn't be on main thread")
-            responseValidationException.fulfill()
+            responseValidationExpectation.fulfill()
             throw ValidationError.invalidResponse
         }
         let api = APIClient(apiContext: SimpleAPIContext(), responseValidator: mockValidator)
@@ -304,7 +308,11 @@ class APIClientTests: XCTestCase {
         } catch {
             FileManager.default.clearTmpDirectory()
         }
-        await waitForExpectations(timeout: 10, handler: nil)
+        
+        await fulfillment(
+            of: [responseValidationExpectation, downloadProgressExpectation],
+            timeout: 10
+        )
     }
 }
 

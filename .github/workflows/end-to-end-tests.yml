@@ -1,4 +1,4 @@
-name: Unit Tests
+name: End to End Tests
 
 on:
   pull_request:
@@ -24,12 +24,12 @@ jobs:
       with:
         xcode-version: '16.1'
 
-    - name: 🧪 Run Unit Tests
+    - name: 🧪 Run End to End Tests
       run: |
         xcodebuild test \
           -project "AdyenNetworking.xcodeproj" \
-          -scheme "UnitTests" \
-          -testPlan "UnitTests" \
+          -scheme "EndToEndTests" \
+          -testPlan "EndToEndTests" \
           -enableCodeCoverage YES \
-          -resultBundlePath "UnitTests.xcresult" \
+          -resultBundlePath "EndToEndTests.xcresult" \
           -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
