@@ -1,0 +1,12 @@
+name: 🗣️ Post Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+
+  publish-cocoapods:
+    name: 🫛 Publish Cocoapods
+    uses: ./.github/workflows/publish_podspec.yml
