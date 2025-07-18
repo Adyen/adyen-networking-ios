@@ -17,12 +17,12 @@ class Secrets {
     }
     
     static var goRestAuthBearer: String {
-        var bearer = value(for: "GO_REST_AUTH_BEARER") ?? ""
+        guard var bearer = value(for: "GO_REST_AUTH_BEARER") else {
+            fatalError("GO_REST_AUTH_BEARER has to be provided via DevSecrets.xcconfig")
+        }
         
         var characterSet = CharacterSet()
         characterSet.insert("\"")
-        bearer = bearer.trimmingCharacters(in: characterSet)
-        
-        return bearer
+        return bearer.trimmingCharacters(in: characterSet) // Making sure we don't have double ""
     }
 }
