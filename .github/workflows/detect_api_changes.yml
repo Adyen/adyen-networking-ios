@@ -1,4 +1,7 @@
 name: 👀 Detect public API changes
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   pull_request:
