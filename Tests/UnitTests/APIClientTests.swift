@@ -97,7 +97,7 @@ struct APIClientTests {
         case .failure: Issue.record("Expecting api call to succeed")
         }
         
-        #expect(debugLogger.logs != expectedLogs)
+        #expect(debugLogger.logs == expectedLogs)
     }
     
     @Test(
