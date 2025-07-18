@@ -1,0 +1,42 @@
+name: 🥘 Prepare Release
+on:
+  workflow_dispatch:
+    inputs:
+      sdk-version:
+        description: 'SDK Version'
+        required: true
+
+jobs:
+
+  create-release-pull-request:
+    name: "Create Release Pull Request"
+    runs-on: macos-14
+    steps:
+    
+    # Checking out the current branch
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    # Cancel previous runs
+    - uses: n1hility/cancel-previous-runs@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    # Update Version
+    - name: Updating Version Number
+      run: |
+        Scripts/increment_version.sh ${{ env.SDK_VERSION }}
+      env:
+        SDK_VERSION: ${{ github.event.inputs.sdk-version }}
+    
+    # Creates a release/[sdk-version] branch with a PR to develop
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        delete-branch: true
+        branch: "release/${{ github.event.inputs.sdk-version }}"
+        commit-message: "chore: prepare '${{ github.event.inputs.sdk-version }}' release"
+        title: "[Release] ${{ github.event.inputs.sdk-version }}"
+        body: "Replace this text with the final release notes and merge the PR to develop to trigger a Release of version '${{ github.event.inputs.sdk-version }}'."
+        token: ${{ secrets.GITHUB_TOKEN }}
