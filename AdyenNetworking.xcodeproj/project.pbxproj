@@ -25,7 +25,9 @@
 		816807532D6635A500359BE6 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3DE26B40C5B008F6CD2 /* UserModel.swift */; };
 		816807542D6635A500359BE6 /* APIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F913B3E026B40E0B008F6CD2 /* APIContext.swift */; };
 		816807552D6635A500359BE6 /* MockScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */; };
+		817243742E2A5B3F002E386B /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817243732E2A5B3F002E386B /* Secrets.swift */; };
 		8189E29E2D66386D00D6694C /* EndToEndTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */; };
+		81911E972E2A47D7005F129B /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 81911E952E2A46C3005F129B /* Secrets.xcconfig */; };
 		81EA9E4D2D563B4E00C077C9 /* AdyenNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F938996E26B004EE0065561F /* AdyenNetworking.framework */; };
 		AE58F25F2968474500012D1A /* AnyResponseValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE58F25E2968474500012D1A /* AnyResponseValidator.swift */; };
 		B14E1D8F28A27F1D00E36290 /* AnyCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14E1D8E28A27F1D00E36290 /* AnyCoder.swift */; };
@@ -105,7 +107,10 @@
 		81571B7B2D6F3B4B0043F876 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
 		81571B7D2D6F3CD60043F876 /* MockDebugLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDebugLogger.swift; sourceTree = "<group>"; };
 		81571B7F2D6F3F160043F876 /* DebugLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
+		817243732E2A5B3F002E386B /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EndToEndTests.xctestplan; sourceTree = "<group>"; };
+		81911E952E2A46C3005F129B /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		81926ADF2E2A596300E651BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		81EA9E492D563B4E00C077C9 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82D5C1D028E59D7F00179E66 /* TestDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDownloadRequest.swift; sourceTree = "<group>"; };
 		82EC1A1728ED7D8600F47B10 /* MockScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScheduler.swift; sourceTree = "<group>"; };
@@ -241,6 +246,8 @@
 			children = (
 				F913B3E226B410C3008F6CD2 /* Mocks */,
 				F9FCFF4726CB96E800540FE1 /* APIClientTests.swift */,
+				817243732E2A5B3F002E386B /* Secrets.swift */,
+				81926ADF2E2A596300E651BD /* Info.plist */,
 				8189E29D2D66386D00D6694C /* EndToEndTests.xctestplan */,
 			);
 			path = EndToEndTests;
@@ -291,6 +298,7 @@
 				816807562D6635AE00359BE6 /* Tests */,
 				F938996F26B004EE0065561F /* Products */,
 				F913B3E526B4152C008F6CD2 /* Frameworks */,
+				81911E952E2A46C3005F129B /* Secrets.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -506,6 +514,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81911E972E2A47D7005F129B /* Secrets.xcconfig in Resources */,
 				8189E29E2D66386D00D6694C /* EndToEndTests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -548,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8168074F2D66359E00359BE6 /* TestDownloadRequest.swift in Sources */,
+				817243742E2A5B3F002E386B /* Secrets.swift in Sources */,
 				816807502D66359E00359BE6 /* InvalidCreateUsersRequest.swift in Sources */,
 				816807512D66359E00359BE6 /* GetUsersRequest.swift in Sources */,
 				816807522D66359E00359BE6 /* CreateUsersRequest.swift in Sources */,
@@ -704,10 +714,13 @@
 		};
 		F913B3D326B18552008F6CD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81911E952E2A46C3005F129B /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B2NYSS5932;
 				GENERATE_INFOPLIST_FILE = YES;
+				GO_REST_AUTH_BEARER = "$(inherited)";
+				INFOPLIST_FILE = Tests/EndToEndTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -726,6 +739,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B2NYSS5932;
 				GENERATE_INFOPLIST_FILE = YES;
+				GO_REST_AUTH_BEARER = "$(inherited)";
+				INFOPLIST_FILE = Tests/EndToEndTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
