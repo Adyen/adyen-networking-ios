@@ -11,18 +11,26 @@ import Foundation
 class Secrets {
     private init() {}
     
-    static private func value<T>(for key: String) -> T? {
-        let bundle = Bundle(for: Self.self)
-        return bundle.infoDictionary?[key] as? T
-    }
-    
     static var goRestAuthBearer: String {
-        guard var bearer = value(for: "GO_REST_AUTH_BEARER") else {
+        guard let bearer = stringValue(for: "GO_REST_AUTH_BEARER") else {
             fatalError("GO_REST_AUTH_BEARER has to be provided via DevSecrets.xcconfig")
         }
         
         var characterSet = CharacterSet()
         characterSet.insert("\"")
         return bearer.trimmingCharacters(in: characterSet) // Making sure we don't have double ""
+    }
+}
+
+// MARK: - Helpers
+
+private extension Secrets {
+    static func value<T>(for key: String) -> T? {
+        let bundle = Bundle(for: Self.self)
+        return bundle.infoDictionary?[key] as? T
+    }
+    
+    static func stringValue(for key: String) -> String? {
+        return value(for: key)
     }
 }
