@@ -38,4 +38,5 @@ jobs:
         brew update
         brew install mint
         mint install yonaskolb/xcodegen@2.43.0
+        export PATH="$PATH:/Users/runner/.mint/bin"
         Scripts/test-CocoaPods-integration.sh
