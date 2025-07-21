@@ -55,6 +55,17 @@ Please check the `Networking Demo App` folder, for some code examples.
 
 :warning: _Please make sure to retain the `APIClient` instance, otherwise the completion handler will not be called._
 
+## Testing
+
+Running End-to-End Tests
+
+Our `EndToEndTests` interact with the gorest.co.in API and require bearer authentication.
+
+To run these tests locally:
+1. Generate a Token: Obtain your personal bearer token from [gorest.co.in](https://gorest.co.in/).
+2. Create DevSecrets.xcconfig: In the root directory of this project, create a new file named DevSecrets.xcconfig.
+3. Add Your Token: Copy the content from DevSecrets.xcconfig.template into your new DevSecrets.xcconfig file. Replace the placeholder token with the actual bearer token you generated.
+
 ## Support
 
 If you have a feature request, or spotted a bug or a technical problem, create a GitHub issue. For other questions, contact our Support Team via [Customer Area](https://ca-live.adyen.com/ca/ca/contactUs/support.shtml) or via email: support@adyen.com
