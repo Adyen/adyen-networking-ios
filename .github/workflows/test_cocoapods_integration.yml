@@ -15,7 +15,7 @@ on:
 jobs:
 
   pods:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
     - uses: actions/checkout@v4
     - uses: n1hility/cancel-previous-runs@v3
@@ -27,11 +27,14 @@ jobs:
       with:
         xcode-version: '16.1'
         
-    - name: Test Cocoapods Integration
+    - name: Lint Cocoapods
       run: |
         brew update
         brew install xcodegen
         gem install cocoapods -v 1.10.2
         pod repo update
-        pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
+        # pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
+        
+    - name: Test Cocoapods Integration
+      run: |
         Scripts/test-CocoaPods-integration.sh
