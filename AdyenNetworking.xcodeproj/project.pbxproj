@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -471,7 +471,6 @@
 				};
 			};
 			buildConfigurationList = F938996826B004EE0065561F /* Build configuration list for PBXProject "AdyenNetworking" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -479,6 +478,7 @@
 				Base,
 			);
 			mainGroup = F938996426B004EE0065561F;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = F938996F26B004EE0065561F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
