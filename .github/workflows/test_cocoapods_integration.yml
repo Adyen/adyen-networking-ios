@@ -31,7 +31,7 @@ jobs:
       run: |
         brew update
         brew install xcodegen
-        gem install cocoapods -v 1.13.0
+        gem install cocoapods
         pod repo update
         pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
         Scripts/test-CocoaPods-integration.sh
