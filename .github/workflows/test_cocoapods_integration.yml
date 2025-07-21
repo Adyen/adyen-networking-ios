@@ -27,22 +27,19 @@ jobs:
       with:
         xcode-version: '16.1'
 
-    - name: Install Prerequisites
+    - name: Test Cocoapods Integration
       run: |
         gem install cocoapods -v 1.10.2
         pod repo update
 
         # brew cannot install older versions and in xcodegen 2.44 there is a bug that doesn't work well with cocoapods
+        # See: https://github.com/yonaskolb/XcodeGen/issues/1561
+        
         # so we install mint so we can install an older version of xcodegen
         brew update
         brew install mint
         mint install yonaskolb/xcodegen@2.43.0
-        export PATH="$PATH:/Users/runner/.mint/bin"
-        
-    - name: Lint Cocoapods
-      run: |
+        export PATH="$PATH:/Users/runner/.mint/bin" # make xcodegen available
+
         pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
-    
-    - name: Test Cocoapods Integration
-      run: |
         Scripts/test-CocoaPods-integration.sh
