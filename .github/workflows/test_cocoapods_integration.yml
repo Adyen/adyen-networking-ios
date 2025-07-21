@@ -30,7 +30,12 @@ jobs:
     - name: Lint Cocoapods
       run: |
         brew update
-        brew install xcodegen@2.43.0
+        
+        # brew cannot install older versions and in 2.44 there is a bug that prevents cocoapods from building projects
+        # so we install mint so we can install an older version of xcodegen
+        brew install mint
+        mint install yonaskolb/xcodegen@2.43.0
+        
         gem install cocoapods -v 1.10.2
         pod repo update
         # pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
