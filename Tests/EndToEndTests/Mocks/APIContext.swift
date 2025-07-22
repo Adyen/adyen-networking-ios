@@ -22,7 +22,7 @@ internal struct APIContext: AnyAPIContext {
     var headers: [String : String] = [
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": "Bearer e475ecaf522c28108af6b7a99e0ad788c73e9f8b15608ee3a1acef57da1c36f6"
+        "Authorization": Secrets.goRestAuthBearer
     ]
     
     var queryParameters: [URLQueryItem] = []

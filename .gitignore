@@ -36,3 +36,4 @@ Internal/
 #Swift Package Manager
 .swiftpm
 Package.resolved
+DevSecrets.xcconfig

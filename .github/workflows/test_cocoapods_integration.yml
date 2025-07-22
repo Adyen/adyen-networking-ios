@@ -15,7 +15,7 @@ on:
 jobs:
 
   pods:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
     - uses: actions/checkout@v4
     - uses: n1hility/cancel-previous-runs@v3
@@ -26,12 +26,21 @@ jobs:
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '16.1'
-        
+
     - name: Test Cocoapods Integration
       run: |
-        brew update
-        brew install xcodegen
         gem install cocoapods -v 1.10.2
         pod repo update
+
+        # Xcodegen 2.44 introduced a bug that breaks compatibility with cocoapods
+        # See: https://github.com/yonaskolb/XcodeGen/issues/1561
+
+        # Unfortunately brew cannot install older versions
+        # so we install mint, so we can install an older version of xcodegen
+        brew update
+        brew install mint
+        mint install yonaskolb/xcodegen@2.43.0
+        export PATH="$PATH:/Users/runner/.mint/bin" # make xcodegen available
+
         pod lib lint AdyenNetworking.podspec --allow-warnings --verbose
         Scripts/test-CocoaPods-integration.sh
