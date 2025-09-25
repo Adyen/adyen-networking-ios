@@ -15,7 +15,7 @@ jobs:
 
   create-release-pull-request:
     name: "Create Release Pull Request"
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
     
     # Checking out the current branch

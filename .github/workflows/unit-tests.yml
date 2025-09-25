@@ -15,7 +15,7 @@ on:
 jobs:
 
   tests:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
     - uses: actions/checkout@v4
     - uses: n1hility/cancel-previous-runs@v3
