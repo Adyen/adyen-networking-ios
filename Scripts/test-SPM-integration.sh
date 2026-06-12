@@ -29,7 +29,7 @@ let package = Package(
     name: \"TempProject\",
     defaultLocalization: \"en-US\",
     platforms: [
-        .iOS(.v14)
+        .iOS(.v12)
     ],
     products: [
         .library(

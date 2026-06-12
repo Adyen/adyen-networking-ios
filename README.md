@@ -6,7 +6,7 @@ Adyen Networking for iOS provides reusable and user-friendly, generic http/https
 
 ## Requirements
 
-- iOS 14.0+
+- iOS 12.0+
 - Xcode 12.0+
 - Swift 5.3
 

@@ -63,20 +63,17 @@ struct APIClientTests {
     )
     func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("\(response.response!.statusCode)"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init(formattedJson(for: response.data!))
+        let expectedLogs: [String] = [
+            "/",
+            "Base URL: https://www.adyen.com/",
+            "Headers:",
+            "{\n\n}",
+            "Query:",
+            "{\n\n}",
+            "/ - \(response.response!.statusCode)",
+            "Headers:",
+            "{\n\n}",
+            formattedJson(for: response.data!)
         ]
         
         Logging.isEnabled = true
@@ -110,20 +107,17 @@ struct APIClientTests {
     )
     func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("\(response.response!.statusCode)"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init(formattedJson(for: response.data!))
+        let expectedLogs: [String] = [
+            "/",
+            "Base URL: https://www.adyen.com/",
+            "Headers:",
+            "{\n\n}",
+            "Query:",
+            "{\n\n}",
+            "/ - \(response.response!.statusCode)",
+            "Headers:",
+            "{\n\n}",
+            formattedJson(for: response.data!)
         ]
         
         Logging.isEnabled = true
@@ -154,20 +148,17 @@ struct APIClientTests {
         
         let expectedResponse = MockResponse(someField: "SomeValue")
         
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n  \"HeaderName\" : \"HeaderValue\"\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n  \"name\" : \"value\"\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("200"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init("{\n  \"someField\" : \"SomeValue\"\n}")
+        let expectedLogs: [String] = [
+            "/",
+            "Base URL: https://www.adyen.com/",
+            "Headers:",
+            "{\n  \"HeaderName\" : \"HeaderValue\"\n}",
+            "Query:",
+            "{\n  \"name\" : \"value\"\n}",
+            "/ - 200",
+            "Headers:",
+            "{\n\n}",
+            "{\n  \"someField\" : \"SomeValue\"\n}"
         ]
         
         Logging.isEnabled = true
@@ -218,7 +209,8 @@ private extension APIClientTests {
             APIClient(
                 apiContext: MockAPIContext(),
                 urlSession: mockURLSession,
-                debugLogger: debugLogger
+                requestLogger: debugLogger,
+                responseLogger: debugLogger
             ).perform(request) { result in
                 continuation.resume(returning: result)
             }

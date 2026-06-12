@@ -6,24 +6,21 @@
 //
 
 import Foundation
+import os.log
 
 internal struct DebugLogger: DebugLogging {
-    
-    func print(_ items: Any..., separator: String, terminator: String, fileId: String) {
+
+    internal static let request = DebugLogger(category: .request)
+    internal static let response = DebugLogger(category: .response)
+
+    private let osLog: OSLog
+
+    private init(category: LogCategory) {
+        osLog = OSLog(subsystem: "com.adyen.networking", category: category.rawValue)
+    }
+
+    func print(_ message: () -> String) {
         guard Logging.isEnabled else { return }
-        let moduleName = fileId.split(separator: "/").first ?? "AdyenNetworking"
-        
-        let items = [
-            ISO8601DateFormatter().string(from: Date()),
-            "[\(moduleName)]"
-        ] + items
-        
-        var idx = items.startIndex
-        let endIdx = items.endIndex
-        
-        repeat {
-            Swift.print(items[idx], separator: separator, terminator: idx == (endIdx - 1) ? terminator : separator)
-            idx += 1
-        } while idx < endIdx
+        os_log("%{public}@", log: osLog, type: .debug, message())
     }
 }

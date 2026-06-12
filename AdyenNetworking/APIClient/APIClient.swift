@@ -83,8 +83,8 @@ public final class APIClient: APIClientProtocol {
     /// Encoding and Decoding
     private let coder: AnyCoder
     
-    /// The debug logger to be used for printing to the console
-    private let logger: any DebugLogging
+    private let requestLogger: any DebugLogging
+    private let responseLogger: any DebugLogging
     
     /// Default file manager
     private let fileManager = FileManager.default
@@ -116,7 +116,8 @@ public final class APIClient: APIClientProtocol {
         )
         self.responseValidator = responseValidator
         self.coder = coder
-        self.logger = DebugLogger()
+        self.requestLogger = DebugLogger.request
+        self.responseLogger = DebugLogger.response
     }
     
     /// Init for dependency injection / testing
@@ -124,7 +125,8 @@ public final class APIClient: APIClientProtocol {
         apiContext: AnyAPIContext,
         urlSession: URLSession,
         coder: AnyCoder = Coder(),
-        debugLogger: any DebugLogging = DebugLogger(),
+        requestLogger: any DebugLogging = DebugLogger.request,
+        responseLogger: any DebugLogging = DebugLogger.response,
         responseValidator: (any AnyResponseValidator)? = nil,
         urlSessionDelegate: URLSessionDelegate? = nil
     ) {
@@ -132,7 +134,8 @@ public final class APIClient: APIClientProtocol {
         self.urlSession = urlSession
         self.responseValidator = responseValidator
         self.coder = coder
-        self.logger = debugLogger
+        self.requestLogger = requestLogger
+        self.responseLogger = responseLogger
     }
     
     public func perform<R>(
@@ -267,47 +270,41 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        logger.print("---- Request (/\(request.path)) ----")
+        requestLogger.print("/\(request.path)")
         
         if let body = urlRequest.httpBody {
-            logger.printAsJSON(body)
+            requestLogger.printAsJSON(body)
         }
         
-        logger.print("---- Request base url (/\(request.path)) ----")
-        logger.print(apiContext.environment.baseURL)
+        requestLogger.print("Base URL: \(apiContext.environment.baseURL)")
         
         if let headers = urlRequest.allHTTPHeaderFields {
-            logger.print("---- Request Headers (/\(request.path)) ----")
-            logger.printAsJSON(headers)
+            requestLogger.print("Headers:")
+            requestLogger.printAsJSON(headers)
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
-            logger.print("---- Request query (/\(request.path)) ----")
-            logger.printAsJSON(queryParams)
+            requestLogger.print("Query:")
+            requestLogger.printAsJSON(queryParams)
         }
-        
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        logger.print("---- Response Code (/\(request.path)) ----")
-        logger.print(result.statusCode)
+        responseLogger.print("/\(request.path) - \(result.statusCode)")
         
-        logger.print("---- Response Headers (/\(request.path)) ----")
-        logger.printAsJSON(result.headers)
+        responseLogger.print("Headers:")
+        responseLogger.printAsJSON(result.headers)
         
-        logger.print("---- Response (/\(request.path)) ----")
-        logger.printAsJSON(result.data)
+        responseLogger.printAsJSON(result.data)
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        logger.print("---- Response Code (/\(request.path)) ----")
-        logger.print(result.statusCode)
+        responseLogger.print("/\(request.path) - \(result.statusCode)")
         
-        logger.print("---- Response Headers (/\(request.path)) ----")
-        logger.printAsJSON(result.headers)
+        responseLogger.print("Headers:")
+        responseLogger.printAsJSON(result.headers)
         
-        logger.print("---- Response (/\(request.path)) ----")
-        logger.print(result.url)
+        responseLogger.print("\(result.url)")
     }
     
     /// :nodoc:
@@ -324,7 +321,11 @@ public final class APIClient: APIClientProtocol {
         let config = URLSessionConfiguration.ephemeral
         config.urlCache = nil
         
-        config.tlsMinimumSupportedProtocolVersion = .TLSv12
+        if #available(iOS 13.0, *) {
+            config.tlsMinimumSupportedProtocolVersion = .TLSv12
+        } else {
+            config.tlsMinimumSupportedProtocol = .tlsProtocol12
+        }
         
         return config
     }

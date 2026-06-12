@@ -7,41 +7,46 @@
 
 import Foundation
 
+public enum LogCategory: String {
+    case request
+    case response
+}
+
 internal protocol DebugLogging {
-    
-    func print(_ items: Any..., separator: String, terminator: String, fileId: String)
+
+    func print(_ message: () -> String)
 }
 
 // MARK: - Convenience Extensions
 
 internal extension DebugLogging {
-    
-    func print(_ items: Any..., fileId: String = #fileID) {
+
+    func print(_ message: @autoclosure () -> String) {
         guard Logging.isEnabled else { return }
-        print(items, separator: " ", terminator: "\n", fileId: fileId)
+        print(message)
     }
-    
-    func printAsJSON(_ dictionary: [String : Any], fileId: String = #fileID) {
+
+    func printAsJSON(_ dictionary: [String: Any]) {
         guard Logging.isEnabled else { return }
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .jsonOptions)
-            printAsJSON(jsonData, fileId: fileId)
+            printAsJSON(jsonData)
         } catch {
-            print(dictionary, fileId: fileId)
+            print("\(dictionary)")
         }
     }
-    
-    func printAsJSON(_ data: Data, fileId: String = #fileID) {
+
+    func printAsJSON(_ data: Data) {
         guard Logging.isEnabled else { return }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .jsonOptions)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-
-            print(jsonString, fileId: fileId)
+            print(jsonString)
         } catch {
+            print("Failed to serialize JSON: \(error)")
             if let string = String(data: data, encoding: .utf8) {
-                print(string, fileId: fileId)
+                print("Raw data: \(string)")
             }
         }
     }
@@ -49,6 +54,10 @@ internal extension DebugLogging {
 
 private extension JSONSerialization.WritingOptions {
     static var jsonOptions: Self {
-        return [.prettyPrinted, .withoutEscapingSlashes]
+        if #available(iOS 13.0, *) {
+            return [.prettyPrinted, .withoutEscapingSlashes]
+        } else {
+            return [.prettyPrinted]
+        }
     }
 }
