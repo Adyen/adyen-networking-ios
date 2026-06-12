@@ -83,8 +83,7 @@ public final class APIClient: APIClientProtocol {
     /// Encoding and Decoding
     private let coder: AnyCoder
     
-    private let requestLogger: any DebugLogging
-    private let responseLogger: any DebugLogging
+    private let logger: (LogCategory) -> any DebugLogging
     
     /// Default file manager
     private let fileManager = FileManager.default
@@ -116,8 +115,7 @@ public final class APIClient: APIClientProtocol {
         )
         self.responseValidator = responseValidator
         self.coder = coder
-        self.requestLogger = DebugLogger.request
-        self.responseLogger = DebugLogger.response
+        self.logger = DebugLogger.shared(for:)
     }
     
     /// Init for dependency injection / testing
@@ -125,8 +123,7 @@ public final class APIClient: APIClientProtocol {
         apiContext: AnyAPIContext,
         urlSession: URLSession,
         coder: AnyCoder = Coder(),
-        requestLogger: any DebugLogging = DebugLogger.request,
-        responseLogger: any DebugLogging = DebugLogger.response,
+        logger: ((LogCategory) -> any DebugLogging)? = nil,
         responseValidator: (any AnyResponseValidator)? = nil,
         urlSessionDelegate: URLSessionDelegate? = nil
     ) {
@@ -134,8 +131,7 @@ public final class APIClient: APIClientProtocol {
         self.urlSession = urlSession
         self.responseValidator = responseValidator
         self.coder = coder
-        self.requestLogger = requestLogger
-        self.responseLogger = responseLogger
+        self.logger = logger ?? DebugLogger.shared(for:)
     }
     
     public func perform<R>(
@@ -270,41 +266,41 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        requestLogger.print("/\(request.path)")
+        logger(.request).print("/\(request.path)")
         
         if let body = urlRequest.httpBody {
-            requestLogger.printAsJSON(body)
+            logger(.request).printAsJSON(body)
         }
         
-        requestLogger.print("Base URL: \(apiContext.environment.baseURL)")
+        logger(.request).print("Base URL: \(apiContext.environment.baseURL)")
         
         if let headers = urlRequest.allHTTPHeaderFields {
-            requestLogger.print("Headers:")
-            requestLogger.printAsJSON(headers)
+            logger(.request).print("Headers:")
+            logger(.request).printAsJSON(headers)
         }
         
         if let queryParams = urlRequest.url?.queryParameters {
-            requestLogger.print("Query:")
-            requestLogger.printAsJSON(queryParams)
+            logger(.request).print("Query:")
+            logger(.request).printAsJSON(queryParams)
         }
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        responseLogger.print("/\(request.path) - \(result.statusCode)")
+        logger(.response).print("/\(request.path) - \(result.statusCode)")
         
-        responseLogger.print("Headers:")
-        responseLogger.printAsJSON(result.headers)
+        logger(.response).print("Headers:")
+        logger(.response).printAsJSON(result.headers)
         
-        responseLogger.printAsJSON(result.data)
+        logger(.response).printAsJSON(result.data)
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        responseLogger.print("/\(request.path) - \(result.statusCode)")
+        logger(.response).print("/\(request.path) - \(result.statusCode)")
         
-        responseLogger.print("Headers:")
-        responseLogger.printAsJSON(result.headers)
+        logger(.response).print("Headers:")
+        logger(.response).printAsJSON(result.headers)
         
-        responseLogger.print("\(result.url)")
+        logger(.response).print("\(result.url)")
     }
     
     /// :nodoc:

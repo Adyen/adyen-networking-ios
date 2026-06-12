@@ -13,6 +13,10 @@ internal struct DebugLogger: DebugLogging {
     internal static let request = DebugLogger(category: .request)
     internal static let response = DebugLogger(category: .response)
 
+    internal static func shared(for category: LogCategory) -> any DebugLogging {
+        category == .request ? request : response
+    }
+
     private let osLog: OSLog
 
     private init(category: LogCategory) {

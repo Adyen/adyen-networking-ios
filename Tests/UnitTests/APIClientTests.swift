@@ -197,7 +197,7 @@ private extension APIClientTests {
     func perform<RequestType: Request>(
         request: RequestType,
         testResponse: TestResponse,
-        debugLogger: any DebugLogging = MockDebugLogger()
+        debugLogger: MockDebugLogger = MockDebugLogger()
     ) async -> Result<RequestType.ResponseType, Error> {
         await withCheckedContinuation { continuation in
             let mockURLSession = MockURLSession(
@@ -209,8 +209,7 @@ private extension APIClientTests {
             APIClient(
                 apiContext: MockAPIContext(),
                 urlSession: mockURLSession,
-                requestLogger: debugLogger,
-                responseLogger: debugLogger
+                logger: { _ in debugLogger }
             ).perform(request) { result in
                 continuation.resume(returning: result)
             }
