@@ -266,41 +266,31 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        logger(.request).print("/\(request.path)")
-        
-        if let body = urlRequest.httpBody {
-            logger(.request).printAsJSON(body)
-        }
-        
-        logger(.request).print("Base URL: \(apiContext.environment.baseURL)")
-        
-        if let headers = urlRequest.allHTTPHeaderFields {
-            logger(.request).print("Headers:")
-            logger(.request).printAsJSON(headers)
-        }
+        logger(.request).print("\(apiContext.environment.baseURL)/\(request.path)")
         
         if let queryParams = urlRequest.url?.queryParameters {
-            logger(.request).print("Query:")
-            logger(.request).printAsJSON(queryParams)
+            logger(.request).printAsJSON(queryParams, label: "Query (/\(request.path))")
+        }
+        
+        if let headers = urlRequest.allHTTPHeaderFields {
+            logger(.request).printAsJSON(headers, label: "Headers (/\(request.path))")
+        }
+        
+        if let body = urlRequest.httpBody {
+            logger(.request).printAsJSON(body, label: "Body (/\(request.path))")
         }
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
         logger(.response).print("/\(request.path) - \(result.statusCode)")
-        
-        logger(.response).print("Headers:")
-        logger(.response).printAsJSON(result.headers)
-        
-        logger(.response).printAsJSON(result.data)
+        logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
+        logger(.response).printAsJSON(result.data, label: "Body (/\(request.path))")
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
         logger(.response).print("/\(request.path) - \(result.statusCode)")
-        
-        logger(.response).print("Headers:")
-        logger(.response).printAsJSON(result.headers)
-        
-        logger(.response).print("\(result.url)")
+        logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
+        logger(.response).print("Body (/\(request.path)): \(result.url)")
     }
     
     /// :nodoc:

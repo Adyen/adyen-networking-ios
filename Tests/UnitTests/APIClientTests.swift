@@ -64,16 +64,12 @@ struct APIClientTests {
     func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
         let expectedLogs: [String] = [
-            "/",
-            "Base URL: https://www.adyen.com/",
-            "Headers:",
-            "{\n\n}",
-            "Query:",
-            "{\n\n}",
+            "https://www.adyen.com//",
+            "Query (/): {\n\n}",
+            "Headers (/): {\n\n}",
             "/ - \(response.response!.statusCode)",
-            "Headers:",
-            "{\n\n}",
-            formattedJson(for: response.data!)
+            "Headers (/): {\n\n}",
+            "Body (/): \(formattedJson(for: response.data!))"
         ]
         
         Logging.isEnabled = true
@@ -108,16 +104,12 @@ struct APIClientTests {
     func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
         let expectedLogs: [String] = [
-            "/",
-            "Base URL: https://www.adyen.com/",
-            "Headers:",
-            "{\n\n}",
-            "Query:",
-            "{\n\n}",
+            "https://www.adyen.com//",
+            "Query (/): {\n\n}",
+            "Headers (/): {\n\n}",
             "/ - \(response.response!.statusCode)",
-            "Headers:",
-            "{\n\n}",
-            formattedJson(for: response.data!)
+            "Headers (/): {\n\n}",
+            "Body (/): \(formattedJson(for: response.data!))"
         ]
         
         Logging.isEnabled = true
@@ -149,16 +141,12 @@ struct APIClientTests {
         let expectedResponse = MockResponse(someField: "SomeValue")
         
         let expectedLogs: [String] = [
-            "/",
-            "Base URL: https://www.adyen.com/",
-            "Headers:",
-            "{\n  \"HeaderName\" : \"HeaderValue\"\n}",
-            "Query:",
-            "{\n  \"name\" : \"value\"\n}",
+            "https://www.adyen.com//",
+            "Query (/): {\n  \"name\" : \"value\"\n}",
+            "Headers (/): {\n  \"HeaderName\" : \"HeaderValue\"\n}",
             "/ - 200",
-            "Headers:",
-            "{\n\n}",
-            "{\n  \"someField\" : \"SomeValue\"\n}"
+            "Headers (/): {\n\n}",
+            "Body (/): {\n  \"someField\" : \"SomeValue\"\n}"
         ]
         
         Logging.isEnabled = true

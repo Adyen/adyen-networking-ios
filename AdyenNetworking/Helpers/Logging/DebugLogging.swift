@@ -26,27 +26,28 @@ internal extension DebugLogging {
         print(message)
     }
 
-    func printAsJSON(_ dictionary: [String: Any]) {
+    func printAsJSON(_ dictionary: [String: Any], label: String = "") {
         guard Logging.isEnabled else { return }
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .jsonOptions)
-            printAsJSON(jsonData)
+            printAsJSON(jsonData, label: label)
         } catch {
-            print("\(dictionary)")
+            print(label.isEmpty ? "Failed to serialize dictionary: \(error)" : "Failed to serialize dictionary for \(label): \(error)")
+            print(label.isEmpty ? "\(dictionary)" : "\(label): \(dictionary)")
         }
     }
 
-    func printAsJSON(_ data: Data) {
+    func printAsJSON(_ data: Data, label: String = "") {
         guard Logging.isEnabled else { return }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .jsonOptions)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-            print(jsonString)
+            print(label.isEmpty ? jsonString : "\(label): \(jsonString)")
         } catch {
-            print("Failed to serialize JSON: \(error)")
+            print(label.isEmpty ? "Failed to serialize data: \(error)" : "Failed to serialize data for \(label): \(error)")
             if let string = String(data: data, encoding: .utf8) {
-                print("Raw data: \(string)")
+                print(label.isEmpty ? "Raw data: \(string)" : "\(label): Raw data: \(string)")
             }
         }
     }
