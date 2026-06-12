@@ -49,10 +49,6 @@ internal extension DebugLogging {
 
 private extension JSONSerialization.WritingOptions {
     static var jsonOptions: Self {
-        if #available(iOS 13.0, *) {
-            return [.prettyPrinted, .withoutEscapingSlashes]
-        } else {
-            return [.prettyPrinted]
-        }
+        return [.prettyPrinted, .withoutEscapingSlashes]
     }
 }
