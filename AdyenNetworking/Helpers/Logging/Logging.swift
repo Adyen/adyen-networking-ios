@@ -16,6 +16,5 @@ public enum Logging {
 
 @_spi(AdyenInternal)
 public func adyenPrintAsJSON(_ data: Data, _ category: LogCategory = .request) {
-    let logger = category == .request ? DebugLogger.request : DebugLogger.response
-    logger.printAsJSON(data)
+    DebugLogger.shared(for: category).printAsJSON(data)
 }
