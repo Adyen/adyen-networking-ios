@@ -324,11 +324,7 @@ public final class APIClient: APIClientProtocol {
         let config = URLSessionConfiguration.ephemeral
         config.urlCache = nil
         
-        if #available(iOS 13.0, *) {
-            config.tlsMinimumSupportedProtocolVersion = .TLSv12
-        } else {
-            config.tlsMinimumSupportedProtocol = .tlsProtocol12
-        }
+        config.tlsMinimumSupportedProtocolVersion = .TLSv12
         
         return config
     }

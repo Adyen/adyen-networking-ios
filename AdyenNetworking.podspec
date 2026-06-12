@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.author = { 'Adyen' => 'support@adyen.com' }
   s.source = { :git => 'https://github.com/Adyen/adyen-networking-ios.git', :tag => "#{s.version}" }
   s.platform = :ios
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '14.0'
   s.swift_version = '5.3'
   s.frameworks = 'Foundation'
   s.source_files = 'AdyenNetworking/**/*.swift'
