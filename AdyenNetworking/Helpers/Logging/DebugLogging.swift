@@ -7,41 +7,45 @@
 
 import Foundation
 
+public enum LogCategory: String {
+    case request
+    case response
+}
+
 internal protocol DebugLogging {
-    
-    func print(_ items: Any..., separator: String, terminator: String, fileId: String)
+
+    func print(_ message: () -> String)
 }
 
 // MARK: - Convenience Extensions
 
 internal extension DebugLogging {
-    
-    func print(_ items: Any..., fileId: String = #fileID) {
+
+    func print(_ message: @autoclosure () -> String) {
         guard Logging.isEnabled else { return }
-        print(items, separator: " ", terminator: "\n", fileId: fileId)
+        print(message)
     }
-    
-    func printAsJSON(_ dictionary: [String : Any], fileId: String = #fileID) {
+
+    func printAsJSON(_ dictionary: [String: Any], label: String = "") {
         guard Logging.isEnabled else { return }
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .jsonOptions)
-            printAsJSON(jsonData, fileId: fileId)
+            printAsJSON(jsonData, label: label)
         } catch {
-            print(dictionary, fileId: fileId)
+            print(label.isEmpty ? "\(dictionary)" : "\(label): \(dictionary)")
         }
     }
-    
-    func printAsJSON(_ data: Data, fileId: String = #fileID) {
+
+    func printAsJSON(_ data: Data, label: String = "") {
         guard Logging.isEnabled else { return }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .jsonOptions)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
-
-            print(jsonString, fileId: fileId)
+            print(label.isEmpty ? jsonString : "\(label): \(jsonString)")
         } catch {
             if let string = String(data: data, encoding: .utf8) {
-                print(string, fileId: fileId)
+                print(label.isEmpty ? string : "\(label): \(string)")
             }
         }
     }
