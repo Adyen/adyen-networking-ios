@@ -32,7 +32,6 @@ internal extension DebugLogging {
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .jsonOptions)
             printAsJSON(jsonData, label: label)
         } catch {
-            print(label.isEmpty ? "Failed to serialize dictionary: \(error)" : "Failed to serialize dictionary for \(label): \(error)")
             print(label.isEmpty ? "\(dictionary)" : "\(label): \(dictionary)")
         }
     }
@@ -45,9 +44,8 @@ internal extension DebugLogging {
             guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
             print(label.isEmpty ? jsonString : "\(label): \(jsonString)")
         } catch {
-            print(label.isEmpty ? "Failed to serialize data: \(error)" : "Failed to serialize data for \(label): \(error)")
             if let string = String(data: data, encoding: .utf8) {
-                print(label.isEmpty ? "Raw data: \(string)" : "\(label): Raw data: \(string)")
+                print(label.isEmpty ? string : "\(label): \(string)")
             }
         }
     }

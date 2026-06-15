@@ -67,7 +67,7 @@ struct APIClientTests {
             "https://www.adyen.com//",
             "Query (/): {\n\n}",
             "Headers (/): {\n\n}",
-            "/ - \(response.response!.statusCode)",
+            "Status Code (/): \(response.response!.statusCode)",
             "Headers (/): {\n\n}",
             "Body (/): \(formattedJson(for: response.data!))"
         ]
@@ -107,7 +107,7 @@ struct APIClientTests {
             "https://www.adyen.com//",
             "Query (/): {\n\n}",
             "Headers (/): {\n\n}",
-            "/ - \(response.response!.statusCode)",
+            "Status Code (/): \(response.response!.statusCode)",
             "Headers (/): {\n\n}",
             "Body (/): \(formattedJson(for: response.data!))"
         ]
@@ -144,7 +144,7 @@ struct APIClientTests {
             "https://www.adyen.com//",
             "Query (/): {\n  \"name\" : \"value\"\n}",
             "Headers (/): {\n  \"HeaderName\" : \"HeaderValue\"\n}",
-            "/ - 200",
+            "Status Code (/): 200",
             "Headers (/): {\n\n}",
             "Body (/): {\n  \"someField\" : \"SomeValue\"\n}"
         ]

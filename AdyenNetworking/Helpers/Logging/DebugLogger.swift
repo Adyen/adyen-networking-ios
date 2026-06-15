@@ -23,7 +23,7 @@ internal struct DebugLogger: DebugLogging {
         osLog = OSLog(subsystem: "com.adyen.networking", category: category.rawValue)
     }
 
-    func print(_ message: () -> String) {
+    internal func print(_ message: () -> String) {
         guard Logging.isEnabled else { return }
         os_log("%{public}@", log: osLog, type: .debug, message())
     }

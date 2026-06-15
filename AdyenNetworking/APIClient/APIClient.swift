@@ -282,15 +282,15 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        logger(.response).print("/\(request.path) - \(result.statusCode)")
+        logger(.response).print("Status Code (/\(request.path)): \(result.statusCode)")
         logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
         logger(.response).printAsJSON(result.data, label: "Body (/\(request.path))")
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        logger(.response).print("/\(request.path) - \(result.statusCode)")
+        logger(.response).print("Status Code (/\(request.path)): \(result.statusCode)")
         logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
-        logger(.response).print("Body (/\(request.path)): \(result.url)")
+        logger(.response).print("Response URL (/\(request.path)): \(result.url)")
     }
     
     /// :nodoc:
