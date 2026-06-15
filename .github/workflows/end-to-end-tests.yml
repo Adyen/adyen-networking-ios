@@ -27,6 +27,16 @@ jobs:
       with:
         xcode-version: '16.1'
 
+    - name: Verify secrets
+      run: |
+        if [ -z "$GO_REST_AUTH_BEARER" ]; then
+          echo "GO_REST_AUTH_BEARER is not set or empty"
+        else
+          echo "GO_REST_AUTH_BEARER is set"
+        fi
+      env:
+        GO_REST_AUTH_BEARER: ${{ secrets.GO_REST_AUTH_BEARER }}
+
     - name: 🧪 Run End to End Tests
       run: |
         xcodebuild test \
@@ -36,7 +46,7 @@ jobs:
           -enableCodeCoverage YES \
           -resultBundlePath "EndToEndTests.xcresult" \
           -destination "name=iPhone 16 Pro,OS=18.1" \
-          GO_REST_AUTH_BEARER="Bearer $GO_REST_AUTH_BEARER" \
+          GO_REST_AUTH_BEARER='Bearer $GO_REST_AUTH_BEARER' \
           | xcpretty --utf --color && exit ${PIPESTATUS[0]}
       env:
         GO_REST_AUTH_BEARER: ${{ secrets.GO_REST_AUTH_BEARER }}
