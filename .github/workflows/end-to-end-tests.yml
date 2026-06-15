@@ -27,16 +27,6 @@ jobs:
       with:
         xcode-version: '16.1'
 
-    - name: Verify secrets
-      run: |
-        if [ -z "$GO_REST_AUTH_BEARER" ]; then
-          echo "GO_REST_AUTH_BEARER is not set or empty"
-        else
-          echo "GO_REST_AUTH_BEARER is set"
-        fi
-      env:
-        GO_REST_AUTH_BEARER: ${{ secrets.GO_REST_AUTH_BEARER }}
-
     - name: 🧪 Run End to End Tests
       run: |
         xcodebuild test \
