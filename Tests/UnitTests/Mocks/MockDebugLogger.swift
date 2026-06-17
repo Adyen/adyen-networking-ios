@@ -9,20 +9,10 @@
 
 class MockDebugLogger: DebugLogging {
     
-    struct Log: Equatable {
-        let content: String
-        let fileId: String
-        
-        init(_ content: String, fileId: String = "AdyenNetworking/APIClient.swift") {
-            self.content = content
-            self.fileId = fileId
-        }
-    }
+    var logs: [String] = []
     
-    var logs: [Log] = []
-    
-    func print(_ items: Any..., separator: String, terminator: String, fileId: String) {
+    func print(_ message: () -> String) {
         guard Logging.isEnabled else { return }
-        logs += items.map { .init("\($0)", fileId: fileId) }
+        logs.append(message())
     }
 }
