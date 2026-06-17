@@ -83,8 +83,7 @@ public final class APIClient: APIClientProtocol {
     /// Encoding and Decoding
     private let coder: AnyCoder
     
-    /// The debug logger to be used for printing to the console
-    private let logger: any DebugLogging
+    private let logger: (LogCategory) -> any DebugLogging
     
     /// Default file manager
     private let fileManager = FileManager.default
@@ -116,7 +115,7 @@ public final class APIClient: APIClientProtocol {
         )
         self.responseValidator = responseValidator
         self.coder = coder
-        self.logger = DebugLogger()
+        self.logger = DebugLogger.shared(for:)
     }
     
     /// Init for dependency injection / testing
@@ -124,7 +123,7 @@ public final class APIClient: APIClientProtocol {
         apiContext: AnyAPIContext,
         urlSession: URLSession,
         coder: AnyCoder = Coder(),
-        debugLogger: any DebugLogging = DebugLogger(),
+        logger: ((LogCategory) -> any DebugLogging)? = nil,
         responseValidator: (any AnyResponseValidator)? = nil,
         urlSessionDelegate: URLSessionDelegate? = nil
     ) {
@@ -132,7 +131,7 @@ public final class APIClient: APIClientProtocol {
         self.urlSession = urlSession
         self.responseValidator = responseValidator
         self.coder = coder
-        self.logger = debugLogger
+        self.logger = logger ?? DebugLogger.shared(for:)
     }
     
     public func perform<R>(
@@ -267,47 +266,31 @@ public final class APIClient: APIClientProtocol {
     }
     
     private func log<R: Request>(urlRequest: URLRequest, request: R) {
-        logger.print("---- Request (/\(request.path)) ----")
-        
-        if let body = urlRequest.httpBody {
-            logger.printAsJSON(body)
-        }
-        
-        logger.print("---- Request base url (/\(request.path)) ----")
-        logger.print(apiContext.environment.baseURL)
-        
-        if let headers = urlRequest.allHTTPHeaderFields {
-            logger.print("---- Request Headers (/\(request.path)) ----")
-            logger.printAsJSON(headers)
-        }
+        logger(.request).print("\(apiContext.environment.baseURL)/\(request.path)")
         
         if let queryParams = urlRequest.url?.queryParameters {
-            logger.print("---- Request query (/\(request.path)) ----")
-            logger.printAsJSON(queryParams)
+            logger(.request).printAsJSON(queryParams, label: "Query (/\(request.path))")
         }
         
+        if let headers = urlRequest.allHTTPHeaderFields {
+            logger(.request).printAsJSON(headers, label: "Headers (/\(request.path))")
+        }
+        
+        if let body = urlRequest.httpBody {
+            logger(.request).printAsJSON(body, label: "Body (/\(request.path))")
+        }
     }
     
     private func log<R: Request>(result: URLSessionSuccess, request: R) {
-        logger.print("---- Response Code (/\(request.path)) ----")
-        logger.print(result.statusCode)
-        
-        logger.print("---- Response Headers (/\(request.path)) ----")
-        logger.printAsJSON(result.headers)
-        
-        logger.print("---- Response (/\(request.path)) ----")
-        logger.printAsJSON(result.data)
+        logger(.response).print("Status Code (/\(request.path)): \(result.statusCode)")
+        logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
+        logger(.response).printAsJSON(result.data, label: "Body (/\(request.path))")
     }
     
     private func log<R: Request>(result: URLSessionDownloadSuccess, request: R) {
-        logger.print("---- Response Code (/\(request.path)) ----")
-        logger.print(result.statusCode)
-        
-        logger.print("---- Response Headers (/\(request.path)) ----")
-        logger.printAsJSON(result.headers)
-        
-        logger.print("---- Response (/\(request.path)) ----")
-        logger.print(result.url)
+        logger(.response).print("Status Code (/\(request.path)): \(result.statusCode)")
+        logger(.response).printAsJSON(result.headers, label: "Headers (/\(request.path))")
+        logger(.response).print("Response URL (/\(request.path)): \(result.url)")
     }
     
     /// :nodoc:

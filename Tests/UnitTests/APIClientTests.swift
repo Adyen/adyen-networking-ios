@@ -63,20 +63,13 @@ struct APIClientTests {
     )
     func client_succeeds_onValidEmptyResponse_withSuccessStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("\(response.response!.statusCode)"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init(formattedJson(for: response.data!))
+        let expectedLogs: [String] = [
+            "https://www.adyen.com//",
+            "Query (/): {\n\n}",
+            "Headers (/): {\n\n}",
+            "Status Code (/): \(response.response!.statusCode)",
+            "Headers (/): {\n\n}",
+            "Body (/): \(formattedJson(for: response.data!))"
         ]
         
         Logging.isEnabled = true
@@ -110,20 +103,13 @@ struct APIClientTests {
     )
     func client_fails_onValidEmptyResponse_withFailureStatusCode(_ response: TestResponse) async throws {
 
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("\(response.response!.statusCode)"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init(formattedJson(for: response.data!))
+        let expectedLogs: [String] = [
+            "https://www.adyen.com//",
+            "Query (/): {\n\n}",
+            "Headers (/): {\n\n}",
+            "Status Code (/): \(response.response!.statusCode)",
+            "Headers (/): {\n\n}",
+            "Body (/): \(formattedJson(for: response.data!))"
         ]
         
         Logging.isEnabled = true
@@ -154,20 +140,13 @@ struct APIClientTests {
         
         let expectedResponse = MockResponse(someField: "SomeValue")
         
-        let expectedLogs: [MockDebugLogger.Log] = [
-            .init("---- Request (/) ----"),
-            .init("---- Request base url (/) ----"),
-            .init("https://www.adyen.com/"),
-            .init("---- Request Headers (/) ----"),
-            .init("{\n  \"HeaderName\" : \"HeaderValue\"\n}"),
-            .init("---- Request query (/) ----"),
-            .init("{\n  \"name\" : \"value\"\n}"),
-            .init("---- Response Code (/) ----"),
-            .init("200"),
-            .init("---- Response Headers (/) ----"),
-            .init("{\n\n}"),
-            .init("---- Response (/) ----"),
-            .init("{\n  \"someField\" : \"SomeValue\"\n}")
+        let expectedLogs: [String] = [
+            "https://www.adyen.com//",
+            "Query (/): {\n  \"name\" : \"value\"\n}",
+            "Headers (/): {\n  \"HeaderName\" : \"HeaderValue\"\n}",
+            "Status Code (/): 200",
+            "Headers (/): {\n\n}",
+            "Body (/): {\n  \"someField\" : \"SomeValue\"\n}"
         ]
         
         Logging.isEnabled = true
@@ -206,7 +185,7 @@ private extension APIClientTests {
     func perform<RequestType: Request>(
         request: RequestType,
         testResponse: TestResponse,
-        debugLogger: any DebugLogging = MockDebugLogger()
+        debugLogger: MockDebugLogger = MockDebugLogger()
     ) async -> Result<RequestType.ResponseType, Error> {
         await withCheckedContinuation { continuation in
             let mockURLSession = MockURLSession(
@@ -218,7 +197,7 @@ private extension APIClientTests {
             APIClient(
                 apiContext: MockAPIContext(),
                 urlSession: mockURLSession,
-                debugLogger: debugLogger
+                logger: { _ in debugLogger }
             ).perform(request) { result in
                 continuation.resume(returning: result)
             }
