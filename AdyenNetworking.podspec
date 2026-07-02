@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'AdyenNetworking'
-  s.version = '3.0.1'
+  s.version = '3.1.0'
   s.summary = "Adyen Networking for iOS"
   s.description = <<-DESC
     Adyen Networking for iOS provides Http/Https networking API's.

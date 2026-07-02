@@ -15,7 +15,9 @@ then
   agvtool new-marketing-version $NEW_VERSION
   agvtool new-version -all $NEW_VERSION
 
-  sed -i '' -e "s/$CURRENT_VERSION/$NEW_VERSION/" $PODSPEC_PATH
+  # Replace the podspec version regardless of its current value, so the bump
+  # does not depend on the Xcode marketing version matching the podspec.
+  sed -i '' -E "s/(s\.version[[:space:]]*=[[:space:]]*)'[^']*'/\1'$NEW_VERSION'/" $PODSPEC_PATH
 fi
 
 CURRENT_VERSION=`agvtool mvers -terse1`
