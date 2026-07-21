@@ -31,7 +31,7 @@ jobs:
     # Update Version
     - name: Updating Version Number
       run: |
-        Scripts/increment_version.sh ${{ env.SDK_VERSION }}
+        Scripts/increment_version.sh "$SDK_VERSION"
       env:
         SDK_VERSION: ${{ github.event.inputs.sdk-version }}
     

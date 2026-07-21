@@ -38,25 +38,29 @@ jobs:
 
     - name: 👾 Define Diff Versions
       run: |
-        NEW="${{ env.source }}~${{ env.headGithubRepo }}"
-        OLD="${{ env.target }}~${{ env.baseGithubRepo }}"
+        if ! git check-ref-format --branch "$SOURCE" > /dev/null || ! git check-ref-format --branch "$TARGET" > /dev/null; then
+          echo "Source and target must be valid branch or tag names."
+          exit 1
+        fi
+
+        NEW="${SOURCE}~${HEAD_GITHUB_REPO}"
+        OLD="${TARGET}~${BASE_GITHUB_REPO}"
         
-        if [[ '${{ env.targetBranchName || env.noTargetBranch }}' == release/* ]]
+        if [[ "$TARGET_BRANCH_NAME" == release/* ]]
         then
             LATEST_TAG=$(git describe --tags --abbrev=0)
-            OLD="$LATEST_TAG~${{ env.baseGithubRepo }}" 
+            OLD="$LATEST_TAG~$BASE_GITHUB_REPO"
         fi
         
         # Providing the output to the environment
         echo "OLD_VERSION=$OLD" >> $GITHUB_ENV
         echo "NEW_VERSION=$NEW" >> $GITHUB_ENV
       env:
-        source: '${{ github.event.inputs.new || github.head_ref }}'
-        target: '${{ github.event.inputs.old || github.event.pull_request.base.ref }}'
-        headGithubRepo: '${{github.server_url}}/${{ github.event.pull_request.head.repo.full_name || github.repository}}.git'
-        baseGithubRepo: '${{github.server_url}}/${{github.repository}}.git'
-        noTargetBranch: 'no target branch'
-        targetBranchName: '${{ github.head_ref }}'
+        SOURCE: ${{ github.event.inputs.new || github.head_ref }}
+        TARGET: ${{ github.event.inputs.old || github.event.pull_request.base.ref }}
+        HEAD_GITHUB_REPO: ${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name || github.repository }}.git
+        BASE_GITHUB_REPO: ${{ github.server_url }}/${{ github.repository }}.git
+        TARGET_BRANCH_NAME: ${{ github.head_ref || 'no target branch' }}
 
     # The github action automatically posts on a PR (if it's not a fork-PR)
     # and/or outputs the diff to the $GITHUB_STEP_SUMMARY
