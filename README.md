@@ -12,18 +12,12 @@ Adyen Networking for iOS provides reusable and user-friendly, generic http/https
 
 ## Installation
 
-Adyen Networking for iOS are available through either [CocoaPods](http://cocoapods.org), [Carthage](https://github.com/Carthage/Carthage) or [Swift Package Manager](https://swift.org/package-manager/).
+Adyen Networking for iOS are available through either [CocoaPods](http://cocoapods.org) or [Swift Package Manager](https://swift.org/package-manager/).
 
 ### CocoaPods
 
 1. Add `pod 'AdyenNetworking'` to your `Podfile`.
 2. Run `pod install`.
-
-### Carthage
-
-1. Add `github "adyen/adyen-networking-ios"` to your `Cartfile`.
-2. Run `carthage update`.
-3. Link the framework with your target as described in [Carthage Readme](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ### Swift Package Manager
 
