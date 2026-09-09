@@ -35,7 +35,7 @@ jobs:
           -testPlan "EndToEndTests" \
           -enableCodeCoverage YES \
           -resultBundlePath "EndToEndTests.xcresult" \
-          -destination "name=iPhone 16 Pro,OS=18.1" \
+          -destination "name=iPhone Air,OS=26.5" \
           GO_REST_AUTH_BEARER='Bearer $GO_REST_AUTH_BEARER' \
           | xcpretty --utf --color && exit ${PIPESTATUS[0]}
       env:
