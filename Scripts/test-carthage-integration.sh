@@ -82,7 +82,7 @@ cp -a "../Networking Demo App/." Source/
 xcodegen generate
 
 echo_header "Build"
-xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone 16" | xcpretty && exit ${PIPESTATUS[0]}
+xcodebuild build -project $PROJECT_NAME.xcodeproj -scheme App -destination "name=iPhone Air" | xcpretty && exit ${PIPESTATUS[0]}
 
 if [ "$NEED_CLEANUP" == true ]
 then
