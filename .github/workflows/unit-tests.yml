@@ -35,4 +35,4 @@ jobs:
           -testPlan "UnitTests" \
           -enableCodeCoverage YES \
           -resultBundlePath "UnitTests.xcresult" \
-          -destination "name=iPhone 16 Pro,OS=18.1" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
+          -destination "name=iPhone Air,OS=26.5" | xcpretty --utf --color && exit ${PIPESTATUS[0]}
