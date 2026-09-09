@@ -45,7 +45,6 @@ apiClient.perform(request) { result in
     }
 }
 ```
-Please check the `Networking Demo App` folder, for some code examples.
 
 :warning: _Please make sure to retain the `APIClient` instance, otherwise the completion handler will not be called._
 
